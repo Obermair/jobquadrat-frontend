@@ -1,0 +1,9 @@
+export { Advertisement } from './models/advertisement';
+export { NewAdvertisement } from './models/new-advertisement';
+export { District } from './models/district';
+export { NewDistrict } from './models/new-district';
+export { UsersPermissionsRole } from './models/users-permissions-role';
+export { NewUsersPermissionsRole } from './models/new-users-permissions-role';
+export { UsersPermissionsUser } from './models/users-permissions-user';
+export { NewUsersPermissionsUser } from './models/new-users-permissions-user';
+export { Error } from './models/error';
