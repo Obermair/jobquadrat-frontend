@@ -15,7 +15,7 @@ export class BaseService {
   ) {
   }
 
-  private _rootUrl: string = '';
+  private _rootUrl: string = 'https://finder-api.simonsteinhuber.com';
 
   /**
    * Returns the root url for all operations in this service. If not set directly in this
