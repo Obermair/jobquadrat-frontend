@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Advertisement } from './api/models';
-import { AdvertisementService } from './api/services';
+import { Advertisement, District } from './api/models';
+import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
- 
-  public advertisements: Advertisement[] = [];
+  public totalAdvertisementAmount: number = 0;
+  public totalAdvertisement: Advertisement[] = [];
+  public currentLimit: number = 50;
+  public displayedAdvertisements: Advertisement[] = [];
+  public districts: District[] = [];
   public advertisementProfile: Advertisement = {
     id: "",
   };
@@ -22,6 +25,7 @@ export class DataService {
 
   constructor(
     private advertisementService: AdvertisementService, 
+    private districtService: DistrictService,
     private userPermissionService: UsersPermissionsUserService) { }
 
   authenticateDevCompany() {
@@ -34,12 +38,30 @@ export class DataService {
     )
   }
 
-  getAdvertisements() {
-    this.advertisementService.advertisementsGet().subscribe(
+  getAmountOfAdvertisements() {
+    this.advertisementService.advertisementsGet({_limit: -1}).subscribe(
       (data: Advertisement[]) => {
-        this.advertisements = data;
+        this.totalAdvertisement = data;
+        this.totalAdvertisementAmount = data.length;
+      }
+    );
+  }
+
+  getAdvertisements() {
+    this.advertisementService.advertisementsGet({_limit: this.currentLimit}).subscribe(
+      (data: Advertisement[]) => {
+        this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
       }
     );
   }
+
+  getDistricts() {
+    this.districtService.districtsGet().subscribe(
+      (data: any) => {
+        this.districts = data;
+      }
+    );
+  }
+
 }

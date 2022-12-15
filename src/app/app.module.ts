@@ -11,6 +11,7 @@ import { AdvertisementTableComponent } from './advertisement-table/advertisement
 import { AdvertisementProfileComponent } from './advertisement-profile/advertisement-profile.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { JwtInterceptor } from './jwt.interceptor';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule
   ],

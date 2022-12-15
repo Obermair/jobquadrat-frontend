@@ -1,7 +1,9 @@
 <aside class="hidden w-96 flex-shrink-0 border-r border-gray-200 xl:order-first xl:flex xl:flex-col">
     <div class="px-6 pt-6 pb-4">
       <h2 class="text-lg font-medium text-gray-900">Job Inserate</h2>
-      <p class="mt-1 text-sm text-gray-600">Suche in {{ dataService.advertisements.length }} Inseraten</p>
+      <p *ngIf="this.searchInput == '' && this.filterDistricts.length == 0" class="mt-1 text-sm text-gray-600">{{ dataService.totalAdvertisementAmount }} Stelleninserate gefunden</p>
+      <p *ngIf="this.searchInput != '' || this.filterDistricts.length > 0" class="mt-1 text-sm text-gray-600">{{ dataService.displayedAdvertisements.length }} Stelleninserate gefunden</p>
+    
       <form class="mt-6 flex space-x-4" action="#">
         <div class="min-w-0 flex-1">
           <label for="search" class="sr-only">Search</label>
@@ -12,24 +14,38 @@
                 <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
               </svg>
             </div>
-            <input type="search" name="search" id="search" class="block w-full rounded-md border-gray-300 pl-10 focus:border-amber-500 focus:ring-amber-500 sm:text-sm" placeholder="Search">
+            <input [(ngModel)]="searchInput" (ngModelChange)="searchAndFilterAdvertisements()" type="search" name="search" id="search" class="block w-full rounded-md border-gray-300 pl-10 focus:border-amber-500 focus:ring-amber-500 sm:text-sm" placeholder="Search">
           </div>
         </div>
-        <button type="submit" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+        <button type="submit" data-dropdown-toggle="dropdownDefaultCheckbox"  class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
           <!-- Heroicon name: mini/location -->
           <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
             <path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd" />
           </svg>
           
           <span class="sr-only">Search</span>
-        </button>
+        </button> 
+
+        <!-- Dropdown menu -->
+        <div id="dropdownDefaultCheckbox" class="hidden z-10 w-48 bg-white rounded divide-y divide-gray-100 shadow max-h-48 overflow-scroll">
+            <ul class="p-3 space-y-3 text-sm text-gray-700 ">
+              <ng-container *ngFor="let district of dataService.districts">
+                <li>
+                  <div class="flex items-center">
+                    <input id="checkbox-item-1" type="checkbox" (change)="districtChanged(district)" [value]="district" class="w-4 h-4 cursor-pointer text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
+                    <label for="checkbox-item-1" class="ml-2 text-sm font-medium text-gray-900 ">{{ district.name }}</label>
+                  </div>
+                </li>
+             </ng-container>
+            </ul>
+        </div>
       </form>
     </div>
  
     <!-- Directory list -->
     <nav class="min-h-0  max-h-screen flex-1 overflow-y-auto overflow-x-hidden" aria-label="Directory">
-        <div class="overflow-hidden shadow rounded-md cursor-pointer">
-            <ul *ngFor="let advertisement of dataService.advertisements" (click)="changeAdvertisementProfile(advertisement)" role="list" class="divide-y divide-gray-200">
+        <div class="overflow-hidden shadow flex flex-col rounded-md cursor-pointer">
+            <ul *ngFor="let advertisement of dataService.displayedAdvertisements" (click)="changeAdvertisementProfile(advertisement)" role="list" class="divide-y divide-gray-200">
               <li>
                 <a class="block">
                   <div class="px-4 py-4 sm:px-6 bg-gray-50 hover:bg-white">
@@ -54,7 +70,7 @@
                           <svg class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd" />
                           </svg>
-                          {{ advertisement.location }}
+                          {{ advertisement.location }} ({{ advertisement.district?.name }})
                         </p>
                       </div>
  
@@ -62,8 +78,10 @@
                   </div>
                 </a>
               </li>
- 
+              
             </ul>
+            <button *ngIf="this.searchInput == '' && this.filterDistricts.length == 0" (click)="loadMoreAdvertisements()" [ngClass]="dataService.totalAdvertisementAmount <= dataService.currentLimit ? 'disabled' : ''" type="button" class="my-2 text-center items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Mehr laden</button>
           </div>
     </nav>
+
   </aside>
