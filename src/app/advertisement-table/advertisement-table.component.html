@@ -25,9 +25,10 @@
         </button>
       </form>
     </div>
+ 
     <!-- Directory list -->
-    <nav class="min-h-0 flex-1 overflow-y-auto" aria-label="Directory">
-        <div class="overflow-hidden shadow sm:rounded-md">
+    <nav class="min-h-0  max-h-screen flex-1 overflow-y-auto overflow-x-hidden" aria-label="Directory">
+        <div class="overflow-hidden shadow rounded-md cursor-pointer">
             <ul *ngFor="let advertisement of dataService.advertisements" (click)="changeAdvertisementProfile(advertisement)" role="list" class="divide-y divide-gray-200">
               <li>
                 <a class="block">
