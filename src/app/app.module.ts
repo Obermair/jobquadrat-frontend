@@ -20,7 +20,7 @@ import { JwtInterceptor } from './jwt.interceptor';
     LostComponent,
     AdvertisementViewComponent,
     AdvertisementTableComponent,
-    AdvertisementProfileComponent
+    AdvertisementProfileComponent,
   ],
   imports: [
     BrowserModule,
