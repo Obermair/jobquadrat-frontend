@@ -7,14 +7,19 @@ import { UsersPermissionsUserService } from './api/services';
   providedIn: 'root'
 })
 export class DataService {
+  //Data Elements
   public totalAdvertisementAmount: number = 0;
   public totalAdvertisement: Advertisement[] = [];
   public currentLimit: number = 50;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
+
   public advertisementProfile: Advertisement = {
     id: "",
   };
+
+  //Style Elements
+  //public mobile
 
   private authParams: any = {
     "body": {
