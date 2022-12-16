@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'https://finder-api.simonsteinhuber.com';
+  rootUrl: string = 'https://api.jobquadrat.com';
 }
 
 /**
