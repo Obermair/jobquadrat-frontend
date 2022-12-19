@@ -3,6 +3,7 @@ import { Advertisement, District } from './api/models';
 import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
 import { BreakpointObserverService } from './breakpoint.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,29 @@ export class DataService {
   constructor(
     private advertisementService: AdvertisementService, 
     private districtService: DistrictService,
-    private userPermissionService: UsersPermissionsUserService,) {}
+    private userPermissionService: UsersPermissionsUserService,
+    public router: Router) {}
+
+  
+  login(username: string, password: string): void {
+    let loginParams: any = {
+      "body": {
+        "identifier": username,
+        "password": password
+      }
+    }
+    this.userPermissionService.authLocalPost(loginParams).subscribe(
+      (data: any) => {
+        localStorage.setItem('jwt_token', data.jwt);
+        localStorage.setItem('jwt_user', data.user);
+
+        this.router.navigate(['/advertisements']);
+      },
+      (err: Error) => {
+        alert('Login failed');
+      }
+    );
+  }
 
   authenticateDevCompany() {
     this.userPermissionService.authLocalPost(this.authParams).subscribe(

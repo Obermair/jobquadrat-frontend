@@ -11,7 +11,7 @@ export class AdvertisementViewComponent implements OnInit {
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
-    this.dataService.authenticateDevCompany();
+    //this.dataService.authenticateDevCompany();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
   }
