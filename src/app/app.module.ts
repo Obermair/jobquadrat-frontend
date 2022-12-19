@@ -12,6 +12,7 @@ import { AdvertisementProfileComponent } from './advertisement-profile/advertise
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
 import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     AdvertisementViewComponent,
     AdvertisementTableComponent,
     AdvertisementProfileComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
