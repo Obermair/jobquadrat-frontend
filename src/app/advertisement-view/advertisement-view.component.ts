@@ -8,12 +8,16 @@ import { DataService } from '../data.service';
 })
 export class AdvertisementViewComponent implements OnInit {
 
-  constructor(private dataService: DataService) { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
     this.dataService.authenticateDevCompany();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
   }
+
+  switchToTable() {
+    this.dataService.currentView = "table";
+  }  
 
 }

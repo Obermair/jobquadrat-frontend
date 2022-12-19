@@ -7,9 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingComponent implements OnInit {
 
+  openMenu: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  toggleMenu() {
+    this.openMenu = !this.openMenu;
+  }
+
+  scrollIntoView(elem: string) {
+    document.querySelector(elem)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
 }

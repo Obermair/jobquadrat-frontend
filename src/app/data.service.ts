@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Advertisement, District } from './api/models';
 import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
+import { BreakpointObserverService } from './breakpoint.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class DataService {
   };
 
   //Style Elements
-  //public mobile
+  currentBreakpoint: string = "xl";
+  currentView: string = "table";
 
   private authParams: any = {
     "body": {
@@ -31,12 +33,11 @@ export class DataService {
   constructor(
     private advertisementService: AdvertisementService, 
     private districtService: DistrictService,
-    private userPermissionService: UsersPermissionsUserService) { }
+    private userPermissionService: UsersPermissionsUserService,) {}
 
   authenticateDevCompany() {
     this.userPermissionService.authLocalPost(this.authParams).subscribe(
       (data: any) => {
-        console.log(data.jwt);
         localStorage.setItem('jwt_token', data.jwt);
         localStorage.setItem('jwt_user', data.user);
       }

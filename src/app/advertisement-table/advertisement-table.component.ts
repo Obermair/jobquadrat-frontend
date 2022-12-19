@@ -26,6 +26,7 @@ export class AdvertisementTableComponent implements OnInit {
   }
 
   changeAdvertisementProfile(advertisement: Advertisement){
+    this.dataService.currentView = "profile";
     this.dataService.advertisementProfile = advertisement;
   }
 
