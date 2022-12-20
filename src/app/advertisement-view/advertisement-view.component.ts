@@ -12,8 +12,14 @@ export class AdvertisementViewComponent implements OnInit {
 
   ngOnInit(): void {
     //this.dataService.authenticateDevCompany();
+    this.loadDefaults();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
+  }
+
+  loadDefaults(){
+    this.dataService.currentLimit = 50;
+    this.dataService.getAdvertisements();
   }
 
   switchToTable() {

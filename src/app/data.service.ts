@@ -85,6 +85,7 @@ export class DataService {
     );
   }
 
+  
   getDistricts() {
     this.districtService.districtsGet().subscribe(
       (data: any) => {

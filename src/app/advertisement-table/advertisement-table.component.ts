@@ -15,7 +15,6 @@ export class AdvertisementTableComponent implements OnInit {
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
-    this.loadDefaultAdvertisements();
   }
 
   loadDefaultAdvertisements(){

@@ -42,9 +42,7 @@
     <div class="mx-auto max-w-7xl">
         <div class="flex max-h-full">
              <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
-              <div class="relative z-0 flex flex-1 overflow-hidden">
-
-                
+              <div class="relative z-0 flex flex-1 overflow-hidden">     
 
                 <app-advertisement-table [ngClass]="{'hidden': dataService.currentView == 'profile' && (dataService.currentBreakpoint == 'sm' || dataService.currentBreakpoint == 'xs')}"></app-advertisement-table>
                 <main [ngClass]="{'hidden': dataService.currentView == 'table' && (dataService.currentBreakpoint == 'sm' || dataService.currentBreakpoint == 'xs')}" class="relative z-0 flex-1 overflow-y-auto focus:outline-none">

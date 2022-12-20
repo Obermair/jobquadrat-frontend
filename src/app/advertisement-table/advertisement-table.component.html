@@ -1,7 +1,8 @@
 <aside class="w-96 flex-shrink-0 border-r border-gray-200 flex flex-col">
     <div class="px-6 pt-6 pb-4">
       <h2 class="text-lg font-medium text-gray-900">Job Inserate</h2>
-      <p *ngIf="this.searchInput == '' && this.filterDistricts.length == 0" class="mt-1 text-sm text-gray-600">{{ dataService.totalAdvertisementAmount }} Stelleninserate gefunden</p>
+      
+      <p *ngIf="this.searchInput == '' && this.filterDistricts.length == 0 && dataService.totalAdvertisementAmount != 0" class="mt-1 text-sm text-gray-600">{{ dataService.totalAdvertisementAmount }} Stelleninserate gefunden</p>
       <p *ngIf="this.searchInput != '' || this.filterDistricts.length > 0" class="mt-1 text-sm text-gray-600">{{ dataService.displayedAdvertisements.length }} Stelleninserate gefunden</p>
     
       <form class="mt-6 flex space-x-4" action="#">
