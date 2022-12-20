@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -8,13 +9,14 @@ import { DataService } from '../data.service';
 })
 export class AdvertisementViewComponent implements OnInit {
 
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     //this.dataService.authenticateDevCompany();
     this.loadDefaults();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
+    this.dataService.currentUser = localStorage.getItem('jwt_user') || '';
   }
 
   loadDefaults(){
@@ -25,5 +27,10 @@ export class AdvertisementViewComponent implements OnInit {
   switchToTable() {
     this.dataService.currentView = "table";
   }  
+
+  logout(){
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 
 }

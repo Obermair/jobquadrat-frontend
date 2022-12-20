@@ -13,6 +13,8 @@ export class DataService {
   public totalAdvertisementAmount: number = 0;
   public totalAdvertisement: Advertisement[] = [];
   public currentLimit: number = 50;
+  public currentUser: string = '';
+  public isLoading: boolean = true;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
 
@@ -48,8 +50,7 @@ export class DataService {
     this.userPermissionService.authLocalPost(loginParams).subscribe(
       (data: any) => {
         localStorage.setItem('jwt_token', data.jwt);
-        localStorage.setItem('jwt_user', data.user);
-
+        localStorage.setItem('jwt_user', data.user.username);
         this.router.navigate(['/advertisements']);
       },
       (err: Error) => {
@@ -81,6 +82,7 @@ export class DataService {
       (data: Advertisement[]) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
+        this.isLoading = false;
       }
     );
   }
