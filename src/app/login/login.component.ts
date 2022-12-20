@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -11,9 +12,12 @@ export class LoginComponent implements OnInit {
   email = "";
   password = "";
 
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
+    if (localStorage.getItem('jwt_token') != null) {
+      this.router.navigate(['/advertisements']);
+    }
   }
 
   login(){
