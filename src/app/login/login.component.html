@@ -6,7 +6,7 @@
           <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Log dich hier ein</h2>
           <p class="mt-2 text-sm text-gray-600">
             Oder
-            <a href="#" class="font-medium text-amber-600 hover:text-amber-500">registriere dich hier</a>
+            <a href="#" class="font-medium cursor-pointer text-amber-600 hover:text-amber-500">registriere dich hier</a>
           </p>
         </div>
   
@@ -18,14 +18,14 @@
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email Addresse</label>
                 <div class="mt-1">
-                  <input [(ngModel)]="email" id="email" name="email" type="email" autocomplete="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
+                  <input [(ngModel)]="email" placeholder="mail@company.com" id="email" name="email" type="email" autocomplete="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
                 </div>
               </div>
   
               <div class="space-y-1">
                 <label for="password" class="block text-sm font-medium text-gray-700">Passwort</label>
                 <div class="mt-1">
-                  <input [(ngModel)]="password" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
+                  <input [(ngModel)]="password" placeholder="*******" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
                 </div>
               </div>
               <p *ngIf="dataService.wrongCredentials" class="mt-2 text-sm font-bold text-red-600">
