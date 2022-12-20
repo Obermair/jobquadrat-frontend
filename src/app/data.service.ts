@@ -15,6 +15,7 @@ export class DataService {
   public currentLimit: number = 50;
   public currentUser: string = '';
   public isLoading: boolean = true;
+  public wrongCredentials: boolean = false;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
 
@@ -54,7 +55,7 @@ export class DataService {
         this.router.navigate(['/advertisements']);
       },
       (err: Error) => {
-        alert('Login failed');
+        this.wrongCredentials = true;
       }
     );
   }

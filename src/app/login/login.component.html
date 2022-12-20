@@ -3,7 +3,7 @@
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
           <img class="h-12 w-auto" src="../../assets/images/logo3.PNG" alt="Your Company">
-          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Log dich hier ein</h2>
           <p class="mt-2 text-sm text-gray-600">
             Oder
             <a href="#" class="font-medium text-amber-600 hover:text-amber-500">registriere dich hier</a>
@@ -16,25 +16,28 @@
           <div class="mt-6">
             <form action="#" method="POST" class="space-y-6">
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Addresse</label>
                 <div class="mt-1">
                   <input [(ngModel)]="email" id="email" name="email" type="email" autocomplete="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
                 </div>
               </div>
   
               <div class="space-y-1">
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <label for="password" class="block text-sm font-medium text-gray-700">Passwort</label>
                 <div class="mt-1">
                   <input [(ngModel)]="password" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-amber-500 sm:text-sm">
                 </div>
               </div>
+              <p *ngIf="dataService.wrongCredentials" class="mt-2 text-sm font-bold text-red-600">
+                Falsche Email oder falsches Passwort eingegeben.
+              </p>
+
   
               <div class="flex items-center justify-between">
                 <div class="text-sm">
-                  <a href="#" class="font-medium text-amber-600 hover:text-amber-500">Forgot your password?</a>
+                  <a href="#" class="font-medium text-amber-600 hover:text-amber-500">Passwort vergessen?</a>
                 </div>
               </div>
-
 
               <div>
                 <button (click)="login()" type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Sign in</button>
