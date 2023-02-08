@@ -133,6 +133,12 @@ export class AdvertisementService extends BaseService {
     );
   }
 
+
+  advertisementsCustomFilterGet(filterParams: string){
+    //send a get request to the server with the filter params
+    return this.http.get(this.rootUrl + AdvertisementService.AdvertisementsGetPath + filterParams);
+  }
+
   /**
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `advertisementsGet$Response()` instead.
@@ -213,6 +219,11 @@ export class AdvertisementService extends BaseService {
       map((r: StrictHttpResponse<Array<Advertisement>>) => r.body as Array<Advertisement>)
     );
   }
+
+
+
+ 
+
 
   /**
    * Path part for operation advertisementsPost

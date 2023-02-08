@@ -27,13 +27,6 @@ export class DataService {
   currentBreakpoint: string = "xl";
   currentView: string = "table";
 
-  private authParams: any = {
-    "body": {
-      "identifier": "contact@fronius.at",
-      "password": "Hello1234"
-    }
-  }
-
   constructor(
     private advertisementService: AdvertisementService, 
     private districtService: DistrictService,
@@ -60,20 +53,10 @@ export class DataService {
     );
   }
 
-  authenticateDevCompany() {
-    this.userPermissionService.authLocalPost(this.authParams).subscribe(
-      (data: any) => {
-        localStorage.setItem('jwt_token', data.jwt);
-        localStorage.setItem('jwt_user', data.user);
-      }
-    )
-  }
-
   getAmountOfAdvertisements() {
-    this.advertisementService.advertisementsGet({_limit: -1}).subscribe(
-      (data: Advertisement[]) => {
-        this.totalAdvertisement = data;
-        this.totalAdvertisementAmount = data.length;
+    this.advertisementService.advertisementsCountGet().subscribe(
+      (data: any) => {
+        this.totalAdvertisementAmount = data;
       }
     );
   }
@@ -88,6 +71,50 @@ export class DataService {
     );
   }
 
+  getFilteredAdvertisements(searchInput: string) {
+    let filterParams: string = '?_where[_or][0][jobTitle_contains]=' + searchInput + '&_where[_or][1][assignment_contains]=' + searchInput + '&_where[_or][2][benefits_contains]=' + searchInput + '&_where[_or][3][location_contains]=' + searchInput + '&_where[_or][4][requirements_contains]=' + searchInput + '&_where[_or][5][salary_contains]=' + searchInput;
+ 
+    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+      (data: any) => {
+        this.displayedAdvertisements = data;
+        this.advertisementProfile = data[0];
+        this.isLoading = false;
+      }
+    );
+  }
+
+  getFilteredAdvertisementsByDistricts(districts: District[]) {
+    let filterParams: string = '?_where[_or][0][district.id]=' + districts[0].id;
+    for (let i = 1; i < districts.length; i++) {
+      filterParams += '&_where[_or][' + i + '][district.id]=' + districts[i].id;
+    }
+
+    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+      (data: any) => {
+        this.displayedAdvertisements = data;
+        this.advertisementProfile = data[0];
+        this.isLoading = false;
+      }
+   );
+  }
+
+  getFilteredAdvertisementsByDistrictsAndSearch(districts: District[], searchInput: string) {
+    let filterParams: string = '?_where[_and][0][_or][0][district.id]=' + districts[0].id;
+    for (let i = 1; i < districts.length; i++) {
+      filterParams += '&_where[_and][0][_or][' + i + '][district.id]=' + districts[i].id;
+    }
+
+    filterParams += '&_where[_and][1][_or][0][jobTitle_contains]=' + searchInput + '&_where[_and][1][_or][1][assignment_contains]=' + searchInput + '&_where[_and][1][_or][2][benefits_contains]=' + searchInput + '&_where[_and][1][_or][3][location_contains]=' + searchInput + '&_where[_and][1][_or][4][requirements_contains]=' + searchInput + '&_where[_and][1][_or][5][salary_contains]=' + searchInput;
+
+
+    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+      (data: any) => {
+        this.displayedAdvertisements = data;
+        this.advertisementProfile = data[0];
+        this.isLoading = false;
+      }
+    );
+  }
   
   getDistricts() {
     this.districtService.districtsGet().subscribe(
@@ -96,5 +123,4 @@ export class DataService {
       }
     );
   }
-
 }
