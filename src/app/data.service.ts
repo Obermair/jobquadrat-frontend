@@ -84,7 +84,7 @@ export class DataService {
         this.userPermissionService.usersIdPut(userParams).subscribe(
           (data: any) => {
             this.registerSuccess = true;
-            localStorage.setItem('auth_user', data.user.email);
+            localStorage.setItem('auth_user', data.email);
           }
         );
       },
