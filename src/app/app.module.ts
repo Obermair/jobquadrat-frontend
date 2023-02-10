@@ -14,6 +14,8 @@ import { JwtInterceptor } from './jwt.interceptor';
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { RegisterComponent } from './register/register.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { RegisterComponent } from './register/register.component';
     AdvertisementProfileComponent,
     SpinnerComponent,
     RegisterComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

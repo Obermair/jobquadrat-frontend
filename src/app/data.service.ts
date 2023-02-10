@@ -16,10 +16,14 @@ export class DataService {
   public currentUser: string = '';
   public isLoading: boolean = true;
   public wrongCredentials: boolean = false;
+  public wrongMail: boolean = false;
+  public forgotSent: boolean = false;
   public authError: boolean = false;
+  public resetSent: boolean = false;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
   public registerSuccess: boolean = false;
+  public resetPath: string = "https://www.jobquadrat.com/reset-password";
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -90,6 +94,37 @@ export class DataService {
     );
   }
 
+  forgotPassword(email: string){
+    let forgotParams: any = {
+      "body": {
+        "email": email,
+        "url": this.resetPath
+      }
+    }
+    this.userPermissionService.authForgotPasswordPost(forgotParams).subscribe(
+      (data: any) => {
+        this.forgotSent = true;
+      },
+      (err: Error) => {
+        this.wrongMail = true;
+      }
+    );
+  }
+
+  resetPassword(password: string, code: string){
+    let resetParams: any = {
+      "body": {
+      } 
+    }
+
+    this.userPermissionService.authResetPasswordPost(resetParams).subscribe(
+      (data: any) => {
+        this.resetSent = true;
+      },
+      (err: Error) => {
+      }
+    );
+  }
 
   getAmountOfAdvertisements() {
     this.advertisementService.advertisementsCountGet().subscribe(
