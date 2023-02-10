@@ -111,9 +111,12 @@ export class DataService {
     );
   }
 
-  resetPassword(password: string, code: string){
+  resetPassword(password: string, passwordRepeat: string, code: string){
     let resetParams: any = {
       "body": {
+        "code": code,
+        "password": password,
+        "passwordConfirmation": passwordRepeat,
       } 
     }
 

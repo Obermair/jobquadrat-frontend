@@ -11,7 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes: Routes = [
-  {path: 'reset-password', component: ResetPasswordComponent},
+  {path: 'reset-password/:code', component: ResetPasswordComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
