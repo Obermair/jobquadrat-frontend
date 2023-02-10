@@ -6,9 +6,11 @@ import { AuthGuardService } from './auth-guard.service';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { LostComponent } from './lost/lost.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'advertisements', component: AdvertisementViewComponent, canActivate: [AuthGuardService]},
   {path: '404', component: LostComponent},
   //wildcard routes

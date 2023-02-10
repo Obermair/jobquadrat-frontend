@@ -13,6 +13,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     AdvertisementTableComponent,
     AdvertisementProfileComponent,
     SpinnerComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

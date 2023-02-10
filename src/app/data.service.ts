@@ -16,6 +16,7 @@ export class DataService {
   public currentUser: string = '';
   public isLoading: boolean = true;
   public wrongCredentials: boolean = false;
+  public authError: boolean = false;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
 
@@ -52,6 +53,41 @@ export class DataService {
       }
     );
   }
+
+  register(name: string, email: string, password: string, description: string, role: number){
+    let createParams: any = {
+      "body": {
+        "username": name,
+        "email": email,
+        "password": password,
+        "description": description
+      },
+    }
+
+    let userParams: any;
+    
+    this.userPermissionService.authLocalRegisterPost(createParams).subscribe(
+      (data: any) => {
+        userParams = {
+          "id": data.user.id,
+          "body": {
+            "role": {
+              "id": role,
+            }
+          }
+        }
+        this.userPermissionService.usersIdPut(userParams).subscribe(
+          (data: any) => {
+            //this.login(email, password);
+          }
+        );
+      },
+      (err: Error) => {
+        this.authError = true;
+      }
+    );
+  }
+
 
   getAmountOfAdvertisements() {
     this.advertisementService.advertisementsCountGet().subscribe(
