@@ -19,6 +19,7 @@ export class DataService {
   public authError: boolean = false;
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
+  public registerSuccess: boolean = false;
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -78,7 +79,8 @@ export class DataService {
         }
         this.userPermissionService.usersIdPut(userParams).subscribe(
           (data: any) => {
-            //this.login(email, password);
+            this.registerSuccess = true;
+            localStorage.setItem('auth_user', data.user.email);
           }
         );
       },

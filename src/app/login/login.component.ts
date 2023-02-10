@@ -11,12 +11,17 @@ export class LoginComponent implements OnInit {
 
   email = "";
   password = "";
+  showAuthMessage = false;
 
   constructor(public dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     if (localStorage.getItem('jwt_token') != null) {
       this.router.navigate(['/advertisements']);
+    }
+    if (localStorage.getItem('auth_user') != null) {
+      this.showAuthMessage = true;
+      this.email = localStorage.getItem('auth_user') || '';
     }
   }
 
