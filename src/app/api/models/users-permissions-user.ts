@@ -21,6 +21,7 @@ export interface UsersPermissionsUser {
   confirmed?: boolean;
   email: string;
   id: string;
+  description: string;
   provider?: string;
   role?: {
 'id': string;

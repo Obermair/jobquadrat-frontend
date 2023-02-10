@@ -30,6 +30,7 @@ export interface Advertisement {
 'advertisements'?: Array<string>;
 'created_by'?: string;
 'updated_by'?: string;
+'description'?: string;
 };
   workingTime?: string;
 }
