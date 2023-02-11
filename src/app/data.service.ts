@@ -14,6 +14,7 @@ export class DataService {
   public totalAdvertisement: Advertisement[] = [];
   public currentLimit: number = 50;
   public currentUser: string = '';
+  public currentUserId: string = '';
   public isLoading: boolean = true;
   public wrongCredentials: boolean = false;
   public wrongMail: boolean = false;
@@ -23,6 +24,7 @@ export class DataService {
   public displayedAdvertisements: Advertisement[] = [];
   public districts: District[] = [];
   public registerSuccess: boolean = false;
+  public userAdvertisements: Advertisement[] = [];
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
 
   public advertisementProfile: Advertisement = {
@@ -51,6 +53,7 @@ export class DataService {
       (data: any) => {
         localStorage.setItem('jwt_token', data.jwt);
         localStorage.setItem('jwt_user', data.user.username);
+        localStorage.setItem('jwt_user_id', data.user.id);
         this.router.navigate(['/advertisements']);
       },
       (err: Error) => {
@@ -155,6 +158,17 @@ export class DataService {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
         this.isLoading = false;
+      }
+    );
+  }
+
+  getAdvertisementsByUser() {
+    let userParams: string = '?_where[users_permissions_user.id]=' + this.currentUserId;
+    userParams += '&_limit=' + 50;
+    this.advertisementService.advertisementsCustomFilterGet(userParams).subscribe(
+      (data: any) => {
+        this.userAdvertisements = data;
+        console.log(data);
       }
     );
   }

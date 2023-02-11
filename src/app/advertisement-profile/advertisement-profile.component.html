@@ -53,45 +53,44 @@
       </div>
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Email</dt>
-          <dd class="mt-1 text-sm text-gray-900">{{ dataService.advertisementProfile.users_permissions_user?.email }} </dd>
+          <dt class="text-sm font-bold text-gray-600">Email</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.users_permissions_user?.email }} </dd>
         </div>
 
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Gehalt</dt>
-          <dd class="mt-1 text-sm text-gray-900">{{ dataService.advertisementProfile.salary }}</dd>
+          <dt class="text-sm font-bold text-gray-600">Gehalt</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary }}</dd>
         </div>
 
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Arbeitszeit</dt>
-          <dd class="mt-1 text-sm text-gray-900">{{ dataService.advertisementProfile.workingTime }}</dd>
+          <dt class="text-sm font-bold text-gray-600">Arbeitszeit</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.workingTime }}</dd>
         </div>
 
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Arbeitsort</dt>
-          <dd class="mt-1 text-sm text-gray-900">{{ dataService.advertisementProfile.location }}</dd>
+          <dt class="text-sm font-bold text-gray-600">Arbeitsort</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.location }}</dd>
         </div>
 
 
         <div class="sm:col-span-2">
-          <dt class="text-sm font-medium text-gray-500">Aufgabengebiet</dt>
-          <dd class="mt-1 max-w-prose space-y-5 text-sm text-gray-900">
+          <dt class="text-sm font-bold text-gray-600">Aufgabengebiet</dt>
+          <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
             <span [innerHtml]="dataService.advertisementProfile.assignment"></span>
            </dd>
         </div>
 
         <div class="sm:col-span-2">
-            <dt class="text-sm font-medium text-gray-500">Anforderungen</dt>
-            <dd class="mt-1 max-w-prose space-y-5 text-sm text-gray-900">
+            <dt class="text-sm font-bold text-gray-600">Anforderungen</dt>
+            <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
                 <span [innerHtml]="dataService.advertisementProfile.requirements"></span>
              </dd>
           </div>
 
           <div class="sm:col-span-2">
-            <dt class="text-sm font-medium text-gray-500">Benefits</dt>
-            <dd class="mt-1 max-w-prose space-y-5 text-sm text-gray-900">
+            <dt class="text-sm font-bold text-gray-600">Benefits</dt>
+            <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
                 <span [innerHtml]="dataService.advertisementProfile.benefits"></span>
-             </dd>
           </div>
       </dl>
     </div>

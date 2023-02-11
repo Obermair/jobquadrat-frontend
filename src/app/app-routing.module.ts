@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { LostComponent } from './lost/lost.component';
+import { OverviewComponent } from './overview/overview.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
@@ -15,7 +16,7 @@ const routes: Routes = [
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'advertisements', component: AdvertisementViewComponent, canActivate: [AuthGuardService]},
+  {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]},
   {path: '404', component: LostComponent},
   //wildcard routes
   { path: '', component: LandingComponent, pathMatch: 'full'},

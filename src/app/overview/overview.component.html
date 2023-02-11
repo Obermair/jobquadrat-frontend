@@ -1,0 +1,37 @@
+ 
+<!-- Header -->
+<div class="relative bg-gray-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <div class="flex items-center justify-between md:justify-start md:space-x-10 border-b-2 border-gray-100 py-6">
+        <div class="hidden md:flex md:flex-1 justify-start lg:w-0 lg:flex-1">
+          <a routerLink="/advertisements">
+            <span class="sr-only">jobquadrat</span>
+            <img class="h-16" src="../../assets/images/logo.png" alt="">
+          </a>
+        </div>
+        <nav class="-my-2 -mr-2">
+            <a [ngClass]="{'text-amber-500': view == 'showAdvertisements', 'text-gray-500': view != 'showAdvertisements'}" (click)="showView('showAdvertisements')"  class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-900">Inserate anzeigen</a>
+            <a [ngClass]="{'text-amber-500': view == 'createAdvertisement', 'text-gray-500': view != 'createAdvertisement'}" (click)="showView('createAdvertisement')"  class="text-base mx-2 cursor-pointer font-medium hover:text-amber-900">Inserate erstellen</a>
+        </nav>
+        <div class="items-center justify-end md:flex md:flex-1 lg:w-0">
+            <a class="group block flex-shrink-0">
+                <div class="flex items-center">
+                  <div>
+                    <span class="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                        <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </span>
+                </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ dataService.currentUser }}</p>
+                    <p (click)="logout()" class="text-xs cursor-pointer font-medium text-gray-500 group-hover:text-gray-700">Sign out</p>
+                  </div>
+                </div>
+              </a>
+        </div>
+      </div>
+    </div>
+</div>
+<app-advertisement-view *ngIf="view == 'showAdvertisements'"></app-advertisement-view>
+<app-create-advertisement *ngIf="view == 'createAdvertisement'"></app-create-advertisement>

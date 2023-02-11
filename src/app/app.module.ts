@@ -16,6 +16,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { OverviewComponent } from './overview/overview.component';
+import { CreateAdvertisementComponent } from './create-advertisement/create-advertisement.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     RegisterComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    OverviewComponent,
+    CreateAdvertisementComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,15 +9,14 @@ import { DataService } from '../data.service';
 })
 export class AdvertisementViewComponent implements OnInit {
 
-  constructor(public dataService: DataService, private router: Router) { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
     //this.dataService.authenticateDevCompany();
     this.loadDefaults();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
-    this.dataService.currentUser = localStorage.getItem('jwt_user') || '';
-  }
+}
 
   loadDefaults(){
     this.dataService.currentLimit = 50;
@@ -27,10 +26,4 @@ export class AdvertisementViewComponent implements OnInit {
   switchToTable() {
     this.dataService.currentView = "table";
   }  
-
-  logout(){
-    localStorage.clear();
-    this.router.navigate(['/login']);
-  }
-
 }
