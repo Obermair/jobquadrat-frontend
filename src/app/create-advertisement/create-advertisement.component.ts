@@ -15,4 +15,9 @@ export class CreateAdvertisementComponent implements OnInit {
     this.dataService.getAdvertisementsByUser();
   }
 
+  loadMoreAdvertisements(){
+    this.dataService.currentAdvertisementLimit += 30;
+    this.dataService.getAdvertisementsByUser();
+  }
+
 }

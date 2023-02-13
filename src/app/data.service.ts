@@ -25,6 +25,7 @@ export class DataService {
   public districts: District[] = [];
   public registerSuccess: boolean = false;
   public userAdvertisements: Advertisement[] = [];
+  public currentAdvertisementLimit: number = 30;
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
 
   public advertisementProfile: Advertisement = {
@@ -164,7 +165,7 @@ export class DataService {
 
   getAdvertisementsByUser() {
     let userParams: string = '?_where[users_permissions_user.id]=' + this.currentUserId;
-    userParams += '&_limit=' + 50;
+    userParams += '&_limit=' + this.currentAdvertisementLimit;
     this.advertisementService.advertisementsCustomFilterGet(userParams).subscribe(
       (data: any) => {
         this.userAdvertisements = data;
