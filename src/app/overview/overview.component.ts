@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -9,13 +9,12 @@ import { DataService } from '../data.service';
 })
 export class OverviewComponent implements OnInit {
 
-  view: string = "showAdvertisements";
-
-  constructor(public dataService: DataService, private router: Router) { }
+  constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.dataService.currentUser = localStorage.getItem('jwt_user') || '';
     this.dataService.currentUserId = localStorage.getItem('jwt_user_id') || '';
+    this.dataService.currentUserRole = localStorage.getItem('jwt_user_role') || '';
   }
 
   logout(){
@@ -23,7 +22,12 @@ export class OverviewComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  showView(view: string){
-    this.view = view;
+  create(){
+    this.router.navigate(['create'], {relativeTo:this.route});
   }
+
+  view(){
+    this.router.navigate(['view'], {relativeTo:this.route});
+  }
+  
 }

@@ -9,9 +9,9 @@
             <img class="h-16" src="../../assets/images/logo.png" alt="">
           </a>
         </div>
-        <nav class="-my-2 -mr-2">
-            <a [ngClass]="{'text-amber-500': view == 'showAdvertisements', 'text-gray-500': view != 'showAdvertisements'}" (click)="showView('showAdvertisements')"  class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-900">Inserate anzeigen</a>
-            <a [ngClass]="{'text-amber-500': view == 'createAdvertisement', 'text-gray-500': view != 'createAdvertisement'}" (click)="showView('createAdvertisement')"  class="text-base mx-2 cursor-pointer font-medium hover:text-amber-900">Inserate erstellen</a>
+        <nav *ngIf="this.dataService.currentUserRole == 'Company'" class="-my-2 -mr-2">
+            <a (click)="view()" class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-500">Inserate anzeigen</a>
+            <a (click)="create()" routerLink="view" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Inserate erstellen</a>
         </nav>
         <div class="items-center justify-end md:flex md:flex-1 lg:w-0">
             <a class="group block flex-shrink-0">
@@ -33,5 +33,4 @@
       </div>
     </div>
 </div>
-<app-advertisement-view *ngIf="view == 'showAdvertisements'"></app-advertisement-view>
-<app-create-advertisement *ngIf="view == 'createAdvertisement'"></app-create-advertisement>
+<router-outlet></router-outlet>

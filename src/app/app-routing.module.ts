@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdvertisementViewComponent } from './advertisement-view/advertisement-view.component';
 import { AppComponent } from './app.component';
 import { AuthGuardService } from './auth-guard.service';
+import { CreateAdvertisementComponent } from './create-advertisement/create-advertisement.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
@@ -16,7 +17,12 @@ const routes: Routes = [
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]},
+  {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]
+  , children: [
+    {path: '', redirectTo: 'view', pathMatch: 'full'},
+    {path: 'create', component: CreateAdvertisementComponent},
+    {path: 'view', component: AdvertisementViewComponent},
+  ]},
   {path: '404', component: LostComponent},
   //wildcard routes
   { path: '', component: LandingComponent, pathMatch: 'full'},

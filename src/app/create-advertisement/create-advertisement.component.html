@@ -1,8 +1,10 @@
-<div *ngIf="dataService.userAdvertisements.length == 0">
+
+<div *ngIf="this.dataService.currentUserRole == 'Company'">
+<div *ngIf="dataService.userAdvertisementsLoading">
     <app-spinner></app-spinner>
 </div>
   
-<div *ngIf="dataService.userAdvertisements.length > 0" class="mx-auto flex flex-col max-w-6xl pb-5">
+<div *ngIf="!dataService.userAdvertisementsLoading"  class="mx-auto flex flex-col max-w-6xl pb-5">
 
     <div class="mx-auto my-4 flex row-reverse mt-4">
         <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
@@ -68,4 +70,5 @@
         <button *ngIf="dataService.userAdvertisements.length == dataService.currentAdvertisementLimit" (click)="loadMoreAdvertisements()" type="button" class="my-2 inline-flex  text-center items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Mehr laden</button>
     </div>
 </div>  
+</div>
  
