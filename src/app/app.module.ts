@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,7 +18,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { OverviewComponent } from './overview/overview.component';
 import { CreateAdvertisementComponent } from './create-advertisement/create-advertisement.component';
-
+import { SaveAdvertisementComponent } from './save-advertisement/save-advertisement.component';
+import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +36,8 @@ import { CreateAdvertisementComponent } from './create-advertisement/create-adve
     ResetPasswordComponent,
     OverviewComponent,
     CreateAdvertisementComponent,
+    SaveAdvertisementComponent,
+    UpdateAdvertisementComponent,
   ],
   imports: [
     BrowserModule,

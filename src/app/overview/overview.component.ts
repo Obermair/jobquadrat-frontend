@@ -29,5 +29,6 @@ export class OverviewComponent implements OnInit {
   view(){
     this.router.navigate(['view'], {relativeTo:this.route});
   }
+
   
 }

@@ -6,4 +6,5 @@ export { UsersPermissionsRole } from './models/users-permissions-role';
 export { NewUsersPermissionsRole } from './models/new-users-permissions-role';
 export { UsersPermissionsUser } from './models/users-permissions-user';
 export { NewUsersPermissionsUser } from './models/new-users-permissions-user';
+export { PlacementBonus } from './models/placementBonus';
 export { Error } from './models/error';

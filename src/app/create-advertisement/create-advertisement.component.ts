@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { DataService } from '../data.service';
 })
 export class CreateAdvertisementComponent implements OnInit {
 
-  constructor(public dataService: DataService, private router: Router) { }
+  constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.dataService.getAdvertisementsByUser();
@@ -18,6 +18,13 @@ export class CreateAdvertisementComponent implements OnInit {
   loadMoreAdvertisements(){
     this.dataService.currentAdvertisementLimit += 30;
     this.dataService.getAdvertisementsByUser();
+  } 
+
+  save(){
+    this.router.navigate(['save'], {relativeTo:this.route});
   }
 
+  edit(advertisementId: string){
+    this.router.navigate(['update/' + advertisementId], {relativeTo:this.route});
+  }
 }

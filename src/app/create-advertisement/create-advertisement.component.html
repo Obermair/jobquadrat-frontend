@@ -7,7 +7,7 @@
 <div *ngIf="!dataService.userAdvertisementsLoading"  class="mx-auto flex flex-col max-w-6xl pb-5">
 
     <div class="mx-auto my-4 flex row-reverse mt-4">
-        <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+        <button (click)="save()" type="button" class="inline-flex items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="-ml-1 mr-3 h-5 w-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
@@ -19,7 +19,7 @@
         
         <ul role="list" class="divide-y  divide-gray-200 w-full">
         <li *ngFor="let userAd of dataService.userAdvertisements">
-            <a href="#" class="block hover:bg-gray-50">
+            <a (click)="edit(userAd.id)" class="block hover:bg-gray-50">
             <div class="flex items-center px-4 py-4 sm:px-6">
                 <div class="flex min-w-0 flex-1 items-center">
                 <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -39,7 +39,7 @@
                     <div>
                         <p class="text-sm text-gray-900">
                         Erstellt am
-                        <time datetime="2020-01-07">{{ userAd.published_at | date:'shortDate' }}</time>
+                        <time datetime="2020-01-07">{{ userAd.published_at | date: 'dd.MM.yyyy' }}</time>
                         </p>
                         <p class="mt-2 flex items-center text-sm text-gray-500">
                         <!-- Heroicon name: mini/check-circle -->
@@ -60,11 +60,8 @@
                 </div>
             </div>
             </a>
-            
         </li>
-    
         </ul>
-
     </div>
     <div class="mx-auto max-w-6xl ">
         <button *ngIf="dataService.userAdvertisements.length == dataService.currentAdvertisementLimit" (click)="loadMoreAdvertisements()" type="button" class="my-2 inline-flex  text-center items-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Mehr laden</button>

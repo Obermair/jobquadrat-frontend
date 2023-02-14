@@ -11,6 +11,8 @@ import { LostComponent } from './lost/lost.component';
 import { OverviewComponent } from './overview/overview.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { SaveAdvertisementComponent } from './save-advertisement/save-advertisement.component';
+import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
 
 const routes: Routes = [
   {path: 'reset-password/:code', component: ResetPasswordComponent},
@@ -20,8 +22,10 @@ const routes: Routes = [
   {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]
   , children: [
     {path: '', redirectTo: 'view', pathMatch: 'full'},
-    {path: 'create', component: CreateAdvertisementComponent},
     {path: 'view', component: AdvertisementViewComponent},
+    {path: 'create', component: CreateAdvertisementComponent},
+    {path: 'create/save', component: SaveAdvertisementComponent},
+    {path: 'create/update/:id', component: UpdateAdvertisementComponent}
   ]},
   {path: '404', component: LostComponent},
   //wildcard routes

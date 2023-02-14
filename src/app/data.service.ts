@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Advertisement, District } from './api/models';
+import { Advertisement, District, PlacementBonus } from './api/models';
 import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
 import { BreakpointObserverService } from './breakpoint.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,8 @@ export class DataService {
   public currentAdvertisementLimit: number = 30;
   public userAdvertisementsLoading: boolean = true;
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
+  public currentAdvertisementBonuses: PlacementBonus[] = [];
+  public activePlacementBonus: number = 0;
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -42,7 +45,9 @@ export class DataService {
     private advertisementService: AdvertisementService, 
     private districtService: DistrictService,
     private userPermissionService: UsersPermissionsUserService,
-    public router: Router) {}
+    private http: HttpClient,
+    public router: Router,
+  ) {}
 
   
   login(username: string, password: string): void {
@@ -136,6 +141,8 @@ export class DataService {
     );
   }
 
+   
+
   getAmountOfAdvertisements() {
     this.advertisementService.advertisementsCountGet().subscribe(
       (data: any) => {
@@ -166,6 +173,7 @@ export class DataService {
     );
   }
 
+ 
   getAdvertisementsByUser() {
     let userParams: string = '?_where[users_permissions_user.id]=' + this.currentUserId;
     userParams += '&_limit=' + this.currentAdvertisementLimit;
@@ -217,4 +225,62 @@ export class DataService {
       }
     );
   }
+
+  addPlacementBonus(bonus: number, advertisementId: number) {
+    let placementBonusParams: any = {
+      "body": {
+        "bonus": bonus,
+        "advertisement": {
+          "id": advertisementId
+        }
+      }
+    }
+    this.http.post<any>('https://api.jobquadrat.com/placement-bonuses', placementBonusParams)
+      .subscribe(data => {
+        this.getPlacementBonusesByAdvertisement(advertisementId);
+      }
+    )
+  }
+
+  getPlacementBonusesByAdvertisement(advertisementId: number) {
+    this.http.get<any>('https://api.jobquadrat.com/placement-bonuses?_where[advertisement.id]=' + advertisementId)
+      .subscribe((data: PlacementBonus[]) => {
+        //sort data by data.created_at property
+        data = data.sort((a, b) => {
+          return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
+        });
+        
+        this.currentAdvertisementBonuses = data;
+        this.activePlacementBonus = data[0].bonus || 0;
+      }
+    )
+  }
+
+  postAvertisement(advertisement: Advertisement, placementBonus: number) {
+    let advertisementParams: any = {
+      "body": {
+        "jobTitle": advertisement.jobTitle,
+        "workingTime": advertisement.workingTime,
+        "assignment": advertisement.assignment,
+        "benefits": advertisement.benefits,
+        "location": advertisement.location,
+        "requirements": advertisement.requirements,
+        "salary": advertisement.salary,
+        "district": {
+          "id": advertisement.district!.id
+        },
+        "users_permissions_user": {
+          "id": this.currentUserId
+        }
+      }
+    }
+
+    this.advertisementService.advertisementsPost(advertisementParams).subscribe(
+      (data: any) => {
+        this.getAdvertisementsByUser();
+        this.addPlacementBonus(placementBonus, data.id);
+      }
+    );
+  }
+
 }

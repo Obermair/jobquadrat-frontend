@@ -1,0 +1,111 @@
+<div class="mx-auto flex flex-col max-w-4xl pb-5">
+    <form class="space-y-8 divide-y divide-gray-200 mt-5 px-4">
+        <div class="space-y-8 divide-y divide-gray-200">
+    
+          <div class="pt-8">
+            <div>
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Inserat bearbeiten</h3>
+              <p class="mt-1 text-sm text-gray-500">Dieses Inserat wird nach den Anpassungen veröffentlicht.</p>
+            </div>
+    
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div class="sm:col-span-3">
+                <label for="jobTitle" class="block text-sm font-medium text-gray-700">Jobtitel</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="advertisement.jobTitle" type="text" name="jobTitle" id="jobTitle" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="workingTime" class="block text-sm font-medium text-gray-700">Arbeitszeit</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="advertisement.workingTime" type="text" name="workingTime" id="workingTime" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+    
+              <div class="sm:col-span-3">
+                <label for="location" class="block text-sm font-medium text-gray-700">Arbeitsort</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="advertisement.location" type="text" name="location" id="location" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="salary" class="block text-sm font-medium text-gray-700">Gehalt</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="advertisement.salary" type="text" name="salary" id="salary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="district" class="block text-sm font-medium text-gray-700">Bezirk</label>
+                <div class="mt-1">
+                  <select [(ngModel)]="advertisement.district" id="district" name="district" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                    <option *ngFor="let district of dataService.districts" [ngValue]="district">{{ district.name }}</option>
+                  </select>
+                </div>
+              </div>
+    
+              <div class="sm:col-span-3">
+                <label for="assignment" class="block text-sm font-medium text-gray-700">Tätigkeitsbereich</label>
+                <div class="mt-1">
+                    <textarea [(ngModel)]="advertisement.assignment" id="assignment" name="assignment" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+                </div>
+             </div>
+    
+             <div class="sm:col-span-3">
+                <label for="requirements" class="block text-sm font-medium text-gray-700">Profilbeschreibung</label>
+                <div class="mt-1">
+                    <textarea [(ngModel)]="advertisement.requirements" id="requirements" name="requirements" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+                </div>
+              </div>
+    
+              <div class="sm:col-span-3">
+                <label for="benefits" class="block text-sm font-medium text-gray-700">Benefits</label>
+                <div class="mt-1">
+                    <textarea [(ngModel)]="advertisement.benefits" id="benefits" name="benefits" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+                </div>
+              </div>
+    
+                
+              <div class="sm:col-span-3">
+                <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie</label>
+                <div class="mt-1 flex">
+                  <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                  <button *ngIf="dataService.currentAdvertisementBonuses.length > 0" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+                </div>
+              </div>
+    
+              <div *ngIf="dataService.currentAdvertisementBonuses.length > 0" class="sm:col-span-3 max-h-96 overflow-y-auto bg-white shadow sm:rounded-lg">
+                <div class="px-2 py-5 sm:p-6">
+                  <h3 class="text-lg font-medium leading-6 text-gray-900">Prämienhistorie</h3>
+                    <div *ngFor="let adBonus of dataService.currentAdvertisementBonuses; let i = index" class="rounded-md mt-5 bg-gray-50 px-2 py-5 sm:flex sm:items-start sm:justify-between">
+                      <div class="sm:flex sm:items-start">
+                        <div class="mt-3 flex justify-between sm:mt-0 sm:ml-4">
+                          <div class="text-lg font-medium text-gray-900">{{ adBonus.bonus }}%</div>
+                          <div class="ml-2 text-sm text-gray-600 sm:flex sm:items-center">
+                            <div class="mt-1 sm:mt-0">Hinzugefügt am {{ adBonus.created_at | date: 'dd.MM.yyyy' }}</div>
+                          </div>
+                          <span *ngIf="i == 0" class="inline-flex ml-2 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Aktive Prämie</span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="pt-5">
+            <p *ngIf="errorMessage != ''" class="mt-2 text-sm font-bold text-red-600">
+                {{ errorMessage }}
+            </p>
+    
+          <div class="flex justify-end">
+            <button (click)="cancel()" type="button" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Abbrechen</button>
+            <button (click)="save()" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Veröffentlichen</button>
+          </div>
+        </div>
+      </form>
+      
+    </div>

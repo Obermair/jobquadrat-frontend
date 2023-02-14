@@ -17,7 +17,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(){
     this.code = this.route.snapshot.params['code'];
-}
+  }
 
   resetPassword(){
     if(this.password == this.passwordRepeat && this.password != ""){
