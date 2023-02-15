@@ -16,6 +16,7 @@ export interface Advertisement {
   published_at?: string;
   requirements?: string;
   salary?: string;
+  currentPlacementBonus?: number;
   users_permissions_user?: {
 'id': string;
 'username': string;

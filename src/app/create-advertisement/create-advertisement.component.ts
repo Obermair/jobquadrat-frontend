@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Advertisement } from '../api/models';
 import { DataService } from '../data.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class CreateAdvertisementComponent implements OnInit {
   loadMoreAdvertisements(){
     this.dataService.currentAdvertisementLimit += 30;
     this.dataService.getAdvertisementsByUser();
-  } 
+    // consume active placement bonus from dataService promise
+  }
 
   save(){
     this.router.navigate(['save'], {relativeTo:this.route});
@@ -26,5 +28,9 @@ export class CreateAdvertisementComponent implements OnInit {
 
   edit(advertisementId: string){
     this.router.navigate(['update/' + advertisementId], {relativeTo:this.route});
+  }
+
+  deleteAdvertisement(userAd: Advertisement) {
+    this.dataService.deleteAdvertisement(userAd);
   }
 }

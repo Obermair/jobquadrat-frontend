@@ -21,11 +21,7 @@ export class SaveAdvertisementComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.getDistricts();
   }
-
-  addPlacementBonus(bonus: number, advertisementId: number){
-    this.dataService.addPlacementBonus(bonus, advertisementId);
-  }
-
+ 
   cancel(){
     this.router.navigate(['../'], {relativeTo:this.route});
   }

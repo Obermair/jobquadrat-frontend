@@ -156,6 +156,7 @@ export class DataService {
       (data: Advertisement[]) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
+        this.addPlacementBonusToList(this.displayedAdvertisements);
         this.isLoading = false;
       }
     );
@@ -168,6 +169,7 @@ export class DataService {
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
+        this.addPlacementBonusToList(this.displayedAdvertisements);
         this.isLoading = false;
       }
     );
@@ -181,9 +183,40 @@ export class DataService {
       (data: any) => {
         this.userAdvertisements = data;
         this.userAdvertisementsLoading = false;
+        this.addPlacementBonusToList(this.userAdvertisements);
       }
     );
   }
+  
+  addPlacementBonusToList(advertisements: Advertisement[]){
+    for (let i = 0; i < advertisements.length; i++) {
+      this.getActivePlacementBonus(advertisements[i].id).then((bonus: any) => {
+        if(bonus){
+          advertisements[i].placementBonus = bonus;
+        } else {
+          advertisements[i].placementBonus = 0;
+        }
+      });
+    }
+  }
+
+  getActivePlacementBonus(advertisementId: string) {
+    return new Promise((resolve, reject) => {
+      this.http.get<any>('https://api.jobquadrat.com/placement-bonuses?_where[advertisement.id]=' + advertisementId)
+        .subscribe((data: PlacementBonus[]) => {
+          //sort data by data.created_at property
+          data = data.sort((a, b) => {
+            return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
+          });
+          this.currentAdvertisementBonuses = data;
+          this.activePlacementBonus = data[0].bonus || 0;
+          console.log()
+          resolve(data[0].bonus || 0);
+        }
+      )
+    });
+  }
+
 
   getFilteredAdvertisementsByDistricts(districts: District[]) {
     let filterParams: string = '?_where[_or][0][district.id]=' + districts[0].id;
@@ -195,6 +228,7 @@ export class DataService {
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
+        this.addPlacementBonusToList(this.displayedAdvertisements);
         this.isLoading = false;
       }
    );
@@ -213,6 +247,7 @@ export class DataService {
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
+        this.addPlacementBonusToList(this.displayedAdvertisements);
         this.isLoading = false;
       }
     );
@@ -228,11 +263,9 @@ export class DataService {
 
   addPlacementBonus(bonus: number, advertisementId: number) {
     let placementBonusParams: any = {
-      "body": {
-        "bonus": bonus,
-        "advertisement": {
-          "id": advertisementId
-        }
+      "bonus": bonus,
+      "advertisement": {
+        "id": advertisementId
       }
     }
     this.http.post<any>('https://api.jobquadrat.com/placement-bonuses', placementBonusParams)
@@ -249,7 +282,6 @@ export class DataService {
         data = data.sort((a, b) => {
           return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
         });
-        
         this.currentAdvertisementBonuses = data;
         this.activePlacementBonus = data[0].bonus || 0;
       }
@@ -283,4 +315,41 @@ export class DataService {
     );
   }
 
+  updateAdvertisement(advertisement: Advertisement) {
+    let advertisementParams: any = {
+      "id": advertisement.id,
+      "body": {
+        "jobTitle": advertisement.jobTitle,
+        "workingTime": advertisement.workingTime,
+        "assignment": advertisement.assignment,
+        "benefits": advertisement.benefits,
+        "location": advertisement.location,
+        "requirements": advertisement.requirements,
+        "salary": advertisement.salary,
+        "district": {
+          "id": advertisement.district!.id
+        },
+        "users_permissions_user": {
+          "id": this.currentUserId
+        }
+      }
+    }
+
+    this.advertisementService.advertisementsIdPut(advertisementParams).subscribe(
+      (data: any) => {
+        this.getAdvertisementsByUser();
+      }
+    );
+  }
+
+  deleteAdvertisement(advertisement: Advertisement) {
+    let advertisementParams: any = {
+      "id": advertisement.id
+    }
+    this.advertisementService.advertisementsIdDelete(advertisementParams).subscribe(
+      (data: any) => {
+        this.getAdvertisementsByUser();
+      }
+    );
+  }
 }

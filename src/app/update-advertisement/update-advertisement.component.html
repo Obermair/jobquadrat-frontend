@@ -1,4 +1,7 @@
-<div class="mx-auto flex flex-col max-w-4xl pb-5">
+<div *ngIf="loading">
+  <app-spinner></app-spinner>
+</div>
+<div *ngIf="!loading" class="mx-auto flex flex-col max-w-4xl pb-5">
     <form class="space-y-8 divide-y divide-gray-200 mt-5 px-4">
         <div class="space-y-8 divide-y divide-gray-200">
     
@@ -72,7 +75,7 @@
                 <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie</label>
                 <div class="mt-1 flex">
                   <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-                  <button *ngIf="dataService.currentAdvertisementBonuses.length > 0" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+                  <button (click)="addPlacementBonus()" *ngIf="dataService.currentAdvertisementBonuses.length > 0" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
                 </div>
               </div>
     
@@ -103,7 +106,7 @@
     
           <div class="flex justify-end">
             <button (click)="cancel()" type="button" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Abbrechen</button>
-            <button (click)="save()" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Veröffentlichen</button>
+            <button (click)="update()" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Anpassungen speichern</button>
           </div>
         </div>
       </form>

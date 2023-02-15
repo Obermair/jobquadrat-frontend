@@ -16,6 +16,7 @@ export class UpdateAdvertisementComponent implements OnInit {
   }
   errorMessage = "";
   placementBonus = 0;
+  loading = true;
 
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute, 
     public advertisementService: AdvertisementService) {
@@ -23,7 +24,10 @@ export class UpdateAdvertisementComponent implements OnInit {
 
       this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
         (data: any) => {
-          this.advertisement = data[0];
+          if(data[0].users_permissions_user.id == this.dataService.currentUserId){
+            this.advertisement = data[0];
+            this.loading = false;
+          }
         }
       );  
   }
@@ -34,20 +38,21 @@ export class UpdateAdvertisementComponent implements OnInit {
     this.dataService.getPlacementBonusesByAdvertisement(this.route.snapshot.params['id']);
   }
 
-  addPlacementBonus(bonus: number, advertisementId: number){
-    this.dataService.addPlacementBonus(bonus, advertisementId);
+  addPlacementBonus(){
+    this.dataService.addPlacementBonus(this.placementBonus, this.route.snapshot.params['id']);
   }
 
   cancel(){
-    this.router.navigate(['../'], {relativeTo:this.route});
+    this.router.navigate(['../../'], {relativeTo:this.route});
   }
 
-  save(){
+  update(){
     if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.advertisement.assignment != undefined && this.advertisement.requirements != undefined && this.advertisement.benefits != undefined ){
-      this.dataService.postAvertisement(this.advertisement, this.placementBonus);
-      this.router.navigate(['../'], {relativeTo:this.route});
+      this.dataService.updateAdvertisement(this.advertisement);
+      this.router.navigate(['../../'], {relativeTo:this.route});
     }else{
       this.errorMessage = "Bitte füllen Sie alle Felder aus!"
     }
   }
+ 
 }

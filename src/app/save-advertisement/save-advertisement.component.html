@@ -72,31 +72,9 @@
             <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie</label>
             <div class="mt-1 flex">
               <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-              <button *ngIf="dataService.currentAdvertisementBonuses.length > 0" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
             </div>
           </div>
-
-          <div *ngIf="dataService.currentAdvertisementBonuses.length > 0" class="sm:col-span-3 bg-white shadow sm:rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-              <h3 class="text-lg font-medium leading-6 text-gray-900">Prämienhistorie</h3>
-              <div class="mt-5">
-                <div class="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
-                  <h4 class="sr-only">Visa</h4>
-                  <div class="sm:flex sm:items-start">
-                    <div class="mt-3 flex justify-between sm:mt-0 sm:ml-4">
-                      <div class="text-lg font-medium text-gray-900">14%</div>
-                      <div class="mt-1 ml-2 text-sm text-gray-600 sm:flex sm:items-center">
-                        <div class="mt-1 sm:mt-0">Added on on 22 Aug 2017</div>
-                      </div>
-                      <span class="text-xs ml-2 font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200 uppercase last:mr-0 mr-1">
-                        Aktive Prämie
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+ 
         </div>
       </div>
     </div>
