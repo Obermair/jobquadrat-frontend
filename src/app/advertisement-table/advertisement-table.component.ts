@@ -11,6 +11,7 @@ export class AdvertisementTableComponent implements OnInit {
 
   searchInput = "";
   filterDistricts: District[] = [];
+  districtDropdownOpen: boolean = false;
 
   constructor(public dataService: DataService) { }
 
