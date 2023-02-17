@@ -29,10 +29,8 @@
               </div>
             </div>
             <div class="hidden space-x-10 md:ml-10 md:flex">
-              <a (click)="toggleMenu(); scrollIntoView('#employer')" class="font-medium cursor-pointer text-white hover:text-gray-300">Für Arbeitgeber</a>
-  
-              <a (click)="toggleMenu(); scrollIntoView('#recruiter')" class="font-medium cursor-pointer text-white hover:text-gray-300">Für Personalvermittler</a>
-  
+              <a (click)="toggleMenu(); scrollIntoView('#concept')" class="font-medium cursor-pointer text-white hover:text-gray-300">Unser Konzept</a>
+
               <a (click)="toggleMenu(); scrollIntoView('#team')" class="font-medium cursor-pointer text-white hover:text-gray-300">Über uns</a>
   
               <a (click)="toggleMenu(); scrollIntoView('#contact')" class="font-medium cursor-pointer text-white hover:text-gray-300">Kontakt</a>
@@ -70,10 +68,8 @@
               </div>
             </div>
             <div class="space-y-1 px-2 pt-2 pb-3">
-              <a (click)="scrollIntoView('#employer')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Für Arbeitgeber</a>
-  
-              <a (click)="scrollIntoView('#recruiter')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Für Personalvermittler</a>
-  
+              <a (click)="scrollIntoView('#concept')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unser Konzept</a>
+ 
               <a (click)="scrollIntoView('#team')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Über uns</a>
   
               <a (click)="scrollIntoView('#contact')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Kontakt</a>
@@ -135,7 +131,7 @@
         </div>
   
         <!-- Feature Section -->
-        <div class="overflow-hidden  bg-gray-50 py-16 lg:py-24">
+        <div id="concept" class="overflow-hidden  bg-gray-50 py-16 lg:py-24">
           <div class="relative mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <svg class="absolute left-full hidden -translate-x-1/2 -translate-y-1/4 transform lg:block" width="404" height="784" fill="none" viewBox="0 0 404 784" aria-hidden="true">
               <defs>
@@ -251,7 +247,7 @@
               
             </div>
         
-            <div id="employer" class="relative mt-10 lg:mt-24 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
+            <div class="relative mt-10 lg:mt-24 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
               <div class="relative mt-5">
                 <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Für Arbeitgeber</h3>
                 <!--
