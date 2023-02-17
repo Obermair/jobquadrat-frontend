@@ -30,16 +30,14 @@
         </button> 
 
         <!-- Dropdown menu -->
-        <div id="dropdownDefaultCheckbox" class="hidden z-10 w-48 bg-white rounded divide-y divide-gray-100 shadow max-h-48 overflow-scroll">
-            <ul class="p-3 space-y-3 text-sm text-gray-700 ">
-              <ng-container *ngFor="let district of dataService.districts">
-                <li>
+        <div id="dropdownDefaultCheckbox" class="hidden absolute z-10 w-48 bg-white rounded divide-y divide-gray-100 shadow max-h-48 overflow-scroll">
+            <ul class="p-3 space-y-3 text-sm text-gray-700 "> 
+                <li *ngFor="let district of dataService.districts">
                   <div class="flex items-center">
                     <input id="checkbox-item-1" type="checkbox" (change)="districtChanged(district)" [value]="district" class="w-4 h-4 cursor-pointer text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
                     <label for="checkbox-item-1" class="ml-2 text-sm font-medium text-gray-900 ">{{ district.name }}</label>
                   </div>
-                </li>
-             </ng-container>
+                </li> 
             </ul>
         </div>
       </form>

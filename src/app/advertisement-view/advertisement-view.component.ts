@@ -17,11 +17,6 @@ export class AdvertisementViewComponent implements OnInit {
     this.dataService.getDistricts();
   }
 
-  ngBeforeInit(): void {
-    //this.dataService.authenticateDevCompany();
-
-  }
-
   loadDefaults(){
     this.dataService.currentLimit = 50;
     this.dataService.getAdvertisements();
