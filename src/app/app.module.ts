@@ -20,6 +20,8 @@ import { OverviewComponent } from './overview/overview.component';
 import { CreateAdvertisementComponent } from './create-advertisement/create-advertisement.component';
 import { SaveAdvertisementComponent } from './save-advertisement/save-advertisement.component';
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { TermsComponent } from './terms/terms.component';
  
 @NgModule({
   declarations: [
@@ -38,12 +40,14 @@ import { UpdateAdvertisementComponent } from './update-advertisement/update-adve
     CreateAdvertisementComponent,
     SaveAdvertisementComponent,
     UpdateAdvertisementComponent,
+    PrivacyPolicyComponent,
+    TermsComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

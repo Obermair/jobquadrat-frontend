@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-landing',
@@ -8,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
 export class LandingComponent implements OnInit {
 
   openMenu: boolean = false;
+  form: any = {
+    firstname: '',
+    lastname: '',
+    company: '',
+    email: '',
+    message: ''
+  };
+  showErrorMessage: boolean = false;
 
-  constructor() { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
   }
@@ -22,4 +31,16 @@ export class LandingComponent implements OnInit {
     document.querySelector(elem)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  sendForm() {
+    if(!this.dataService.formSent){
+      //check if all fields are filled
+      if (this.form.firstname == '' || this.form.lastname == '' || this.form.company == '' || this.form.email == '' || this.form.message == '') {
+        this.showErrorMessage = true;
+      }
+      else {
+        this.showErrorMessage = false;
+        this.dataService.sendForm(this.form);
+      }
+    }
+  }
 }

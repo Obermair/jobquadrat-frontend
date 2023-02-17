@@ -9,9 +9,11 @@ import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { LostComponent } from './lost/lost.component';
 import { OverviewComponent } from './overview/overview.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SaveAdvertisementComponent } from './save-advertisement/save-advertisement.component';
+import { TermsComponent } from './terms/terms.component';
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
 
 const routes: Routes = [
@@ -19,6 +21,8 @@ const routes: Routes = [
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'terms-and-conditions', component: TermsComponent},
+  {path: 'privacy-policy', component: PrivacyPolicyComponent},
   {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]
   , children: [
     {path: '', redirectTo: 'view', pathMatch: 'full'},

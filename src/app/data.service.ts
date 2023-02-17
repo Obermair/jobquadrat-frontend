@@ -32,6 +32,7 @@ export class DataService {
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
   public currentAdvertisementBonuses: PlacementBonus[] = [];
   public activePlacementBonus: number = 0;
+  public formSent: boolean = false;
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -351,5 +352,22 @@ export class DataService {
         this.getAdvertisementsByUser();
       }
     );
+  }
+
+  sendForm(form: any) {
+    let html = '<img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"><h2>Neue Email von Jobquadrat</h2><p><b>Name:</b> ' + form.firstname + " " + form.lastname + '</p><p><b>Unternehmen:</b> ' + form.company + '</p><p><b>Email:</b> ' + form.email + '</p><p><b>Nachricht:</b> ' + form.message + '</p>';
+
+    let emailParams: any = {
+      "to": "jobquadrat@gmail.com",
+      "from": "jobquadrat@gmail.com",
+      "subject": "Neue Email von Jobquadrat",
+      "html": html
+    }
+
+    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+      .subscribe(data => {
+        this.formSent = true;
+      }
+    )
   }
 }
