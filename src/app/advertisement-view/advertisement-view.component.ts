@@ -12,11 +12,15 @@ export class AdvertisementViewComponent implements OnInit {
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
-    //this.dataService.authenticateDevCompany();
     this.loadDefaults();
     this.dataService.getAmountOfAdvertisements();
     this.dataService.getDistricts();
-}
+  }
+
+  ngBeforeInit(): void {
+    //this.dataService.authenticateDevCompany();
+
+  }
 
   loadDefaults(){
     this.dataService.currentLimit = 50;

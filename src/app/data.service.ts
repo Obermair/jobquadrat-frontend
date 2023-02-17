@@ -18,6 +18,7 @@ export class DataService {
   public currentUserId: string = '';
   public currentUserRole: string = '';
   public isLoading: boolean = true;
+  public districtsLoading: boolean = true;
   public wrongCredentials: boolean = false;
   public wrongMail: boolean = false;
   public forgotSent: boolean = false;
@@ -258,6 +259,7 @@ export class DataService {
     this.districtService.districtsGet().subscribe(
       (data: any) => {
         this.districts = data;
+        this.districtsLoading = false;
       }
     );
   }
