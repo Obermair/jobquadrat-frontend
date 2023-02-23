@@ -22,6 +22,7 @@ import { SaveAdvertisementComponent } from './save-advertisement/save-advertisem
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { TermsComponent } from './terms/terms.component';
+import { ImprintComponent } from './imprint/imprint.component';
  
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TermsComponent } from './terms/terms.component';
     UpdateAdvertisementComponent,
     PrivacyPolicyComponent,
     TermsComponent,
+    ImprintComponent,
   ],
   imports: [
     BrowserModule,

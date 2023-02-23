@@ -20,7 +20,7 @@
               </div>
       
               <div class="sm:col-span-3">
-                <label for="workingTime" class="block text-sm font-medium text-gray-700">Arbeitszeit</label>
+                <label for="workingTime" class="block text-sm font-medium text-gray-700">Arbeitszeit (Vollzeit, Teilzeit)</label>
                 <div class="mt-1">
                   <input [(ngModel)]="advertisement.workingTime" type="text" name="workingTime" id="workingTime" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                 </div>
@@ -34,7 +34,7 @@
               </div>
       
               <div class="sm:col-span-3">
-                <label for="salary" class="block text-sm font-medium text-gray-700">Gehalt</label>
+                <label for="salary" class="block text-sm font-medium text-gray-700">Bruttojahresgehalt</label>
                 <div class="mt-1">
                   <input [(ngModel)]="advertisement.salary" type="text" name="salary" id="salary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                 </div>
@@ -50,14 +50,14 @@
               </div>
     
               <div class="sm:col-span-3">
-                <label for="assignment" class="block text-sm font-medium text-gray-700">Tätigkeitsbereich</label>
+                <label for="assignment" class="block text-sm font-medium text-gray-700">Aufgabenbeschreibung</label>
                 <div class="mt-1">
                     <textarea [(ngModel)]="advertisement.assignment" id="assignment" name="assignment" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
                 </div>
              </div>
     
              <div class="sm:col-span-3">
-                <label for="requirements" class="block text-sm font-medium text-gray-700">Profilbeschreibung</label>
+                <label for="requirements" class="block text-sm font-medium text-gray-700">Qualifikationen/Erfahrungen</label>
                 <div class="mt-1">
                     <textarea [(ngModel)]="advertisement.requirements" id="requirements" name="requirements" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
                 </div>
@@ -72,7 +72,7 @@
     
                 
               <div class="sm:col-span-3">
-                <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie</label>
+                <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie (in % des Bruttojahresgehalts)</label>
                 <div class="mt-1 flex">
                   <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                   <button (click)="addPlacementBonus()" *ngIf="dataService.currentAdvertisementBonuses.length > 0" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>

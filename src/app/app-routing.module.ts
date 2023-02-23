@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { AuthGuardService } from './auth-guard.service';
 import { CreateAdvertisementComponent } from './create-advertisement/create-advertisement.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ImprintComponent } from './imprint/imprint.component';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { LostComponent } from './lost/lost.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'terms-and-conditions', component: TermsComponent},
+  {path: 'imprint', component: ImprintComponent},
   {path: 'privacy-policy', component: PrivacyPolicyComponent},
   {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]
   , children: [
