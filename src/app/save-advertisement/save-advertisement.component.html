@@ -10,21 +10,23 @@
 
         <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div class="sm:col-span-3">
-            <label for="jobTitle" class="block text-sm font-medium text-gray-700">Jobtitel</label>
+            <label for="jobTitle" class="block text-sm font-medium text-gray-700">Jobtitel ((m/w/d) wird automatisch angehängt)</label>
             <div class="mt-1">
               <input [(ngModel)]="advertisement.jobTitle" type="text" name="jobTitle" id="jobTitle" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
             </div>
           </div>
-  
+
           <div class="sm:col-span-3">
             <label for="workingTime" class="block text-sm font-medium text-gray-700">Arbeitszeit (Vollzeit, Teilzeit)</label>
             <div class="mt-1">
-              <input [(ngModel)]="advertisement.workingTime" type="text" name="workingTime" id="workingTime" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+              <select [(ngModel)]="advertisement.workingTime" id="workingTime" name="workingTime" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                <option *ngFor="let workingTime of workingTimeOptions" [ngValue]="workingTime">{{ workingTime }}</option>
+              </select>
             </div>
           </div>
 
           <div class="sm:col-span-3">
-            <label for="location" class="block text-sm font-medium text-gray-700">Arbeitsort</label>
+            <label for="location" class="block text-sm font-medium text-gray-700">Arbeitsort (Straße, Postleitzahl, Ort)</label>
             <div class="mt-1">
               <input [(ngModel)]="advertisement.location" type="text" name="location" id="location" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
             </div>
@@ -33,7 +35,7 @@
           <div class="sm:col-span-3">
             <label for="salary" class="block text-sm font-medium text-gray-700">Bruttojahresgehalt</label>
             <div class="mt-1">
-              <input [(ngModel)]="advertisement.salary" type="text" name="salary" id="salary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+              <input [(ngModel)]="advertisement.salary" type="number" name="salary" id="salary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
             </div>
           </div>
   

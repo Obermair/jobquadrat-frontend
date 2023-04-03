@@ -95,12 +95,14 @@ export class DataService {
             }
           }
         }
+        
         this.userPermissionService.usersIdPut(userParams).subscribe(
           (data: any) => {
             this.registerSuccess = true;
             localStorage.setItem('auth_user', data.email);
           }
         );
+        
       },
       (err: Error) => {
         this.authError = true;
@@ -212,7 +214,6 @@ export class DataService {
           });
           this.currentAdvertisementBonuses = data;
           this.activePlacementBonus = data[0].bonus || 0;
-          console.log()
           resolve(data[0].bonus || 0);
         }
       )
@@ -259,6 +260,11 @@ export class DataService {
     this.districtService.districtsGet().subscribe(
       (data: any) => {
         this.districts = data;
+        //sort discricts by name
+        this.districts = this.districts.sort((a, b) => {
+          return a.name!.localeCompare(b.name!);
+        });
+
         this.districtsLoading = false;
       }
     );

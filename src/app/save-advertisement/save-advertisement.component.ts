@@ -13,6 +13,8 @@ export class SaveAdvertisementComponent implements OnInit {
   advertisement: Advertisement = {
     id: "",
   }
+
+  workingTimeOptions = ["Vollzeit", "Teilzeit"];
   errorMessage = "";
   placementBonus = 0;
 

@@ -14,6 +14,8 @@ export class UpdateAdvertisementComponent implements OnInit {
   advertisement: Advertisement = {
     id: "",
   }
+  
+  workingTimeOptions = ["Vollzeit", "Teilzeit"];
   errorMessage = "";
   placementBonus = 0;
   loading = true;

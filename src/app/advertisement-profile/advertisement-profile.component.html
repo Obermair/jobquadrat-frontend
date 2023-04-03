@@ -9,11 +9,9 @@
               <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-5 shadow sm:px-6 sm:pt-6">
                 <dt>
                   <div class="absolute rounded-md bg-amber-500 p-3">
-
                     <svg  class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                     </svg>
-                    
                   </div>
                   <p class="ml-16 truncate text-sm font-medium text-gray-500">Vermittlungsprämie</p>
                 </dt>
@@ -25,7 +23,7 @@
           </div>
         </div>
         <div class="mt-4 min-w-0 flex-1">
-            <h1 class="truncate text-4xl mb-2 font-bold text-amber-600">{{ dataService.advertisementProfile.jobTitle }}</h1>
+            <h1 class="truncate text-4xl mb-2 font-bold text-amber-600">{{ dataService.advertisementProfile.jobTitle }} (m/w/d)</h1>
             <p class="text-md font-bold mb-2 text-gray-500">bei {{ dataService.advertisementProfile.users_permissions_user?.username }}</p> 
             <p class="text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.users_permissions_user?.description }}</p>
           </div>
@@ -58,12 +56,12 @@
         </div>
 
         <div class="sm:col-span-1">
-          <dt class="text-sm font-bold text-gray-600">Gehalt</dt>
-          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary }}</dd>
+          <dt class="text-sm font-bold text-gray-600">Bruttojahresgehalt</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary | currency:"EUR":"symbol" }}</dd>
         </div>
 
         <div class="sm:col-span-1">
-          <dt class="text-sm font-bold text-gray-600">Arbeitszeit</dt>
+          <dt class="text-sm font-bold text-gray-600">Arbeitszeit (Vollzeit, Teilzeit)</dt>
           <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.workingTime }}</dd>
         </div>
 
