@@ -29,6 +29,10 @@ export class SaveAdvertisementComponent implements OnInit {
   }
 
   save(){
+    if(this.advertisement.salary != undefined){
+      this.advertisement.salary = this.advertisement.salary.toString();
+    }
+
     if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.advertisement.assignment != undefined && this.advertisement.requirements != undefined && this.advertisement.benefits != undefined ){
       this.dataService.postAvertisement(this.advertisement, this.placementBonus);
       this.router.navigate(['../'], {relativeTo:this.route});

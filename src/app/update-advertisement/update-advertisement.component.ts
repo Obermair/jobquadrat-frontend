@@ -49,6 +49,10 @@ export class UpdateAdvertisementComponent implements OnInit {
   }
 
   update(){
+    if(this.advertisement.salary != undefined){
+      this.advertisement.salary = this.advertisement.salary.toString();
+    }
+
     if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.advertisement.assignment != undefined && this.advertisement.requirements != undefined && this.advertisement.benefits != undefined ){
       this.dataService.updateAdvertisement(this.advertisement);
       this.router.navigate(['../../'], {relativeTo:this.route});
