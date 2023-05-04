@@ -7,7 +7,7 @@ import { DataService } from '../data.service';
   templateUrl: './advertisement-table.component.html',
   styleUrls: ['./advertisement-table.component.scss']
 })
-export class AdvertisementTableComponent implements OnInit {
+export class AdvertisementTableComponent implements OnInit  {
 
   searchInput = "";
   filterDistricts: District[] = [];
@@ -17,6 +17,7 @@ export class AdvertisementTableComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
 
   loadDefaultAdvertisements(){
     if(this.searchInput == "" && this.filterDistricts.length == 0){

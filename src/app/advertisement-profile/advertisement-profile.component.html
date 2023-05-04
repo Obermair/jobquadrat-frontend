@@ -54,11 +54,12 @@
           <dt class="text-sm font-bold text-gray-600">Email</dt>
           <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.users_permissions_user?.email }} </dd>
         </div>
-
+ 
         <div class="sm:col-span-1">
           <dt class="text-sm font-bold text-gray-600">Bruttojahresgehalt</dt>
-          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary | currency:"EUR":"symbol" }}</dd>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary | number:'1.0-0':'de-AT' }}€</dd>
         </div>
+       
 
         <div class="sm:col-span-1">
           <dt class="text-sm font-bold text-gray-600">Arbeitszeit (Vollzeit, Teilzeit)</dt>
@@ -73,22 +74,22 @@
 
         <div class="sm:col-span-2">
           <dt class="text-sm font-bold text-gray-600">Aufgabengebiet</dt>
-          <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
-            <span [innerHtml]="dataService.advertisementProfile.assignment"></span>
+          <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
+            <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.assignment || '')"></span>
            </dd>
         </div>
 
         <div class="sm:col-span-2">
             <dt class="text-sm font-bold text-gray-600">Anforderungen</dt>
-            <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
-                <span [innerHtml]="dataService.advertisementProfile.requirements"></span>
+            <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
+              <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.requirements || '')"></span>
              </dd>
           </div>
 
           <div class="sm:col-span-2">
             <dt class="text-sm font-bold text-gray-600">Benefits</dt>
-            <dd class="mt-1 max-w-prose space-y-5 text-sm font-medium text-gray-500">
-                <span [innerHtml]="dataService.advertisementProfile.benefits"></span>
+            <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
+                <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.benefits || '')"></span>
           </div>
       </dl>
     </div>
