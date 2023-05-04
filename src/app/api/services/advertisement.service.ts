@@ -26,7 +26,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsGet
    */
-  static readonly AdvertisementsGetPath = '/advertisements';
+  static readonly AdvertisementsGetPath = '/jobs';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -228,7 +228,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsPost
    */
-  static readonly AdvertisementsPostPath = '/advertisements';
+  static readonly AdvertisementsPostPath = '/jobs';
 
   /**
    * Create a new record
@@ -283,7 +283,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsCountGet
    */
-  static readonly AdvertisementsCountGetPath = '/advertisements/count';
+  static readonly AdvertisementsCountGetPath = '/jobs/count';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -341,7 +341,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsIdGet
    */
-  static readonly AdvertisementsIdGetPath = '/advertisements/{id}';
+  static readonly AdvertisementsIdGetPath = '/jobs/{id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -392,7 +392,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsIdPut
    */
-  static readonly AdvertisementsIdPutPath = '/advertisements/{id}';
+  static readonly AdvertisementsIdPutPath = '/jobs/{id}';
 
   /**
    * Update a record
@@ -450,7 +450,7 @@ export class AdvertisementService extends BaseService {
   /**
    * Path part for operation advertisementsIdDelete
    */
-  static readonly AdvertisementsIdDeletePath = '/advertisements/{id}';
+  static readonly AdvertisementsIdDeletePath = '/jobs/{id}';
 
   /**
    * Delete a record
