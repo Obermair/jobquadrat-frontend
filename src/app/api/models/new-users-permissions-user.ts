@@ -12,5 +12,6 @@ export interface NewUsersPermissionsUser {
   resetPasswordToken?: string;
   role?: string;
   updated_by?: string;
+  description: string;
   username: string;
 }

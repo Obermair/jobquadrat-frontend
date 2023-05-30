@@ -3,16 +3,57 @@
 <div class="relative bg-gray-50">
     <div class="mx-auto max-w-7xl px-4 sm:px-6">
       <div class="flex items-center justify-between md:justify-start md:space-x-10 border-b-2 border-gray-100 py-6">
-        <div class="hidden md:flex md:flex-1 justify-start lg:w-0 lg:flex-1">
+        <div class="hidden lg:flex md:flex-1 justify-start lg:w-0 lg:flex-1">
           <a routerLink="/">
             <span class="sr-only">jobquadrat</span>
             <img class="h-16" src="../../assets/images/logo.png" alt="">
           </a>
         </div>
         <nav *ngIf="this.dataService.currentUserRole == 'Company'" class="-my-2 -mr-2">
+          <div class="flex w-full items-center justify-between md:w-auto">
+            <div class="-mr-2 flex items-center lg:hidden">
+              <button (click)="toggleMenu()" type="button" class="focus-ring-inset inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:text-gray-500 focus:outline-none" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <!-- Heroicon name: outline/bars-3 -->
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="hidden lg:flex">
             <a (click)="view()" class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-500">Inserate anzeigen</a>
             <a (click)="create()" routerLink="view" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Inserate erstellen/bearbeiten</a>
+            <a (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Unternehmensprofil bearbeiten</a>
+          </div>
         </nav>
+        <div [ngClass]="{'hidden': !openMenu}" class="absolute inset-x-0 top-0 z-10 origin-top-right transform p-2 transition lg:hidden">
+          <div class="overflow-hidden rounded-lg bg-white shadow-md ring-1 ring-black ring-opacity-5">
+            <div class="flex items-center justify-between px-5 pt-4">
+              <div>
+                <img class="h-12 w-auto" src="../../assets/images/logo.png" alt="">
+              </div>
+              <div class="-mr-2">
+                <button (click)="toggleMenu()" type="button" class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500">
+                  <span class="sr-only">Close menu</span>
+                  <!-- Heroicon name: outline/x-mark -->
+                  <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="space-y-1 px-2 pt-2 pb-3">
+              <a (click)="view()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate anzeigen</a>
+ 
+              <a (click)="create()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate erstellen/bearbeiten</a>
+  
+              <a (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unternehmensprofil bearbeiten</a>
+            </div>
+            <a routerLink="/" class="block w-full cursor-pointer bg-gray-50 px-5 py-3 text-center font-medium text-amber-600 hover:bg-gray-100">Startseite</a>
+          </div>
+        </div>
+
         <div class="items-center justify-end md:flex md:flex-1 lg:w-0">
             <a class="group block flex-shrink-0">
                 <div class="flex items-center">

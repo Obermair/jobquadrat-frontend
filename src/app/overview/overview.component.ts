@@ -9,6 +9,8 @@ import { DataService } from '../data.service';
 })
 export class OverviewComponent implements OnInit {
 
+  openMenu: boolean = false;
+
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -22,6 +24,10 @@ export class OverviewComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  toggleMenu() {
+    this.openMenu = !this.openMenu;
+  }
+
   create(){
     this.router.navigate(['create'], {relativeTo:this.route});
   }
@@ -30,5 +36,7 @@ export class OverviewComponent implements OnInit {
     this.router.navigate(['view'], {relativeTo:this.route});
   }
 
-  
+  profile(){
+    this.router.navigate(['profile'], {relativeTo:this.route});
+  }
 }

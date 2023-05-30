@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Advertisement, District, PlacementBonus } from './api/models';
+import { Advertisement, District, PlacementBonus, UsersPermissionsUser } from './api/models';
 import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
 import { BreakpointObserverService } from './breakpoint.service';
@@ -14,6 +14,12 @@ export class DataService {
   public totalAdvertisementAmount: number = 0;
   public totalAdvertisement: Advertisement[] = [];
   public currentLimit: number = 50;
+  public user: UsersPermissionsUser = {
+    id: "",
+    description: "",
+    email: "",
+    username: ""
+  };
   public currentUser: string = '';
   public currentUserId: string = '';
   public currentUserRole: string = '';
@@ -65,6 +71,8 @@ export class DataService {
         localStorage.setItem('jwt_user', data.user.username);
         localStorage.setItem('jwt_user_id', data.user.id);
         localStorage.setItem('jwt_user_role', data.user.role.name);
+        localStorage.setItem('jwt_user_description', data.user.description);
+        localStorage.setItem('jwt_user_email', data.user.email);
         this.router.navigate(['/advertisements']);
       },
       (err: Error) => {

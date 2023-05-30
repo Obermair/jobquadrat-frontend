@@ -1,0 +1,134 @@
+
+<div class="mx-auto flex flex-col max-w-4xl pb-5">
+      <form class="space-y-8 divide-y divide-gray-200 mt-5 px-4">
+        <div class="space-y-8 divide-y divide-gray-200">
+    
+          <div class="pt-8">
+            <div>
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Unternehmensprofil bearbeiten</h3>
+              <p class="mt-1 text-sm text-gray-500">Hier kannst du dein Unternehmensprofil bearbeiten, dein Passwort ändern sowie deinen Account löschen.</p>
+            </div>
+    
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div class="sm:col-span-3">
+                <label for="companyName" class="block text-sm font-medium text-gray-700">Firmenname</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="company.username" type="text" name="companyName" id="companyName" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Adresse</label>
+                <div class="mt-1">
+                  <input [(ngModel)]="company.email" type="email" name="email" id="email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                </div>
+              </div>
+  
+              <div class="sm:col-span-6">
+                <label for="description" class="block text-sm font-medium text-gray-700">Firmenbeschreibung</label>
+                <div class="mt-1 flex">
+                  <textarea [(ngModel)]="company.description" id="description" name="description" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500 sm:text-sm"></textarea>
+                </div>
+              </div> 
+              <div class="flex sm:col-span-6 justify-end">
+                <button (click)="toggleResetPasswort()" type="button" class="rounded-md border border-gray-300 bg-white w-full py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Passwort ändern</button>    
+                <button (click)="toggleDeactiveProfile()" type="button" class="ml-3 inline-flex justify-center w-full rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Account deaktivieren</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      
+        <div class="pt-5">
+          <p *ngIf="errorMessage != ''" class="mt-2 text-sm font-bold text-red-600">
+              {{ errorMessage }}
+          </p>
+          <p *ngIf="successMessage != ''" class="mt-2 text-sm font-bold text-green-600">
+              {{ successMessage }}
+          </p>
+    
+          <div class="flex justify-end">
+            <button (click)="update()" type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Anpassungen speichern</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Deactivate account -->
+    <div *ngIf="showDeactivationAccount" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+            <div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+              <button (click)="toggleDeactiveProfile()" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                <span class="sr-only">Close</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Account deaktivieren</h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">Sind Sie sicher, dass Sie Ihr Konto deaktivieren möchten? Alle Ihre Daten werden dauerhaft und für immer von unseren Servern entfernt. Diese Aktion kann nicht rückgängig gemacht werden.</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              <button (click)="deactiveProfile()" type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Account deaktivieren</button>
+              <button (click)="toggleDeactiveProfile()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reset Passwort -->
+    <div *ngIf="showResetPasswort" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+            <div>
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+ 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-green-600">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+                
+              </div>
+              <div class="mt-3 text-center sm:mt-5">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Passwort ändern</h3>
+                <div class="mt-2">
+                  <label for="newPassword" class="block text-sm font-medium text-gray-700">Neues Passwort</label>
+                  <div class="mt-1">
+                    <input [(ngModel)]="password" type="password" name="newPassword" id="newPassword" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                  </div>
+                </div>
+
+                <div class="mt-2">
+                  <label for="newPasswordRepeat" class="block text-sm font-medium text-gray-700">Neues Passwort bestätigen</label>
+                  <div class="mt-1">
+                    <input [(ngModel)]="passwordRepeat" type="password" name="newPasswordRepeat" id="newPasswordRepeat" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+            <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+              <button (click)="resetPassword()" type="button" class="inline-flex w-full justify-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 sm:col-start-2">Passwort ändern</button>
+              <button (click)="toggleResetPasswort()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

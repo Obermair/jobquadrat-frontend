@@ -16,6 +16,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { SaveAdvertisementComponent } from './save-advertisement/save-advertisement.component';
 import { TermsComponent } from './terms/terms.component';
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
 
 const routes: Routes = [
   {path: 'reset-password/:code', component: ResetPasswordComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
     {path: '', redirectTo: 'view', pathMatch: 'full'},
     {path: 'view', component: AdvertisementViewComponent},
     {path: 'create', component: CreateAdvertisementComponent},
+    {path: 'profile', component: UpdateProfileComponent},
     {path: 'create/save', component: SaveAdvertisementComponent},
     {path: 'create/update/:id', component: UpdateAdvertisementComponent}
   ]},
