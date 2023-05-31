@@ -34,25 +34,27 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   update(): void {
-    const userParams: any = {
-      "id": localStorage.getItem('jwt_user_id') ?? '',
-      "body": this.company
-    };
-    this.userService.usersIdPut(userParams)
-    .subscribe(
-      (updatedUser) => {
-        this.successMessage = "Änderungen erfolgreich angepasst!";
-        this.errorMessage = "";
-        localStorage.setItem('jwt_user', updatedUser.username); 
-        localStorage.setItem('jwt_user_description', updatedUser.description);
-        localStorage.setItem('jwt_user_email',updatedUser.email);
-      },
-      (error: any) => {
-        // Handle any errors that occurred during the update
-        this.errorMessage = "Änderungen wurden nicht übernommen werden. Versuche es später erneut."
-        this.successMessage = "";
-      }
-    );
+    if(this.company.description != "" && this.company.username != "" && this.company.email != ""){
+      const userParams: any = {
+        "id": localStorage.getItem('jwt_user_id') ?? '',
+        "body": this.company
+      };
+      this.userService.usersIdPut(userParams)
+      .subscribe(
+        (updatedUser) => {
+          this.successMessage = "Änderungen erfolgreich angepasst!";
+          this.errorMessage = "";
+          localStorage.setItem('jwt_user', updatedUser.username); 
+          localStorage.setItem('jwt_user_description', updatedUser.description);
+          localStorage.setItem('jwt_user_email',updatedUser.email);
+        },
+        (error: any) => {
+          // Handle any errors that occurred during the update
+          this.errorMessage = "Änderungen wurden nicht übernommen werden. Versuche es später erneut."
+          this.successMessage = "";
+        }
+      ); 
+    }
   }
 
   toggleDeactiveProfile(){
