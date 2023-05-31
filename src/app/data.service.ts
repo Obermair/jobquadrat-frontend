@@ -359,11 +359,15 @@ export class DataService {
     );
   }
 
-  deleteAdvertisement(advertisement: Advertisement) {
+  deactivateAdvertisement(advertisement: Advertisement) {
     let advertisementParams: any = {
-      "id": advertisement.id
+      "id": advertisement.id,
+      "body": {
+        "published_at": null
+      }
     }
-    this.advertisementService.advertisementsIdDelete(advertisementParams).subscribe(
+
+    this.advertisementService.advertisementsIdPut(advertisementParams).subscribe(
       (data: any) => {
         this.getAdvertisementsByUser();
       }
@@ -383,6 +387,23 @@ export class DataService {
     this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
       .subscribe(data => {
         this.formSent = true;
+      }
+    )
+  }
+
+  sendRecruiterSuccessPlacement(placementData: any){
+    let html = '<!DOCTYPE html><html><head>  <meta charset="UTF-8">  <title>Neue Vermittlung gemeldet</title>  <style>    body {      font-family: Arial, sans-serif;      line-height: 1.6;      margin: 0;      padding: 20px;    }    h1 {      color: #333333;      font-size: 24px;      margin-bottom: 20px;    }    p {      color: #333333;      font-size: 16px;      margin-bottom: 10px;    }    table {      border-collapse: collapse;      width: 100%;    }    th, td {      border: 1px solid #dddddd;      padding: 8px;      text-align: left;    }    th {      background-color: #f5f5f5;    }  </style></head><body><img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo">  <h1>Neue Vermittlung gemeldet</h1> <p>Ein Personalvermittler hat eine neue Vermittlung gemeldet:</p>  <table>    <tr>      <th>Personalvermittler</th>      <td>' + placementData.recruiter + '</td>    </tr>    <tr>      <th>E-Mail-Adresse</th>      <td>' + placementData.recruiterMail + '</td>    </tr>    <tr>      <th>Inserat</th>      <td>' + placementData.jobTitle + '</td>    </tr>    <tr>      <th>Vermittlungsprämie</th>      <td>' + placementData.placementBonus + '%</td>    </tr>    <tr>      <th>Unternehmen</th>      <td>' + placementData.companyName + '</td>    </tr>    <tr>      <th>Kontaktperson</th>      <td>' + placementData.contactPerson + '</td>    </tr>  </table>  <p>Bitte überprüfen Sie die Details und nehmen Sie gegebenenfalls weitere Schritte vor.</p></body></html>'
+
+    let emailParams: any = {
+      "to": "jobquadrat@gmail.com",
+      "from": "jobquadrat@gmail.com",
+      "subject": "Neue Vermittlung von Jobquadrat",
+      "html": html
+    }
+
+    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+      .subscribe(data => {
+        console.log(data)
       }
     )
   }

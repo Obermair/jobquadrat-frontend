@@ -10,6 +10,11 @@ import { DataService } from '../data.service';
 })
 export class CreateAdvertisementComponent implements OnInit {
 
+  showDeactivationAdvertisement = false;
+  currentUserAd: Advertisement = {
+    id: ""
+  }
+
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -30,7 +35,13 @@ export class CreateAdvertisementComponent implements OnInit {
     this.router.navigate(['update/' + advertisementId], {relativeTo:this.route});
   }
 
-  deleteAdvertisement(userAd: Advertisement) {
-    this.dataService.deleteAdvertisement(userAd);
+  showDeactiveAdvertisement(userAd: Advertisement){
+    this.currentUserAd = userAd;
+    this.showDeactivationAdvertisement = true;
+  }
+
+  deactiveAdvertisement(){
+    this.dataService.deactivateAdvertisement(this.currentUserAd); 
+    this.showDeactivationAdvertisement = false;
   }
 }

@@ -10,10 +10,20 @@ import localeDe from '@angular/common/locales/de';
 })
 export class AdvertisementProfileComponent implements OnInit {
 
+  showSuccessPlacement = false;
+  placementData: any = {
+    recruiter: "",
+    recruiterMail: "",
+    companyName: "",
+    jobTitle: "",
+    contactPerson: "",
+    placementBonus: ""
+  }
+
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
-    registerLocaleData(localeDe);
+    registerLocaleData(localeDe); 
   }
 
   showValueinHTMLList(value: string){
@@ -35,4 +45,24 @@ export class AdvertisementProfileComponent implements OnInit {
   }
     
 
+  toggleShowSuccessPlacement(){
+    this.showSuccessPlacement = !this.showSuccessPlacement;
+    //init placement data
+    this.placementData.companyName = this.dataService.advertisementProfile.users_permissions_user?.username;
+    this.placementData.jobTitle = this.dataService.advertisementProfile.jobTitle;
+    this.placementData.contactPerson = this.dataService.advertisementProfile.users_permissions_user?.email;
+    this.placementData.placementBonus = this.dataService.advertisementProfile.placementBonus;
+  }
+
+  successPlacement(){
+    this.placementData.recruiter = localStorage.getItem('jwt_user') + '(ID: ' + localStorage.getItem('jwt_user_id') + ")";
+    this.placementData.recruiterMail = localStorage.getItem('jwt_user_email');
+    this.dataService.sendRecruiterSuccessPlacement(this.placementData);
+    //deactivateAdvertisement
+    this.dataService.deactivateAdvertisement(this.dataService.advertisementProfile);
+    //reload advertisements
+    window.location.reload();
+    
+    this.showSuccessPlacement = !this.showSuccessPlacement;
+  }
 }
