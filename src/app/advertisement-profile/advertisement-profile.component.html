@@ -59,10 +59,10 @@
  
         <div class="sm:col-span-1">
           <dt class="text-sm font-bold text-gray-600">Bruttojahresgehalt</dt>
-          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary | number:'1.0-0':'de-AT' }}€</dd>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary }}€</dd> <!--number:'1.0-0':'de-AT'-->
         </div>
        
-
+s
         <div class="sm:col-span-1">
           <dt class="text-sm font-bold text-gray-600">Arbeitszeit (Vollzeit, Teilzeit)</dt>
           <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.workingTime }}</dd>
@@ -206,6 +206,12 @@
                       <label for="placementBonus" class="block text-sm font-medium text-gray-700">Tatsächliche Vermittlungsprämie (in %)</label>
                       <div class="mt-1">
                         <input [(ngModel)]="placementData.placementBonus" type="number" name="placementBonus" id="placementBonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                      </div>
+                    </div>  
+                    <div class="sm:col-span-3 mb-2">
+                      <label for="actualSalary" class="block text-sm font-medium text-gray-700">Tatsächliches Bruttojahresgehalt (in €)</label>
+                      <div class="mt-1">
+                        <input [(ngModel)]="placementData.actualSalary" type="number" name="actualSalary" id="actualSalary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                       </div>
                     </div>  
               </div>

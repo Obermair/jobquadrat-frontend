@@ -17,7 +17,8 @@ export class AdvertisementProfileComponent implements OnInit {
     companyName: "",
     jobTitle: "",
     contactPerson: "",
-    placementBonus: ""
+    placementBonus: "",
+    actualSalary: "",
   }
 
   constructor(public dataService: DataService) { }
@@ -52,6 +53,7 @@ export class AdvertisementProfileComponent implements OnInit {
     this.placementData.jobTitle = this.dataService.advertisementProfile.jobTitle;
     this.placementData.contactPerson = this.dataService.advertisementProfile.users_permissions_user?.email;
     this.placementData.placementBonus = this.dataService.advertisementProfile.placementBonus;
+    this.placementData.actualSalary = this.dataService.advertisementProfile.salary;
   }
 
   successPlacement(){

@@ -23,6 +23,7 @@ export class CreateAdvertisementComponent implements OnInit {
     jobTitle: "",
     contactPerson: "",
     placementBonus: "",
+    actualSalary: "",
     uid: "",
     street: "",
     houseNr: "",
@@ -64,6 +65,7 @@ export class CreateAdvertisementComponent implements OnInit {
     this.showSuccessPlacement = !this.showSuccessPlacement;
     this.placementData.jobTitle = userAd.jobTitle;
     this.placementData.placementBonus = userAd.placementBonus;
+    this.placementData.actualSalary = userAd.salary;
     this.placementData.companyName = userAd.users_permissions_user?.username;
     this.placementData.contactPerson = userAd.users_permissions_user?.email;
     this.placementData.companyId = userAd.users_permissions_user?.id;

@@ -142,7 +142,7 @@
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
               <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Erfolgreiche Stellenbesetzung melden</h3>
               <div class="mt-2">
-                <p class="text-sm mb-2 text-gray-500">Vielen Dank für Ihre Vermittlung der Stelle '{{ placementData.jobTitle }}'. Für die Ausstellung der Rechnung benötigen wir noch Ihre Rechnungsadresse, UID sowie die Kontaktinformation des Personalvermittlers und die tatsächlich vereinbarte Vermittlungsprämie. </p>
+                <p class="text-sm mb-2 text-gray-500">Vielen Dank für Ihre Vermittlung der Stelle '{{ placementData.jobTitle }}'. Für die Ausstellung der Rechnung benötigen wir noch Ihre Rechnungsadresse, UID sowie die Kontaktinformation des Personalvermittlers. </p>
                 <div class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6">
                   <div class="sm:col-span-3">
                     <label for="street" class="block text-sm font-medium text-gray-700">Straße</label>
@@ -178,6 +178,12 @@
                     <label for="placementBonus" class="block text-sm font-medium text-gray-700">Tatsächliche Vermittlungsprämie (in %)</label>
                     <div class="mt-1">
                       <input [(ngModel)]="placementData.placementBonus"  type="number" name="placementBonus" id="placementBonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                    </div>
+                  </div>  
+                  <div class="sm:col-span-3">
+                    <label for="actualSalary" class="block text-sm font-medium text-gray-700">Tatsächliches Bruttojahresgehalt (in €)</label>
+                    <div class="mt-1">
+                      <input [(ngModel)]="placementData.actualSalary"  type="number" name="actualSalary" id="actualSalary" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                     </div>
                   </div>  
                     <div class="sm:col-span-3">
