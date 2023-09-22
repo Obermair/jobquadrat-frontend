@@ -3,9 +3,11 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 
 @Injectable()
@@ -19,7 +21,16 @@ export class JwtInterceptor implements HttpInterceptor {
       const cloned = req.clone({
         headers: req.headers.set('Authorization', 'Bearer ' + idToken),
       });
-      return next.handle(cloned);
+
+      return next.handle(cloned).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401 && error.error.message === 'Token expired') {
+            // Token expired, remove it from localStorage
+            localStorage.removeItem('jwt_token');
+          }
+          return throwError(error);
+        })
+      );
     } else {
       return next.handle(req);
     }
