@@ -20,6 +20,7 @@ export class LandingComponent implements OnInit {
 
   constructor(public dataService: DataService) { 
     this.getLandingPageAdvertisements();
+    
   }
 
   ngOnInit(): void {
