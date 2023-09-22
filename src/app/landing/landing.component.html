@@ -31,6 +31,8 @@
             <div class="hidden space-x-10 md:ml-10 md:flex">
               <a (click)="toggleMenu(); scrollIntoView('#concept')" class="font-medium cursor-pointer text-white hover:text-gray-300">Unser Konzept</a>
 
+              <a (click)="toggleMenu(); scrollIntoView('#advertisements')" class="font-medium cursor-pointer text-white hover:text-gray-300">Aktuelle Jobinserate</a>
+
               <a (click)="toggleMenu(); scrollIntoView('#team')" class="font-medium cursor-pointer text-white hover:text-gray-300">Über uns</a>
   
               <a (click)="toggleMenu(); scrollIntoView('#contact')" class="font-medium cursor-pointer text-white hover:text-gray-300">Kontakt</a>
@@ -70,6 +72,8 @@
             <div class="space-y-1 px-2 pt-2 pb-3">
               <a (click)="scrollIntoView('#concept')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unser Konzept</a>
  
+              <a (click)="scrollIntoView('#advertisements')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Aktuelle Jobinserate</a>
+ 
               <a (click)="scrollIntoView('#team')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Über uns</a>
   
               <a (click)="scrollIntoView('#contact')" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Kontakt</a>
@@ -105,7 +109,7 @@
         </div>
   
         <!-- Feature Section -->
-        <div id="concept" class="overflow-hidden  bg-gray-50 py-16 lg:py-24">
+        <div id="concept" class="overflow-hidden  bg-white py-16 lg:py-24">
           <div class="relative mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <svg class="absolute left-full hidden -translate-x-1/2 -translate-y-1/4 transform lg:block" width="404" height="784" fill="none" viewBox="0 0 404 784" aria-hidden="true">
               <defs>
@@ -394,6 +398,48 @@
               </div>
             </div>
              -->
+          </div>
+        </div>
+
+        <!-- Advertisement Section -->
+        <div id="advertisements" class="overflow-hidden  bg-gray-50 py-16 lg:py-24">
+          <div class="relative mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+            <svg class="absolute left-full hidden -translate-x-1/2 -translate-y-1/4 transform lg:block" width="404" height="784" fill="none" viewBox="0 0 404 784" aria-hidden="true">
+              <defs>
+                <pattern id="b1e6e422-73f8-40a6-b5d9-c8586e37e0e7" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
+                </pattern>
+              </defs>
+              <rect width="404" height="784" fill="url(#b1e6e422-73f8-40a6-b5d9-c8586e37e0e7)" />
+            </svg>
+        
+            <div class="relative max-w-xl mx-auto">
+              <h2 class="text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">Aktuelle Jobinserate</h2>
+              <div class="flow-root mt-12">
+                <ul role="list" class="divide-y divide-gray-100">
+                  <li *ngFor="let advertisement of dataService.landingPageAdvertisements" class="flex items-center justify-between gap-x-6 py-5">
+                    <div class="min-w-0">
+                      <div class="flex items-start gap-x-3">
+                        <p class="text-sm font-semibold leading-6 text-gray-900">{{ advertisement.jobTitle }}</p>
+                        <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">{{ advertisement.placementBonus}}%</p>
+                      </div>
+                      <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                        <p class="whitespace-nowrap">Erstellt am <time datetime="2023-03-17T00:00Z">{{ advertisement.published_at | date: 'dd.MM.yyyy' }}</time></p>
+                        <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
+                          <circle cx="1" cy="1" r="1" />
+                        </svg>
+                        <p class="truncate">Bruttojahresgehalt: {{ advertisement.salary }}€</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-none items-center gap-x-4">
+                      <a routerLink="/login" class="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block">Inserat anzeigen</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              
+            </div>
+         
           </div>
         </div>
   

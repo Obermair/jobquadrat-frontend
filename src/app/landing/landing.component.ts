@@ -18,7 +18,9 @@ export class LandingComponent implements OnInit {
   };
   showErrorMessage: boolean = false;
 
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService) { 
+    this.getLandingPageAdvertisements();
+  }
 
   ngOnInit(): void {
   }
@@ -42,5 +44,9 @@ export class LandingComponent implements OnInit {
         this.dataService.sendForm(this.form);
       }
     }
+  }
+
+  getLandingPageAdvertisements(){
+    this.dataService.getAdvertisementsLandingPage();
   }
 }

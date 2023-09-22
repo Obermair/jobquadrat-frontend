@@ -40,6 +40,7 @@ export class DataService {
   public currentAdvertisementBonuses: PlacementBonus[] = [];
   public activePlacementBonus: number = 0;
   public formSent: boolean = false;
+  public landingPageAdvertisements: Advertisement[] = [];
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -153,7 +154,19 @@ export class DataService {
     );
   }
 
-   
+  getAdvertisementsLandingPage() {
+    this.advertisementService.advertisementsGet({_limit: 10}).subscribe(
+      (data: Advertisement[]) => {
+        //order data by published_at property
+        data = data.sort((a, b) => {
+          return <any>new Date(b.published_at!) - <any>new Date(a.published_at!);
+        });
+
+        this.addPlacementBonusToLandingPageList(data);
+        this.landingPageAdvertisements = data;
+      }
+    );
+  }
 
   getAmountOfAdvertisements() {
     this.advertisementService.advertisementsCountGet().subscribe(
@@ -201,6 +214,18 @@ export class DataService {
   }
   
   addPlacementBonusToList(advertisements: Advertisement[]){
+    for (let i = 0; i < advertisements.length; i++) {
+      this.getActivePlacementBonus(advertisements[i].id).then((bonus: any) => {
+        if(bonus){
+          advertisements[i].placementBonus = bonus;
+        } else {
+          advertisements[i].placementBonus = 0;
+        }
+      });
+    }
+  }
+
+  addPlacementBonusToLandingPageList(advertisements: Advertisement[]){
     for (let i = 0; i < advertisements.length; i++) {
       this.getActivePlacementBonus(advertisements[i].id).then((bonus: any) => {
         if(bonus){
