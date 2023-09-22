@@ -24,11 +24,11 @@ export class JwtInterceptor implements HttpInterceptor {
 
       return next.handle(cloned).pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401 && error.error.message === 'Token expired') {
+          if (error.status === 401) {
             // Token expired, remove it from localStorage
             localStorage.removeItem('jwt_token');
           }
-          return throwError(error);
+          return next.handle(req);
         })
       );
     } else {
