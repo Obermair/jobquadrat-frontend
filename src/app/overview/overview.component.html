@@ -9,7 +9,7 @@
             <img class="h-16" src="../../assets/images/logo.png" alt="">
           </a>
         </div>
-        <nav *ngIf="this.dataService.currentUserRole == 'Company'" class="-my-2 -mr-2">
+        <nav class="-my-2 -mr-2">
           <div class="flex w-full items-center justify-between md:w-auto">
             <div class="-mr-2 flex items-center lg:hidden">
               <button (click)="toggleMenu()" type="button" class="focus-ring-inset inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:text-gray-500 focus:outline-none" aria-expanded="false">
@@ -23,8 +23,9 @@
           </div>
           <div class="hidden lg:flex">
             <a (click)="view()" class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-500">Inserate anzeigen</a>
-            <a (click)="create()" routerLink="view" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Inserate erstellen/bearbeiten</a>
-            <a (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Unternehmensprofil bearbeiten</a>
+            <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="create()" routerLink="view" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Inserate erstellen/bearbeiten</a>
+            <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Unternehmensprofil bearbeiten</a>
+            <a *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Personalvermittlerprofil bearbeiten</a>
           </div>
         </nav>
         <div [ngClass]="{'hidden': !openMenu}" class="absolute inset-x-0 top-0 z-10 origin-top-right transform p-2 transition lg:hidden">
@@ -46,9 +47,10 @@
             <div class="space-y-1 px-2 pt-2 pb-3">
               <a (click)="view()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate anzeigen</a>
  
-              <a (click)="create()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate erstellen/bearbeiten</a>
+              <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="create()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate erstellen/bearbeiten</a>
   
-              <a (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unternehmensprofil bearbeiten</a>
+              <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unternehmensprofil bearbeiten</a>
+              <a *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Personalvermittlerprofil bearbeiten</a>    
             </div>
             <a routerLink="/" class="block w-full cursor-pointer bg-gray-50 px-5 py-3 text-center font-medium text-amber-600 hover:bg-gray-100">Startseite</a>
           </div>

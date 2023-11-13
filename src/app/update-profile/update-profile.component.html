@@ -4,9 +4,13 @@
         <div class="space-y-8 divide-y divide-gray-200">
     
           <div class="pt-8">
-            <div>
+            <div *ngIf="this.dataService.currentUserRole == 'Company'">
               <h3 class="text-lg font-medium leading-6 text-gray-900">Unternehmensprofil bearbeiten</h3>
               <p class="mt-1 text-sm text-gray-500">Hier kannst du dein Unternehmensprofil bearbeiten, dein Passwort ändern sowie deinen Account löschen.</p>
+            </div>
+            <div *ngIf="this.dataService.currentUserRole == 'HR-Consultant'">
+              <h3 class="text-lg font-medium leading-6 text-gray-900">Personalvermittlerprofil bearbeiten</h3>
+              <p class="mt-1 text-sm text-gray-500">Hier kannst du dein Personalvermittlerprofil bearbeiten, dein Passwort ändern sowie deinen Account löschen.</p>
             </div>
     
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
