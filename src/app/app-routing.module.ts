@@ -17,6 +17,7 @@ import { SaveAdvertisementComponent } from './save-advertisement/save-advertisem
 import { TermsComponent } from './terms/terms.component';
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { FaqComponent } from './faq/faq.component';
 
 const routes: Routes = [
   {path: 'reset-password/:code', component: ResetPasswordComponent},
@@ -24,6 +25,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'terms-and-conditions', component: TermsComponent},
+  {path: 'faq', component: FaqComponent},
   {path: 'imprint', component: ImprintComponent},
   {path: 'privacy-policy', component: PrivacyPolicyComponent},
   {path: 'advertisements', component: OverviewComponent, canActivate: [AuthGuardService]

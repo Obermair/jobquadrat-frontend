@@ -24,6 +24,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { TermsComponent } from './terms/terms.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { FaqComponent } from './faq/faq.component';
  
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { UpdateProfileComponent } from './update-profile/update-profile.componen
     TermsComponent,
     ImprintComponent,
     UpdateProfileComponent,
+    FaqComponent,
   ],
   imports: [
     BrowserModule,
