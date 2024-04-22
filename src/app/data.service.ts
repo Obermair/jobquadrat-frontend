@@ -58,6 +58,15 @@ export class DataService {
     public router: Router,
   ) {}
 
+  getInitials(name: string){
+    //get initials from name - split name by space and take first letter of each word and if only one name then take first two letters
+    let initials = name.split(' ').map((n: string) => n[0]).join('');
+    if(initials.length > 2){
+      initials = initials.substring(0, 2);
+    }
+    return initials;
+  }
+
   
   login(username: string, password: string): void {
     let loginParams: any = {

@@ -39,4 +39,8 @@ export class OverviewComponent implements OnInit {
   profile(){
     this.router.navigate(['profile'], {relativeTo:this.route});
   }
+
+  chat(){
+    this.router.navigate(['chat'], {relativeTo:this.route});
+  }
 }
