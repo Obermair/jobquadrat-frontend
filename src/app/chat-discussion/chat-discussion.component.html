@@ -4,15 +4,15 @@
     <div class="border-b border-gray-200 flex justify-between bg-white rounded-lg px-4 py-5 sm:px-6">
         <div class="min-w-0">
             <div class="flex items-start gap-x-3">
-              <p class="text-sm font-semibold leading-6 text-gray-900">{{ chatAdvertisement.jobTitle}}</p>
-              <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">{{chatAdvertisement.placementBonus }}% Prämie</p>
+              <p class="text-sm font-semibold leading-6 text-gray-900">{{ dataService.chatAdvertisement.jobTitle}}</p>
+              <p class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">{{ dataService.getActivePlacementBonus(dataService.chatAdvertisement.id) }}% Prämie</p>
             </div>
             <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-              <p class="whitespace-nowrap">Arbeitsort: {{ chatAdvertisement.location}}</p>
+              <p class="whitespace-nowrap">Arbeitsort: {{ dataService.chatAdvertisement.location}}</p>
               <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
                 <circle cx="1" cy="1" r="1" />
               </svg>
-              <p class="truncate">Bruttojahresgehalt: {{ chatAdvertisement.salary}}</p>
+              <p class="truncate">Bruttojahresgehalt: {{ dataService.chatAdvertisement.salary}}</p>
             </div>
         </div>
         <div class="flex  items-center justify-end gap-x-4">
@@ -25,32 +25,34 @@
         <!-- Chat Messages -->
         <div class="flex flex-col space-y-4">
 
-            <ng-container *ngFor="let message of chatMessages">
+            <ng-container *ngFor="let message of dataService.chatMessages">
             <!-- Chat Message: Received -->
-            <div *ngIf="message.sender != currentSender" class="flex items-start gap-2.5">
+            <div *ngIf="message.username != dataService.currentUser" class="flex items-start gap-2.5">
                 <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full ">
-                    <span class="font-medium text-gray-600  ">{{ dataService.getInitials(message.sender) }}</span>
+                    <span class="font-medium text-gray-600  ">{{ dataService.getInitials(message.username) }}</span>
                 </div>
                 <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-lg ">
                    <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                      <span class="text-sm font-semibold text-gray-900 ">{{ message.sender }}</span>
-                      <span class="text-sm font-normal text-gray-500 ">{{ message.time }}</span>
+                      <span class="text-sm font-semibold text-gray-900 ">{{ message.username }}</span>
+                      <span class="text-sm font-normal text-gray-500 ">
+                        {{  message.timestamp | date: 'HH:mm, dd.MM.yyyy'}}
+                     </span>
                    </div>
                    <p class="text-sm font-normal py-2.5 text-gray-900 ">{{ message.message }}</p>
                 </div>
              </div>
              
             <!-- Chat Message: Sent --> 
-            <div *ngIf="message.sender == currentSender" class="flex items-start justify-end gap-2.5">
+            <div *ngIf="message.username == dataService.currentUser" class="flex items-start justify-end gap-2.5">
                 <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-amber-100 rounded-lg ">
                    <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                      <span class="text-sm font-semibold text-gray-900 ">{{ message.sender }}</span>
-                      <span class="text-sm font-normal text-gray-500 ">{{ message.time }}</span>
+                      <span class="text-sm font-semibold text-gray-900 ">{{ message.username }}</span>
+                      <span class="text-sm font-normal text-gray-500 ">{{ message.timestamp | date: 'HH:mm, dd.MM.yyyy' }}</span>
                    </div>
                    <p class="text-sm font-normal py-2.5 text-gray-900 ">{{ message.message }}</p> 
                 </div>
                 <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-amber-500 rounded-full ">
-                    <span class="font-medium text-white  ">{{ dataService.getInitials('Test Company') }}</span>
+                    <span class="font-medium text-white  ">{{ dataService.getInitials(message.username) }}</span>
                 </div>
              </div>
             </ng-container>

@@ -1,5 +1,11 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DataService } from '../data.service';
+import { FirebaseApp, initializeApp } from 'firebase/app';
+import { Database, getDatabase, ref, set, onValue  } from "firebase/database";
+import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { v4 as uuidv4 } from 'uuid';
+import { Chat } from '../firechat/chat';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat-discussion',
@@ -10,65 +16,11 @@ export class ChatDiscussionComponent implements OnInit {
  
   @ViewChild('chatArea') chatArea!: ElementRef;
 
-  public chatAdvertisement = {
-    id: '1',
-    jobTitle: 'Personalverrechner/in mit eigenständigem Aufgabengebiet (m/w/d)',
-    location: 'Schachermayerstraße 2a, 4020 Linz',
-    placementBonus: 15,
-    published_at: '2021-01-01',
-    requirements: 'Java, Angular, Spring',
-    salary: '32.000 - 38.000€',
-    currentPlacementBonus: 15,
-  };
-
-  currentSender="Schachermayer GmbH";
   currentMessage = "";
   showUploadFile = false;
 
-  public chatMessages = [
-    {
-      sender: 'Schachermayer GmbH',
-      message: 'Hello, how can I help you?',
-      time: '10:00',
-    },
-    {
-      sender: 'Hornbach Baumarkt GmbH',
-      message: 'Hello, I would like to order some products.',
-      time: '11:00',
-    },
-    {
-      sender: 'Schachermayer GmbH',
-      message: 'Sure, which products would you like to order?',
-      time: '12:00',
-    },
-    {
-      sender: 'Hornbach Baumarkt GmbH',
-      message: 'I would like to order some screws and nails.',
-      time: '13:00',
-    },
-    {
-      sender: 'Schachermayer GmbH',
-      message: 'Sure, how many screws and nails would you like to order?',
-      time: '14:00',
-    },
-    {
-      sender: 'Hornbach Baumarkt GmbH',
-      message: 'I would like to order 100 screws and 50 nails.',
-      time: '15:00',
-    },
-    {
-      sender: 'Schachermayer GmbH',
-      message: 'Sure, we will deliver the products to your address.',
-      time: '16:00',
-    },
-    {
-      sender: 'Hornbach Baumarkt GmbH',
-      message: 'Thank you very much.',
-      time: '17:00',
-    },
-  ];
-
-  constructor(public dataService: DataService, private renderer: Renderer2) { }
+  constructor(public dataService: DataService, private renderer: Renderer2, private formBuilder: FormBuilder) {  
+  }
 
   ngOnInit(): void {
   }
@@ -89,11 +41,9 @@ export class ChatDiscussionComponent implements OnInit {
   }
 
   sendMessage(){
-    this.chatMessages.push({
-      sender: this.currentSender,
-      message: this.currentMessage,
-      time: new Date().getHours() + ':' + new Date().getMinutes(),
-    });
+    //send message to the server
+    this.dataService.addNewMessagetoFirechat(this.dataService.currentChatCommunicationId, this.currentMessage);
+
     this.currentMessage = "";
     this.onScrollToBottomClick();
   }

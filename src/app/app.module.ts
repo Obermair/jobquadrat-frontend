@@ -28,6 +28,8 @@ import { FaqComponent } from './faq/faq.component';
 import { ChatComponent } from './chat/chat.component';
 import { ChatConversationsComponent } from './chat-conversations/chat-conversations.component';
 import { ChatDiscussionComponent } from './chat-discussion/chat-discussion.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
  
 @NgModule({
   declarations: [
@@ -58,11 +60,13 @@ import { ChatDiscussionComponent } from './chat-discussion/chat-discussion.compo
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    
   ],
   bootstrap: [AppComponent]
 })

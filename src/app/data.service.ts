@@ -2,14 +2,26 @@ import { Injectable } from '@angular/core';
 import { Advertisement, District, PlacementBonus, UsersPermissionsUser } from './api/models';
 import { AdvertisementService, DistrictService } from './api/services';
 import { UsersPermissionsUserService } from './api/services';
+import { FirebaseApp, initializeApp } from 'firebase/app';
+import { Database, getDatabase, ref, set, onValue  } from "firebase/database";
 import { BreakpointObserverService } from './breakpoint.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { FormGroup } from '@angular/forms';
+import { v4 as uuidv4 } from 'uuid';
+import { ChatCommunications } from './api/models/chatCommunications';
+import { ChatMessage } from './api/models/chatMessage';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+
+  public firechat: FirebaseApp;
+  public firechat_db: Database;
+
   //Data Elements
   public totalAdvertisementAmount: number = 0;
   public totalAdvertisement: Advertisement[] = [];
@@ -41,6 +53,12 @@ export class DataService {
   public activePlacementBonus: number = 0;
   public formSent: boolean = false;
   public landingPageAdvertisements: Advertisement[] = [];
+  public currentUserConversations: ChatCommunications[] = [];
+  public currentChatCommunicationId: string = "";
+  public chatAdvertisement: Advertisement = {
+    id: "",
+  };
+  public chatMessages: ChatMessage[] = [];
 
   public advertisementProfile: Advertisement = {
     id: "",
@@ -56,7 +74,10 @@ export class DataService {
     private userPermissionService: UsersPermissionsUserService,
     private http: HttpClient,
     public router: Router,
-  ) {}
+  ) {
+    this.firechat = initializeApp(environment.firebase);
+    this.firechat_db = getDatabase(this.firechat);
+  }
 
   getInitials(name: string){
     //get initials from name - split name by space and take first letter of each word and if only one name then take first two letters
@@ -311,6 +332,97 @@ export class DataService {
       }
     );
   }
+
+  //load all chatCommunications where chat sender is current user
+  getChatCommunicationsOfConsultant() {
+    this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_sender_p1.id]=' + this.currentUserId)
+      .subscribe((data: any) => {
+        //order data by last_message_timestamp property
+        data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
+          return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
+        });
+        this.currentUserConversations = data;
+
+        this.currentChatCommunicationId = data[0].id;
+        this.chatAdvertisement = data[0].advertisement;
+        this.updateChatMessages(this.currentChatCommunicationId);
+      }
+    );
+  }
+
+  getChatCommunicationsOfCompany() {
+    this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_receiver_p2.id]=' + this.currentUserId)
+      .subscribe((data: any) => {
+        //order data by last_message_timestamp property
+        data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
+          return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
+        });
+        this.currentUserConversations = data;
+
+        this.currentChatCommunicationId = data[0].id;
+        this.chatAdvertisement = data[0].advertisement!;
+        this.updateChatMessages(this.currentChatCommunicationId);
+      }
+    );
+  }
+
+  updateChatCommunication(chatCommunicationId: string) {
+    let chatParams: any = {
+      "id": chatCommunicationId,
+      "last_message_timestamp": new Date().toString()
+    }
+
+    this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
+      .subscribe(data => {
+      }
+    )
+  }
+
+  addChatCommunication(communicationMessage: string) {
+    let chatParams: any = {
+      "advertisement": {
+        "id": this.advertisementProfile.id
+      },
+      "chat_sender_p1": {
+        "id": this.currentUserId
+      }, 
+      "chat_receiver_p2": this.advertisementProfile.users_permissions_user,
+      "last_message_timestamp": new Date()
+    }
+
+    this.http.post<any>('https://api.jobquadrat.com/chat-communications', chatParams)
+      .subscribe(data => {
+        this.addNewMessagetoFirechat(data.id, communicationMessage);
+      }
+    )
+  }
+
+  updateChatMessages(chatCommunicationId: string){
+    //get chats from the firebase database
+    const chatsRef = ref(this.firechat_db, chatCommunicationId.toString());
+    
+    onValue(chatsRef, (snapshot: any) => {
+      const data = snapshot.val();
+      for (let key in data) {
+        this.chatMessages.push(data[key]);
+      }
+    });
+    console.log(this.chatMessages);
+  }
+
+  addNewMessagetoFirechat(chatId: string, message: string) {
+    let newMessageId = uuidv4();
+    
+    let chatParams: any = {
+      "messageId": newMessageId,
+      "message": message,
+      "username": this.currentUser,
+      "timestamp": new Date().toString()
+    }
+
+    set(ref(this.firechat_db, `${chatId}/${newMessageId}`), chatParams);
+  }
+ 
 
   addPlacementBonus(bonus: number, advertisementId: number) {
     let placementBonusParams: any = {

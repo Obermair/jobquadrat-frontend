@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { DataService } from '../data.service';
 import localeDe from '@angular/common/locales/de';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-advertisement-profile',
@@ -11,6 +12,8 @@ import localeDe from '@angular/common/locales/de';
 export class AdvertisementProfileComponent implements OnInit {
 
   showSuccessPlacement = false;
+  showCompanyContact = false;
+  newCommunicationMessage = "";
   placementData: any = {
     recruiter: "",
     recruiterMail: "",
@@ -21,10 +24,16 @@ export class AdvertisementProfileComponent implements OnInit {
     actualSalary: "",
   }
 
+
+
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
     registerLocaleData(localeDe); 
+  }
+
+  createNewCommunication(){
+    this.dataService.addChatCommunication(this.newCommunicationMessage);
   }
 
   showValueinHTMLList(value: string){
@@ -54,6 +63,10 @@ export class AdvertisementProfileComponent implements OnInit {
     this.placementData.contactPerson = this.dataService.advertisementProfile.users_permissions_user?.email;
     this.placementData.placementBonus = this.dataService.advertisementProfile.placementBonus;
     this.placementData.actualSalary = this.dataService.advertisementProfile.salary;
+  }
+
+  toggleCompanyContact(){
+    this.showCompanyContact = !this.showCompanyContact;
   }
 
   successPlacement(){

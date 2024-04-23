@@ -5,17 +5,22 @@
     <!-- Directory list -->
     <nav class="min-h-0 pl-6 max-h-[calc(100vh-200px)] flex-1 overflow-y-auto overflow-x-hidden" aria-label="Directory">
         <ul role="list" class="divide-y divide-gray-100"> 
-            <li *ngFor="let participant of conversationParticipants" class="relative flex justify-between py-5 px-2 rounded-md hover:bg-white ">
+            <li *ngFor="let participant of dataService.currentUserConversations" class="relative flex justify-between py-5 px-2 rounded-md hover:bg-white ">
                 <div class="flex gap-x-4 pr-2 sm:flex-none hover:bg-white">
                 <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full ">
-                    <span class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.participant) }}</span>
+                    <span *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.chat_receiver_p2?.username! ) }}</span>
+                    <span *ngIf="this.dataService.currentUserRole == 'Company'" class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.chat_sender_p1?.username! ) }}</span>
                 </div>
                 <div class="min-w-0 flex-auto">
-                    <p class="text-sm font-semibold leading-6 text-gray-900">  
+                    <p *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="text-sm font-semibold leading-6 text-gray-900">  
                         <span class="absolute inset-x-0 -top-px bottom-0"></span>
-                        {{ participant.participant }}
+                        {{ participant.chat_receiver_p2?.username! }}
                     </p>
-                    <p class="mt-1 text-xs leading-5 text-gray-500">Letzte Nachricht um <time datetime="2023-01-23T13:23Z">{{ participant.lastMessageTime }}</time></p>
+                    <p *ngIf="this.dataService.currentUserRole == 'Company'" class="text-sm font-semibold leading-6 text-gray-900">  
+                        <span class="absolute inset-x-0 -top-px bottom-0"></span>
+                        {{ participant.chat_sender_p1?.username! }}
+                    </p>
+                    <p class="mt-1 text-xs leading-5 text-gray-500">{{ participant.advertisement?.jobTitle | slice:0:40 }}{{ participant.advertisement?.jobTitle!.length > 40 ? '...' : '' }}</p>
                 </div>
                 </div>
                 <div class="flex items-center justify-between sm:flex-none">
