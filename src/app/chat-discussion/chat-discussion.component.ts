@@ -6,6 +6,7 @@ import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Valida
 import { v4 as uuidv4 } from 'uuid';
 import { Chat } from '../firechat/chat';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat-discussion',
@@ -17,9 +18,13 @@ export class ChatDiscussionComponent implements OnInit {
   @ViewChild('chatArea') chatArea!: ElementRef;
 
   currentMessage = "";
+  private scrollToBottomSubscription: Subscription;
   showUploadFile = false;
 
-  constructor(public dataService: DataService, private renderer: Renderer2, private formBuilder: FormBuilder) {  
+  constructor(public dataService: DataService, private renderer: Renderer2, private formBuilder: FormBuilder) { 
+    this.scrollToBottomSubscription = this.dataService.getScrollToBottomChatTrigger().subscribe(() => {
+      this.onScrollToBottomClick();
+    }); 
   }
 
   ngOnInit(): void {
@@ -43,6 +48,7 @@ export class ChatDiscussionComponent implements OnInit {
   sendMessage(){
     //send message to the server
     this.dataService.addNewMessagetoFirechat(this.dataService.currentChatCommunicationId, this.currentMessage);
+    this.dataService.updateChatCommunicationTimestamp(this.dataService.currentChatCommunicationId);
 
     this.currentMessage = "";
     this.onScrollToBottomClick();

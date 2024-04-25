@@ -5,7 +5,7 @@
     <!-- Directory list -->
     <nav class="min-h-0 pl-6 max-h-[calc(100vh-200px)] flex-1 overflow-y-auto overflow-x-hidden" aria-label="Directory">
         <ul role="list" class="divide-y divide-gray-100"> 
-            <li *ngFor="let participant of dataService.currentUserConversations" class="relative flex justify-between py-5 px-2 rounded-md hover:bg-white ">
+            <li *ngFor="let participant of dataService.currentUserConversations" [ngClass]="{ 'bg-amber-100': dataService.currentChatCommunicationId == participant.id}" (click)="updateCommunicationId(participant.id)" class="relative flex justify-between py-5 px-2 rounded-md hover:bg-white ">
                 <div class="flex gap-x-4 pr-2 sm:flex-none hover:bg-white">
                 <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full ">
                     <span *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.chat_receiver_p2?.username! ) }}</span>

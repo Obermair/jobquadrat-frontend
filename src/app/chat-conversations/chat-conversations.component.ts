@@ -11,10 +11,14 @@ export class ChatConversationsComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.dataService.currentUserRole == 'HR-Consultant'){
-      this.dataService.getChatCommunicationsOfConsultant();
+      this.dataService.getChatCommunicationsOfConsultant(true);
     }
     if(this.dataService.currentUserRole == 'Company'){
-      this.dataService.getChatCommunicationsOfCompany();
+      this.dataService.getChatCommunicationsOfCompany(true);
     }
+  }
+
+  updateCommunicationId(participantId: string){
+    this.dataService.updateChatCommunicationId(participantId);
   }
 }

@@ -12,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { ChatCommunications } from './api/models/chatCommunications';
 import { ChatMessage } from './api/models/chatMessage';
+import { Subject } from 'rxjs';
 
 
 @Injectable({
@@ -63,6 +64,12 @@ export class DataService {
   public advertisementProfile: Advertisement = {
     id: "",
   };
+
+  public scrollToBottomChatTrigger = new Subject<void>();
+
+  getScrollToBottomChatTrigger() {
+    return this.scrollToBottomChatTrigger.asObservable();
+  }
 
   //Style Elements
   currentBreakpoint: string = "xl";
@@ -333,8 +340,9 @@ export class DataService {
     );
   }
 
+
   //load all chatCommunications where chat sender is current user
-  getChatCommunicationsOfConsultant() {
+  getChatCommunicationsOfConsultant(chatUpdate: boolean) {
     this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_sender_p1.id]=' + this.currentUserId)
       .subscribe((data: any) => {
         //order data by last_message_timestamp property
@@ -343,14 +351,17 @@ export class DataService {
         });
         this.currentUserConversations = data;
 
-        this.currentChatCommunicationId = data[0].id;
-        this.chatAdvertisement = data[0].advertisement;
-        this.updateChatMessages(this.currentChatCommunicationId);
+        if(chatUpdate){
+          this.currentChatCommunicationId = data[0].id;
+          this.chatAdvertisement = data[0].advertisement;
+          this.readMessages(this.currentChatCommunicationId);
+          this.updateChatMessages(this.currentChatCommunicationId);
+        } 
       }
     );
   }
 
-  getChatCommunicationsOfCompany() {
+  getChatCommunicationsOfCompany(chatUpdate: boolean) {
     this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_receiver_p2.id]=' + this.currentUserId)
       .subscribe((data: any) => {
         //order data by last_message_timestamp property
@@ -358,22 +369,48 @@ export class DataService {
           return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
         });
         this.currentUserConversations = data;
-
-        this.currentChatCommunicationId = data[0].id;
-        this.chatAdvertisement = data[0].advertisement!;
-        this.updateChatMessages(this.currentChatCommunicationId);
+ 
+        if(chatUpdate){
+          this.currentChatCommunicationId = data[0].id;
+          this.chatAdvertisement = data[0].advertisement;
+          this.readMessages(this.currentChatCommunicationId);
+          this.updateChatMessages(this.currentChatCommunicationId);
+        }
       }
     );
   }
 
-  updateChatCommunication(chatCommunicationId: string) {
+  updateChatCommunicationId(chatCommunicationId: string) {
+    this.currentChatCommunicationId = chatCommunicationId;
+    this.updateChatMessages(chatCommunicationId);
+  }
+
+  updateChatCommunicationTimestamp(chatCommunicationId: string) {
     let chatParams: any = {
       "id": chatCommunicationId,
-      "last_message_timestamp": new Date().toString()
+      "last_message_timestamp": new Date()
     }
 
     this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
-      .subscribe(data => {
+      .subscribe(data => { 
+        if(this.currentUserRole == "HR-Consultant"){
+          this.getChatCommunicationsOfConsultant(true);
+        }
+        if(this.currentUserRole == "Company"){
+          this.getChatCommunicationsOfCompany(true);
+        }
+      }
+    )
+  }
+
+  readMessages(chatCommunicationId: string) {
+    let chatParams: any = {
+      "id": chatCommunicationId,
+      "unread_messages": false
+    }
+
+    this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
+      .subscribe(data => { 
       }
     )
   }
@@ -387,7 +424,8 @@ export class DataService {
         "id": this.currentUserId
       }, 
       "chat_receiver_p2": this.advertisementProfile.users_permissions_user,
-      "last_message_timestamp": new Date()
+      "last_message_timestamp": new Date(),
+      "unread_messages": true
     }
 
     this.http.post<any>('https://api.jobquadrat.com/chat-communications', chatParams)
@@ -401,13 +439,30 @@ export class DataService {
     //get chats from the firebase database
     const chatsRef = ref(this.firechat_db, chatCommunicationId.toString());
     
+    this.chatMessages = [];
+
     onValue(chatsRef, (snapshot: any) => {
+      //get data from snapshot and push it to chatMessages array and remove all previous messages
+      this.chatMessages = [];
       const data = snapshot.val();
       for (let key in data) {
         this.chatMessages.push(data[key]);
       }
+      //order chatMessages by timestamp
+      this.chatMessages = this.chatMessages.sort((a, b) => {
+        return <any>new Date(a.timestamp) - <any>new Date(b.timestamp);
+      });
+
+      this.scrollToBottomChatTrigger.next();
+      
+      if(this.currentUserRole == "HR-Consultant"){
+        this.getChatCommunicationsOfConsultant(false);
+      }
+      if(this.currentUserRole == "Company"){
+        this.getChatCommunicationsOfCompany(false);
+      }
+      
     });
-    console.log(this.chatMessages);
   }
 
   addNewMessagetoFirechat(chatId: string, message: string) {
