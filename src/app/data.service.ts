@@ -351,10 +351,10 @@ export class DataService {
         });
         this.currentUserConversations = data;
 
+        //this.readMessages(this.currentChatCommunicationId, "p1");
         if(chatUpdate){
           this.currentChatCommunicationId = data[0].id;
           this.chatAdvertisement = data[0].advertisement;
-          this.readMessages(this.currentChatCommunicationId);
           this.updateChatMessages(this.currentChatCommunicationId);
         } 
       }
@@ -369,11 +369,11 @@ export class DataService {
           return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
         });
         this.currentUserConversations = data;
- 
+        
+        //this.readMessages(this.currentChatCommunicationId, "p2");
         if(chatUpdate){
           this.currentChatCommunicationId = data[0].id;
           this.chatAdvertisement = data[0].advertisement;
-          this.readMessages(this.currentChatCommunicationId);
           this.updateChatMessages(this.currentChatCommunicationId);
         }
       }
@@ -383,12 +383,25 @@ export class DataService {
   updateChatCommunicationId(chatCommunicationId: string) {
     this.currentChatCommunicationId = chatCommunicationId;
     this.updateChatMessages(chatCommunicationId);
+
   }
 
   updateChatCommunicationTimestamp(chatCommunicationId: string) {
-    let chatParams: any = {
-      "id": chatCommunicationId,
-      "last_message_timestamp": new Date()
+
+    let chatParams: any;
+    if(this.currentUserRole == "HR-Consultant"){
+      chatParams = {
+        "id": chatCommunicationId,
+        "last_message_timestamp": new Date(),
+        "unread_message_p2": true
+      }
+    }
+    if(this.currentUserRole == "Company"){
+      chatParams = {
+        "id": chatCommunicationId,
+        "last_message_timestamp": new Date(),
+        "unread_message_p1": true
+      }
     }
 
     this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
@@ -403,17 +416,33 @@ export class DataService {
     )
   }
 
-  readMessages(chatCommunicationId: string) {
-    let chatParams: any = {
-      "id": chatCommunicationId,
-      "unread_messages": false
+  readMessages(chatCommunicationId: string, chatSender: string) {
+    let chatParams: any;
+    if(chatSender == "p1"){
+      chatParams = {
+        "id": chatCommunicationId,
+        "unread_message_p1": false
+      }
+    }
+    if(chatSender == "p2"){
+      chatParams = {
+        "id": chatCommunicationId,
+        "unread_message_p2": false
+      }
     }
 
     this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
+        if(this.currentUserRole == "HR-Consultant"){
+          this.getChatCommunicationsOfConsultant(false);
+        }
+        if(this.currentUserRole == "Company"){
+          this.getChatCommunicationsOfCompany(false);
+        }
       }
     )
   }
+
 
   addChatCommunication(communicationMessage: string) {
     let chatParams: any = {
@@ -425,7 +454,8 @@ export class DataService {
       }, 
       "chat_receiver_p2": this.advertisementProfile.users_permissions_user,
       "last_message_timestamp": new Date(),
-      "unread_messages": true
+      "unread_message_p1": false,
+      "unread_message_p2": true
     }
 
     this.http.post<any>('https://api.jobquadrat.com/chat-communications', chatParams)
@@ -438,22 +468,32 @@ export class DataService {
   updateChatMessages(chatCommunicationId: string){
     //get chats from the firebase database
     const chatsRef = ref(this.firechat_db, chatCommunicationId.toString());
-    
+    let activeUpdateChat = false;
     this.chatMessages = [];
 
     onValue(chatsRef, (snapshot: any) => {
       //get data from snapshot and push it to chatMessages array and remove all previous messages
-      this.chatMessages = [];
+      activeUpdateChat = false;
       const data = snapshot.val();
       for (let key in data) {
-        this.chatMessages.push(data[key]);
+        if(data[key].chatId == this.currentChatCommunicationId){
+          activeUpdateChat = true;
+        }
       }
-      //order chatMessages by timestamp
-      this.chatMessages = this.chatMessages.sort((a, b) => {
-        return <any>new Date(a.timestamp) - <any>new Date(b.timestamp);
-      });
 
-      this.scrollToBottomChatTrigger.next();
+
+      if(activeUpdateChat){
+        this.chatMessages = [];
+        for (let key in data) {
+          this.chatMessages.push(data[key]);
+        }
+        //order chatMessages by timestamp
+        this.chatMessages = this.chatMessages.sort((a, b) => {
+          return <any>new Date(a.timestamp) - <any>new Date(b.timestamp);
+        });
+        this.scrollToBottomChatTrigger.next();
+      }
+
       
       if(this.currentUserRole == "HR-Consultant"){
         this.getChatCommunicationsOfConsultant(false);
@@ -461,7 +501,6 @@ export class DataService {
       if(this.currentUserRole == "Company"){
         this.getChatCommunicationsOfCompany(false);
       }
-      
     });
   }
 
@@ -470,6 +509,7 @@ export class DataService {
     
     let chatParams: any = {
       "messageId": newMessageId,
+      "chatId": chatId,
       "message": message,
       "username": this.currentUser,
       "timestamp": new Date().toString()

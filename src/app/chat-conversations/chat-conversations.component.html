@@ -15,10 +15,13 @@
                     <p *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="text-sm font-semibold leading-6 text-gray-900">  
                         <span class="absolute inset-x-0 -top-px bottom-0"></span>
                         {{ participant.chat_receiver_p2?.username! }}
+                        <span *ngIf="participant.unread_message_p1" class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-white bg-amber-600 ring-amber-600/20">Neue Nachricht</span>
                     </p>
                     <p *ngIf="this.dataService.currentUserRole == 'Company'" class="text-sm font-semibold leading-6 text-gray-900">  
                         <span class="absolute inset-x-0 -top-px bottom-0"></span>
                         {{ participant.chat_sender_p1?.username! }}
+                        <span *ngIf="participant.unread_message_p2" class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-white bg-amber-600 ring-amber-600/20">Neue Nachricht</span>
+                   
                     </p>
                     <p class="mt-1 text-xs leading-5 text-gray-500">{{ participant.advertisement?.jobTitle | slice:0:40 }}{{ participant.advertisement?.jobTitle!.length > 40 ? '...' : '' }}</p>
                 </div>

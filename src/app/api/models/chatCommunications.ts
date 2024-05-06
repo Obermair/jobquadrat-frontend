@@ -7,6 +7,7 @@ export interface ChatCommunications {
     chat_sender_p1?: UsersPermissionsUser;
     chat_receiver_p2?:  UsersPermissionsUser;
     last_message_timestamp: Date;
-    unread_messages: boolean;
+    unread_message_p1: boolean;
+    unread_message_p2: boolean;
 }
   
