@@ -29,7 +29,6 @@ import { ChatComponent } from './chat/chat.component';
 import { ChatConversationsComponent } from './chat-conversations/chat-conversations.component';
 import { ChatDiscussionComponent } from './chat-discussion/chat-discussion.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
  
 @NgModule({
   declarations: [
@@ -62,7 +61,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

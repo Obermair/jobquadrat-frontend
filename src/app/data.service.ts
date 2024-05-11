@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ChatCommunications } from './api/models/chatCommunications';
 import { ChatMessage } from './api/models/chatMessage';
 import { Subject } from 'rxjs';
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +57,8 @@ export class DataService {
   public landingPageAdvertisements: Advertisement[] = [];
   public currentUserConversations: ChatCommunications[] = [];
   public currentChatCommunicationId: string = "";
+  public firebaseChatUser: string = "office@jobquadrat.com";
+  public firebaseChatPassword: string = "jobquadrat2024";
   public chatAdvertisement: Advertisement = {
     id: "",
   };
@@ -87,7 +89,8 @@ export class DataService {
   ) {
     this.firechat = initializeApp(environment.firebase);
     this.firechat_db = getDatabase(this.firechat);
-
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, this.firebaseChatUser, this.firebaseChatPassword);
   }
 
   getInitials(name: string){
