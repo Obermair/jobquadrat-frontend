@@ -199,7 +199,7 @@ export class DataService {
   }
 
   getAdvertisementsLandingPage() {
-    this.advertisementService.advertisementsGet({_limit: 10}).subscribe(
+    this.advertisementService.advertisementsGet({_limit: 20}).subscribe(
       (data: Advertisement[]) => {
         //order data by published_at property
         data = data.sort((a, b) => {
@@ -223,6 +223,10 @@ export class DataService {
   getAdvertisements() {
     this.advertisementService.advertisementsGet({_limit: this.currentLimit}).subscribe(
       (data: Advertisement[]) => {
+        //order data by published_at property
+        data = data.sort((a, b) => {
+          return <any>new Date(b.published_at!) - <any>new Date(a.published_at!);
+        });
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
         this.addPlacementBonusToList(this.displayedAdvertisements);
