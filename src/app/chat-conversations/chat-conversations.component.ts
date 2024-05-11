@@ -19,6 +19,7 @@ export class ChatConversationsComponent implements OnInit {
   }
 
   updateCommunicationId(participantId: string){
+    this.dataService.chatView = "chat";
     this.dataService.updateChatCommunicationId(participantId);
   }
 }

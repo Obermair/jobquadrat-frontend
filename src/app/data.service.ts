@@ -50,6 +50,7 @@ export class DataService {
   public currentAdvertisementLimit: number = 30;
   public userAdvertisementsLoading: boolean = true;
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
+  public rootUrl: string = 'https://api.jobquadrat.com';
   public currentAdvertisementBonuses: PlacementBonus[] = [];
   public activePlacementBonus: number = 0;
   public formSent: boolean = false;
@@ -74,6 +75,8 @@ export class DataService {
   //Style Elements
   currentBreakpoint: string = "xl";
   currentView: string = "table";
+  chatView: string = "conversations";
+
 
   constructor(
     private advertisementService: AdvertisementService, 
@@ -283,7 +286,7 @@ export class DataService {
             return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
           });
           this.currentAdvertisementBonuses = data;
-          this.activePlacementBonus = data[0].bonus || 0;
+          this.activePlacementBonus = data[0].bonus || 0; 
           resolve(data[0].bonus || 0);
         }
       )
@@ -351,10 +354,19 @@ export class DataService {
         });
         this.currentUserConversations = data;
 
-        //this.readMessages(this.currentChatCommunicationId, "p1");
         if(chatUpdate){
           this.currentChatCommunicationId = data[0].id;
-          this.chatAdvertisement = data[0].advertisement;
+          this.chatAdvertisement = data[0].advertisement.id || {id: ""};
+          if(data[0].advertisement.id != ""){
+            this.getActivePlacementBonus(data[0].advertisement.id).then((bonus: any) => {
+              if(bonus){
+                this.chatAdvertisement.currentPlacementBonus = bonus;
+              } else {
+                this.chatAdvertisement.currentPlacementBonus = 0;
+              }
+            });
+          } 
+          console.log(this.chatAdvertisement);
           this.updateChatMessages(this.currentChatCommunicationId);
         } 
       }
@@ -369,11 +381,21 @@ export class DataService {
           return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
         });
         this.currentUserConversations = data;
-        
-        //this.readMessages(this.currentChatCommunicationId, "p2");
+
         if(chatUpdate){
           this.currentChatCommunicationId = data[0].id;
-          this.chatAdvertisement = data[0].advertisement;
+          this.chatAdvertisement = data[0].advertisement || {id: ""};
+          if(data[0].advertisement){
+            this.getActivePlacementBonus(data[0].advertisement.id).then((bonus: any) => {
+              if(bonus){
+                this.chatAdvertisement.currentPlacementBonus = bonus;
+              } else {
+                this.chatAdvertisement.currentPlacementBonus = 0;
+              }
+            });
+          } 
+          
+          console.log(this.chatAdvertisement);
           this.updateChatMessages(this.currentChatCommunicationId);
         }
       }
@@ -383,11 +405,25 @@ export class DataService {
   updateChatCommunicationId(chatCommunicationId: string) {
     this.currentChatCommunicationId = chatCommunicationId;
     this.updateChatMessages(chatCommunicationId);
+    this.chatAdvertisement = this.currentUserConversations.find(x => x.id == chatCommunicationId)!.advertisement || {id: ""};
 
+    this.getActivePlacementBonus(this.chatAdvertisement.id).then((bonus: any) => {
+      if(bonus){
+        this.chatAdvertisement.currentPlacementBonus = bonus;
+      } else {
+        this.chatAdvertisement.currentPlacementBonus = 0;
+      }
+    }); 
+
+    if(this.currentUserRole == "HR-Consultant"){
+      this.readMessages(chatCommunicationId, "p1");
+    }
+    if(this.currentUserRole == "Company"){
+      this.readMessages(chatCommunicationId, "p2");
+    }
   }
 
   updateChatCommunicationTimestamp(chatCommunicationId: string) {
-
     let chatParams: any;
     if(this.currentUserRole == "HR-Consultant"){
       chatParams = {
@@ -433,6 +469,7 @@ export class DataService {
 
     this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
+        //go through all chatCommunications and update the unread messages
         if(this.currentUserRole == "HR-Consultant"){
           this.getChatCommunicationsOfConsultant(false);
         }
@@ -444,7 +481,7 @@ export class DataService {
   }
 
 
-  addChatCommunication(communicationMessage: string) {
+  addChatCommunication(communicationMessage: string, files: File[]) {
     let chatParams: any = {
       "advertisement": {
         "id": this.advertisementProfile.id
@@ -458,9 +495,13 @@ export class DataService {
       "unread_message_p2": true
     }
 
+    
     this.http.post<any>('https://api.jobquadrat.com/chat-communications', chatParams)
       .subscribe(data => {
         this.addNewMessagetoFirechat(data.id, communicationMessage);
+        if(files.length > 0){
+          this.uploadFiles(data.id, files);
+        }
       }
     )
   }
@@ -481,7 +522,6 @@ export class DataService {
         }
       }
 
-
       if(activeUpdateChat){
         this.chatMessages = [];
         for (let key in data) {
@@ -494,7 +534,6 @@ export class DataService {
         this.scrollToBottomChatTrigger.next();
       }
 
-      
       if(this.currentUserRole == "HR-Consultant"){
         this.getChatCommunicationsOfConsultant(false);
       }
@@ -504,7 +543,74 @@ export class DataService {
     });
   }
 
+  uploadFiles(chatId: string, files: File[]){
+    let formData = new FormData();
+    //add files to formData
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
+    //upload to server and log errror
+    this.http.post<any>('https://api.jobquadrat.com/upload', formData)
+      .subscribe(data => {
+        this.addUploadFileToFirechat(chatId, data);
+      }
+    )
+  }
+
+  addUploadFileToFirechat(chatId: string, files: any){
+    if(this.currentUserRole == "HR-Consultant"){
+      this.readMessages(chatId, "p1");
+    }
+    if(this.currentUserRole == "Company"){
+      this.readMessages(chatId, "p2");
+    }
+
+    let newMessageId = uuidv4();
+    
+    let chatParams: any = {
+      "messageId": newMessageId,
+      "chatId": chatId,
+      "username": this.currentUser,
+      "timestamp": new Date().toString(),
+      "file_message": true,
+      "files": []
+    }
+
+    //add files to chatParams
+    for (let i = 0; i < files.length; i++) {
+      let fileParams: any = {
+        "filePath": files[i].url,
+        "name": files[i].name,
+        "ext": files[i].ext,
+        "size": files[i].size
+      }
+      chatParams["files"].push(fileParams);
+    }
+    
+    set(ref(this.firechat_db, `${chatId}/${newMessageId}`), chatParams);
+
+    //find chatCommunication by id
+    let chatCommunication = this.currentUserConversations.find(x => x.id == chatId);
+
+    if (chatCommunication) {
+      if (this.currentUserRole == "HR-Consultant") {
+        this.sendNewMessageMailToCompany(chatCommunication);
+      }
+      if (this.currentUserRole == "Company") {
+        this.sendNewMessageMailToConstultant(chatCommunication);
+      }
+    }
+  }
+
   addNewMessagetoFirechat(chatId: string, message: string) {
+    if(this.currentUserRole == "HR-Consultant"){
+      this.readMessages(chatId, "p1");
+    }
+    if(this.currentUserRole == "Company"){
+      this.readMessages(chatId, "p2");
+    }
+
     let newMessageId = uuidv4();
     
     let chatParams: any = {
@@ -512,12 +618,24 @@ export class DataService {
       "chatId": chatId,
       "message": message,
       "username": this.currentUser,
-      "timestamp": new Date().toString()
+      "timestamp": new Date().toString(),
+      "file_message": false
     }
-
+    
     set(ref(this.firechat_db, `${chatId}/${newMessageId}`), chatParams);
+    
+    //find chatCommunication by id
+    let chatCommunication = this.currentUserConversations.find(x => x.id == chatId);
+
+    if (chatCommunication) {
+      if (this.currentUserRole == "HR-Consultant") {
+        this.sendNewMessageMailToCompany(chatCommunication);
+      }
+      if (this.currentUserRole == "Company") {
+        this.sendNewMessageMailToConstultant(chatCommunication);
+      }
+    }
   }
- 
 
   addPlacementBonus(bonus: number, advertisementId: number) {
     let placementBonusParams: any = {
@@ -545,6 +663,8 @@ export class DataService {
       }
     )
   }
+
+ 
 
   postAvertisement(advertisement: Advertisement, placementBonus: number) {
     let advertisementParams: any = {
@@ -614,6 +734,39 @@ export class DataService {
       }
     );
   }
+
+  sendNewMessageMailToCompany(chatCommunication: ChatCommunications){
+    let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_sender_p1?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
+ 
+    let emailParams: any = {
+      "to": chatCommunication.chat_receiver_p2?.email,
+      "from": "jobquadrat@gmail.com",
+      "subject": "Neue Nachricht auf Jobquadrat",
+      "html": html
+    }
+
+    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+      .subscribe(data => { 
+      }
+    )
+  }
+
+  sendNewMessageMailToConstultant(chatCommunication: ChatCommunications){
+    let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_receiver_p2?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
+ 
+    let emailParams: any = {
+      "to": chatCommunication.chat_sender_p1?.email,
+      "from": "jobquadrat@gmail.com",
+      "subject": "Neue Nachricht auf Jobquadrat",
+      "html": html
+    }
+
+    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+      .subscribe(data => {
+      }
+    )
+  }
+
 
   sendForm(form: any) {
     let html = '<img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"><h2>Neue Email von Jobquadrat</h2><p><b>Name:</b> ' + form.firstname + " " + form.lastname + '</p><p><b>Unternehmen:</b> ' + form.company + '</p><p><b>Email:</b> ' + form.email + '</p><p><b>Nachricht:</b> ' + form.message + '</p>';

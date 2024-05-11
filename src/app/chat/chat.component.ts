@@ -14,4 +14,8 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  switchToConversations() {
+    this.dataService.chatView = "conversations";
+  } 
+
 }

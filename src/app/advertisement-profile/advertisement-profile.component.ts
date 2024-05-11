@@ -3,6 +3,7 @@ import { registerLocaleData } from '@angular/common';
 import { DataService } from '../data.service';
 import localeDe from '@angular/common/locales/de';
 import { v4 as uuidv4 } from 'uuid';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-advertisement-profile',
@@ -23,17 +24,62 @@ export class AdvertisementProfileComponent implements OnInit {
     placementBonus: "",
     actualSalary: "",
   }
+  errorMessageFileUpload = "";
+  
+  selectedFiles: File[] = [];
 
-
-
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService, public router: Router) { }
 
   ngOnInit(): void {
     registerLocaleData(localeDe); 
   }
 
   createNewCommunication(){
-    this.dataService.addChatCommunication(this.newCommunicationMessage);
+    this.dataService.addChatCommunication(this.newCommunicationMessage, this.selectedFiles);
+    this.router.navigate(['advertisements/chat']);
+  }
+
+  removeFile(file: File) {
+    // Datei aus der Liste entfernen without filter
+    const index = this.selectedFiles.indexOf(file);
+    this.selectedFiles.splice(index, 1);
+  }
+
+  onFileChange(event: any) {
+    // Ausgewählte Dateien abrufen
+    const files = event.target.files;
+
+    if(this.selectedFiles.length + files.length > 5){
+      this.errorMessageFileUpload = 'Sie können maximal 5 Dateien auf einmal hochladen.';
+      return;
+    }
+
+    // Dateigröße und Typ überprüfen
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      if (file.type !== 'application/pdf') {
+        this.errorMessageFileUpload = 'Nur PDF-Dateien sind erlaubt.';
+        this.selectedFiles = [];
+        return;
+      }
+
+      if (file.size > 1024 * 1024) {
+        this.errorMessageFileUpload = 'Dateigröße überschreitet das Limit von 1MB.';
+        this.selectedFiles = [];
+        return;
+      }
+
+      this.selectedFiles.push(file);
+    }
+
+    if (this.selectedFiles.length > 5) {
+      this.errorMessageFileUpload = 'Sie können maximal 5 Dateien auf einmal hochladen.';
+      this.selectedFiles = [];
+      return;
+    }
+
+    this.errorMessageFileUpload = '';
   }
 
   showValueinHTMLList(value: string){

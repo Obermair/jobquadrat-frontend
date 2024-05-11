@@ -30,17 +30,21 @@ export class OverviewComponent implements OnInit {
 
   create(){
     this.router.navigate(['create'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 
   view(){
     this.router.navigate(['view'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 
   profile(){
     this.router.navigate(['profile'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 
   chat(){
     this.router.navigate(['chat'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 }
