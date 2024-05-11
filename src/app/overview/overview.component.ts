@@ -11,7 +11,8 @@ export class OverviewComponent implements OnInit {
 
   openMenu: boolean = false;
 
-  constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
+  constructor(public dataService: DataService, private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.dataService.currentUser = localStorage.getItem('jwt_user') || '';

@@ -18,8 +18,7 @@ import { TermsComponent } from './terms/terms.component';
 import { UpdateAdvertisementComponent } from './update-advertisement/update-advertisement.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { FaqComponent } from './faq/faq.component';
-import { ChatComponent } from './chat/chat.component';
-
+import { ChatComponent } from './chat/chat.component'; 
 const routes: Routes = [
   {path: 'reset-password/:code', component: ResetPasswordComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
