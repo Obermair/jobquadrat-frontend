@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { DataService } from '../data.service';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Database, getDatabase, ref, set, onValue  } from "firebase/database";
-import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroupDirective, UntypedFormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { Chat } from '../firechat/chat';
 import { environment } from 'src/environments/environment';
@@ -27,7 +27,7 @@ export class ChatDiscussionComponent implements OnInit {
   selectedFiles: File[] = [];
 
 
-  constructor(public dataService: DataService, private renderer: Renderer2, private formBuilder: FormBuilder, public router: Router) { 
+  constructor(public dataService: DataService, private renderer: Renderer2, private formBuilder: UntypedFormBuilder, public router: Router) { 
     this.scrollToBottomSubscription = this.dataService.getScrollToBottomChatTrigger().subscribe(() => {
       this.onScrollToBottomClick();
     }); 
