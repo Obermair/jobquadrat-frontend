@@ -87,6 +87,7 @@ export class DataService {
   ) {
     this.firechat = initializeApp(environment.firebase);
     this.firechat_db = getDatabase(this.firechat);
+
   }
 
   getInitials(name: string){
