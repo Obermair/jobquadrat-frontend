@@ -35,7 +35,7 @@ export class AdvertisementProfileComponent implements OnInit {
   }
 
   createNewCommunication(){
-    this.dataService.addChatCommunication(this.newCommunicationMessage, this.selectedFiles);
+    this.dataService.addChatCommunication(this.newCommunicationMessage, this.selectedFiles); 
     this.router.navigate(['advertisements/chat']);
   }
 

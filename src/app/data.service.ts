@@ -374,8 +374,8 @@ export class DataService {
               }
             });
           } 
-          console.log(this.chatAdvertisement);
           this.updateChatMessages(this.currentChatCommunicationId);
+          this.updateChatCommunicationId(this.currentChatCommunicationId);
         } 
       }
     );
@@ -402,9 +402,8 @@ export class DataService {
               }
             });
           } 
-          
-          console.log(this.chatAdvertisement);
           this.updateChatMessages(this.currentChatCommunicationId);
+          this.updateChatCommunicationId(this.currentChatCommunicationId);
         }
       }
     );
@@ -510,6 +509,7 @@ export class DataService {
         if(files.length > 0){
           this.uploadFiles(data.id, files);
         }
+        this.router.navigate(['advertisements/chat']);
       }
     )
   }

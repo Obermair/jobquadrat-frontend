@@ -81,8 +81,8 @@ export class ChatDiscussionComponent implements OnInit {
 
   fileNameLength(name: string, ext: string){
     //return the file name with a maximum length of 33 characters but with the last 2 character to the file + the extension
-    if(name.length > 33){
-      return name.substring(0, 24) + "..." + name.substring(name.length - 2, name.length) + ext;
+    if(name.length > 30){
+      return name.substring(0, 20) + "..." + name.substring(name.length - 2, name.length) + ext;
     } else {
       return name;
     }
