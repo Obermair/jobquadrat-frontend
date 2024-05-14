@@ -147,14 +147,16 @@ export class ChatDiscussionComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
 
-      if (file.type !== 'application/pdf') {
-        this.errorMessageFileUpload = 'Nur PDF-Dateien sind erlaubt.';
+      //nur PDF und Word Dokument sind erlaubt
+      if (file.type != 'application/pdf' && file.type != 'application/msword' && file.type != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        this.errorMessageFileUpload = 'Nur PDF und Word Dokumente sind erlaubt.';
         this.selectedFiles = [];
         return;
       }
 
-      if (file.size > 1024 * 1024) {
-        this.errorMessageFileUpload = 'Dateigröße überschreitet das Limit von 1MB.';
+
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessageFileUpload = 'Dateigröße überschreitet das Limit von 5MB.';
         this.selectedFiles = [];
         return;
       }

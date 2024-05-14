@@ -52,6 +52,10 @@
       </div>
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div class="sm:col-span-1">
+          <dt class="text-sm font-bold text-gray-600">Email</dt>
+          <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.users_permissions_user?.email }}</dd> <!--number:'1.0-0':'de-AT'-->
+        </div>
+        <div class="sm:col-span-1">
           <dt class="text-sm font-bold text-gray-600">Bruttojahresgehalt</dt>
           <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.salary }}€</dd> <!--number:'1.0-0':'de-AT'-->
         </div>
@@ -280,7 +284,7 @@
                           <p class="mt-1 text-sm text-gray-500">Ziehe hier einfach ein Dokument hinein oder wähle mittels Klick ein Dokument aus deinem Explorer.</p>
    
                       </div>
-                      <input type="file" id="fileInput" (change)="onFileChange($event)" accept=".pdf" class="hidden" multiple>
+                      <input type="file" id="fileInput" (change)="onFileChange($event)" accept=".pdf, .doc, .docx" class="hidden" multiple>
                   </label>
  
               </div>
