@@ -25,6 +25,10 @@ import { TermsComponent } from './terms/terms.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { FaqComponent } from './faq/faq.component';
+import { ChatComponent } from './chat/chat.component';
+import { ChatConversationsComponent } from './chat-conversations/chat-conversations.component';
+import { ChatDiscussionComponent } from './chat-discussion/chat-discussion.component';
+import { ReactiveFormsModule } from '@angular/forms';
  
 @NgModule({
   declarations: [
@@ -48,15 +52,20 @@ import { FaqComponent } from './faq/faq.component';
     ImprintComponent,
     UpdateProfileComponent,
     FaqComponent,
+    ChatComponent,
+    ChatConversationsComponent,
+    ChatDiscussionComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    
   ],
   bootstrap: [AppComponent]
 })

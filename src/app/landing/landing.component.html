@@ -515,7 +515,7 @@
         
             <div class="relative max-w-xl mx-auto">
               <h2 class="text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">Aktuelle Jobinserate</h2>
-              <div class="flow-root mt-12">
+              <div class="flow-root mt-12 h-96 overflow-y-scroll">
                 <ul role="list" class="divide-y divide-gray-100">
                   <li *ngFor="let advertisement of dataService.landingPageAdvertisements" class="flex items-center justify-between gap-x-6 py-5">
                     <div class="min-w-0">
@@ -531,6 +531,8 @@
                       <a routerLink="/login" class="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block">Inserat anzeigen</a>
                     </div>
                   </li>
+                  <p class="text-sm py-2 text-center font-semibold leading-6 text-gray-900"><a routerLink="/login" class="text-amber-600">Melden Sie sich jetzt an</a>, um alle Firmen Jobinserate zu sehen</p>
+                        
                 </ul>
               </div>
               
@@ -568,7 +570,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                               </svg>
                             </dt>
-                            <dd><a class="hover:text-gray-900" href="mailto:office@jobquadrat.com">office@jobquadrat.com</a></dd>
+                            <dd><a class="hover:text-gray-900" href="mailto:office@jobquadrat.com">office&#64;jobquadrat.com</a></dd>
                           </div>
                           <div class="flex gap-x-4">
                             <dt class="flex-none">

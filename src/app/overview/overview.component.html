@@ -2,33 +2,8 @@
 <!-- Header -->
 <div class="relative bg-gray-50">
     <div class="mx-auto max-w-7xl px-4 sm:px-6">
-      <div class="flex items-center justify-between md:justify-start md:space-x-10 border-b-2 border-gray-100 py-6">
-        <div class="hidden lg:flex md:flex-1 justify-start lg:w-0 lg:flex-1">
-          <a routerLink="/">
-            <span class="sr-only">jobquadrat</span>
-            <img class="h-16" src="../../assets/images/logo.png" alt="">
-          </a>
-        </div>
-        <nav class="-my-2 -mr-2">
-          <div class="flex w-full items-center justify-between md:w-auto">
-            <div class="-mr-2 flex items-center lg:hidden">
-              <button (click)="toggleMenu()" type="button" class="focus-ring-inset inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:text-gray-500 focus:outline-none" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <!-- Heroicon name: outline/bars-3 -->
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="hidden lg:flex">
-            <a (click)="view()" class="text-base mx-2 cursor-pointer font-medium  hover:text-amber-500">Inserate anzeigen</a>
-            <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="create()" routerLink="view" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Inserate erstellen/bearbeiten</a>
-            <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Unternehmensprofil bearbeiten</a>
-            <a *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" (click)="profile()" routerLink="profile" class="text-base mx-2 cursor-pointer font-medium hover:text-amber-500">Personalvermittlerprofil bearbeiten</a>
-          </div>
-        </nav>
-        <div [ngClass]="{'hidden': !openMenu}" class="absolute inset-x-0 top-0 z-10 origin-top-right transform p-2 transition lg:hidden">
+      <div class="flex relative items-center justify-between md:justify-start md:space-x-10 border-b-2 border-gray-100 py-6">
+        <div style="margin-top: 100px !important;" [ngClass]="{'hidden': !openMenu}" class="absolute top-0 right-0 max-w-lg z-10 transform transition">
           <div class="overflow-hidden rounded-lg bg-white shadow-md ring-1 ring-black ring-opacity-5">
             <div class="flex items-center justify-between px-5 pt-4">
               <div>
@@ -46,25 +21,29 @@
             </div>
             <div class="space-y-1 px-2 pt-2 pb-3">
               <a (click)="view()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate anzeigen</a>
- 
               <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="create()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate erstellen/bearbeiten</a>
-  
               <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unternehmensprofil bearbeiten</a>
               <a *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Personalvermittlerprofil bearbeiten</a>    
+              <a (click)="chat()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Konversationen anzeigen</a>
+             
             </div>
             <a routerLink="/" class="block w-full cursor-pointer bg-gray-50 px-5 py-3 text-center font-medium text-amber-600 hover:bg-gray-100">Startseite</a>
           </div>
         </div>
-
+        <div class="flex md:flex-1 justify-start lg:w-0 lg:flex-1">
+          <a routerLink="/">
+            <span class="sr-only">jobquadrat</span>
+            <img class="h-16" src="../../assets/images/logo.png" alt="">
+          </a>
+        </div>
         <div class="items-center justify-end md:flex md:flex-1 lg:w-0">
+
             <a class="group block flex-shrink-0">
                 <div class="flex items-center">
                   <div>
-                    <span class="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100">
-                        <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                      </span>
+                    <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full ">
+                      <span class="font-medium text-gray-600  ">{{ dataService.getInitials(dataService.currentUser) }}</span>
+                  </div>
                 </div>
                   <div class="ml-3">
                     <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ dataService.currentUser }}</p>
@@ -72,6 +51,18 @@
                   </div>
                 </div>
               </a>
+              <nav class="my-2 mx-5">
+                <div class="flex w-full items-center justify-between md:w-auto">
+                  <div class="-mr-2 flex items-center">
+                    <button (click)="toggleMenu()" type="button" class="inline-flex z-10 justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                      <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                      </svg>
+                      Menü
+                    </button>
+                  </div>
+                </div>
+              </nav>
         </div>
       </div>
     </div>

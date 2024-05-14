@@ -11,7 +11,8 @@ export class OverviewComponent implements OnInit {
 
   openMenu: boolean = false;
 
-  constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute) { }
+  constructor(public dataService: DataService, private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.dataService.currentUser = localStorage.getItem('jwt_user') || '';
@@ -30,13 +31,21 @@ export class OverviewComponent implements OnInit {
 
   create(){
     this.router.navigate(['create'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 
   view(){
     this.router.navigate(['view'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 
   profile(){
     this.router.navigate(['profile'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
+  }
+
+  chat(){
+    this.router.navigate(['chat'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
   }
 }

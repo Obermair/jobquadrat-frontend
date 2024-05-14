@@ -73,7 +73,6 @@ export class CreateAdvertisementComponent implements OnInit {
   }
 
   successPlacement(){
-    console.log(this.placementData)
     if(this.placementData.recruiter != "" && this.placementData.recruiterMail != "" && this.placementData.street != "" && this.placementData.houseNr != "" && this.placementData.postalCode != "" && this.placementData.city != "" && this.placementData.uid != ""){
       this.dataService.sendCompanySuccessPlacement(this.placementData);
       //deactivateAdvertisement

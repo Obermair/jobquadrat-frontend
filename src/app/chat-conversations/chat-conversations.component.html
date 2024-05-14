@@ -1,0 +1,41 @@
+<div class="h-[calc(100vh-130px)]">
+    <div class="px-6 pt-6 pb-4">
+        <h2 class="text-lg font-medium text-gray-900">Konversationen</h2>
+    </div>
+    <span *ngIf="dataService.currentUserConversations.length == 0" class="px-6 font-medium text-gray-500 text-sm">Aktuell noch keine Konversationen</span>
+    <!-- Directory list -->
+    <nav class="min-h-0 pl-6 max-h-[calc(100vh-200px)] flex-1 overflow-y-auto overflow-x-hidden" aria-label="Directory">
+        <ul role="list" class="divide-y divide-gray-100"> 
+            <li *ngFor="let participant of dataService.currentUserConversations" [ngClass]="{ 'bg-amber-100': dataService.currentChatCommunicationId == participant.id}" (click)="updateCommunicationId(participant.id)" class="relative flex justify-between py-5 px-2 rounded-md hover:bg-white ">
+                <div class="flex gap-x-4 pr-2 sm:flex-none hover:bg-white">
+                <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full ">
+                    <span *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.chat_receiver_p2?.username! ) }}</span>
+                    <span *ngIf="this.dataService.currentUserRole == 'Company'" class="font-medium text-gray-600  ">{{ dataService.getInitials(participant.chat_sender_p1?.username! ) }}</span>
+                </div>
+                <div class="min-w-0 flex-auto">
+                    <p *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" class="text-sm font-semibold leading-6 text-gray-900">  
+                        <span class="absolute inset-x-0 -top-px bottom-0"></span>
+                        {{ participant.chat_receiver_p2?.username || 'Benutzer existiert nicht mehr'}}
+                        <span *ngIf="participant.unread_message_p1" class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-white bg-amber-600 ring-amber-600/20">Neue Nachricht</span>
+                    </p>
+                    <p *ngIf="this.dataService.currentUserRole == 'Company'" class="text-sm font-semibold leading-6 text-gray-900">  
+                        <span class="absolute inset-x-0 -top-px bottom-0"></span>
+                        {{ participant.chat_sender_p1?.username || 'Benutzer existiert nicht mehr'}}
+                        <span *ngIf="participant.unread_message_p2" class="rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset text-white bg-amber-600 ring-amber-600/20">Neue Nachricht</span>
+                        
+                    </p>
+                    <p *ngIf="participant.advertisement?.jobTitle" class="mt-1 text-xs leading-5 text-gray-500">{{ participant.advertisement?.jobTitle | slice:0:40 }}{{ participant.advertisement?.jobTitle!.length > 40 ? '...' : '' }}</p>
+                    <p *ngIf="!participant.advertisement?.jobTitle" class="mt-1 text-xs leading-5 text-gray-500">Inserat existiert nicht mehr</p>
+                </div>
+                </div>
+                <div class="flex items-center justify-between sm:flex-none">
+                <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                </svg>
+                </div>
+            </li>
+            </ul>
+    </nav>
+    
+                    
+</div>
