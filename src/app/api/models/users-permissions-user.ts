@@ -23,6 +23,10 @@ export interface UsersPermissionsUser {
   id: string;
   description: string;
   provider?: string;
+  services?: string;
+  profile_img?: string;
+  profile_img_id?: string;
+  public?: boolean;
   role?: {
 'id': string;
 'name': string;

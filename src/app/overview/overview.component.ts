@@ -39,6 +39,11 @@ export class OverviewComponent implements OnInit {
     this.openMenu = !this.openMenu;
   }
 
+  publicConsultants(){
+    this.router.navigate(['public-consultants'], {relativeTo:this.route});
+    this.openMenu = !this.openMenu;
+  }
+
   profile(){
     this.router.navigate(['profile'], {relativeTo:this.route});
     this.openMenu = !this.openMenu;

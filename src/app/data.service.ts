@@ -56,6 +56,7 @@ export class DataService {
   public formSent: boolean = false;
   public landingPageAdvertisements: Advertisement[] = [];
   public currentUserConversations: ChatCommunications[] = [];
+  public publicConsultants: UsersPermissionsUser[] = [];
   public currentChatCommunicationId: string = "";
   public firebaseChatUser: string = "office@jobquadrat.com";
   public firebaseChatPassword: string = "jobquadrat2024";
@@ -63,7 +64,6 @@ export class DataService {
     id: "",
   };
   public chatMessages: ChatMessage[] = [];
-
   public advertisementProfile: Advertisement = {
     id: "",
   };
@@ -163,6 +163,23 @@ export class DataService {
     );
   }
 
+  getCurrentUser(){
+    this.currentUserId = localStorage.getItem('jwt_user_id') || '';
+
+    if(this.currentUserId != ''){
+      this.userPermissionService.usersIdGet({id: this.currentUserId}).subscribe(
+        (data: any) => {
+          this.user = data;
+          this.currentUser = data.username;
+          this.currentUserRole = data.role.name;
+          if(this.user.profile_img == null){
+            this.user.profile_img = "";
+          }
+        }
+      );
+    }
+  }
+
   forgotPassword(email: string){
     let forgotParams: any = {
       "body": {
@@ -246,6 +263,15 @@ export class DataService {
         this.isLoading = false;
       }
     );
+  }
+
+  loadPublicConsultants() {
+    this.http.get<any>('https://api.jobquadrat.com/users?_where[public]=true')
+      .subscribe((data: UsersPermissionsUser[]) => {
+        this.publicConsultants = data;
+        console.log(data);
+      }
+    )
   }
 
  
@@ -564,6 +590,12 @@ export class DataService {
         this.addUploadFileToFirechat(chatId, data);
       }
     )
+  }
+
+  uploadImage(file: File){
+    let formData = new FormData();
+    formData.append('files', file);
+    return this.http.post<any>('https://api.jobquadrat.com/upload', formData);
   }
 
   addUploadFileToFirechat(chatId: string, files: any){

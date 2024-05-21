@@ -14,4 +14,7 @@ export interface NewUsersPermissionsUser {
   updated_by?: string;
   description: string;
   username: string;
+  services?: string;
+  profile_img?: string;
+  public?: boolean;
 }

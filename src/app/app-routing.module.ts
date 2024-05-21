@@ -19,6 +19,7 @@ import { UpdateAdvertisementComponent } from './update-advertisement/update-adve
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { FaqComponent } from './faq/faq.component';
 import { ChatComponent } from './chat/chat.component'; 
+import { PublicConsultantsComponent } from './public-consultants/public-consultants.component';
 const routes: Routes = [
   {path: 'reset-password/:code', component: ResetPasswordComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
@@ -36,7 +37,8 @@ const routes: Routes = [
     {path: 'profile', component: UpdateProfileComponent},
     {path: 'create/save', component: SaveAdvertisementComponent},
     {path: 'create/update/:id', component: UpdateAdvertisementComponent},
-    {path: 'chat', component: ChatComponent}
+    {path: 'chat', component: ChatComponent},
+    {path: 'public-consultants', component: PublicConsultantsComponent}
   ]},
   {path: '404', component: LostComponent},
   //wildcard routes

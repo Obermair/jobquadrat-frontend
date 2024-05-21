@@ -1,0 +1,52 @@
+<div class="mx-auto flex flex-col max-w-4xl pb-5">
+    <div class="py-8">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+          <div class="mx-auto max-w-2xl lg:max-w-4xl">
+            <h2 class="text-3xl font-bold tracking-tight text-amber-600 sm:text-4xl">Öffentliche Personalberater</h2>
+            <p class="mt-1 text-sm font-semibold text-gray-500">Hier können Personalberater ihre Leistungen und Angebote präsentieren. Informieren Sie sich hier welche Personalberater auf unserer Plattform verfügbar sind und treten Sie mit Ihnen in Kontakt.</p>  
+            <div class="mt-10 space-y-10">
+            <article *ngFor="let consultant of dataService.publicConsultants" class="relative isolate flex flex-col gap-8 lg:flex-row">
+                <div *ngIf="consultant.profile_img != null" class="relative aspect-[16/9] sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
+                  <img [src]="dataService.rootUrl + consultant.profile_img" alt="" class="absolute inset-0 h-full w-full rounded-2xl bg-gray-50 object-cover">
+                  <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                </div>
+                <div>
+                  <div class="group relative max-w-xl mt-2">
+                    <div class="flex items-center gap-x-4 text-xs">
+                        <div class="flex flex-row gap-x-4">
+                          <a [href]="'mailto:' + consultant.email" class="relative flex flex-row z-10 rounded-full bg-gray-100 px-2 font-medium text-gray-600 hover:bg-gray-200">
+                            <div>
+                                <span class="sr-only">Email</span>
+                                <svg class="h-5 w-5 mt-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            </div>
+
+                            <span class="font-semibold px-3 py-1.5">{{ consultant.email }}</span>
+                          </a>
+                        </div>
+                    </div>
+                    <h3 class="mt-3 text-lg font-bold leading-6 text-gray-900 group-hover:text-gray-600">
+                        <span class="absolute inset-0"></span>
+                        {{ consultant.username }}
+                    </h3>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">{{ consultant.description }}</p>
+                  </div>
+                  <div *ngIf="consultant.services != null" class="mt-2 flex border-t border-gray-900/5 pt-4">
+                    <div class="relative flex items-center gap-x-4">
+                        <div class="flex items-center gap-x-2 text-xs">
+                            <span class="relative z-10 rounded-full bg-amber-600 px-3 py-1.5 font-medium text-white">Leistungen</span>
+                        </div>
+                        <div class="text-sm leading-6 font-semibold text-gray-900 pl-4">
+                            <span [innerHtml]="showValueinHTMLList(consultant.services || '')"></span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

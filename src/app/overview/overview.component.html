@@ -24,8 +24,8 @@
               <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="create()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Inserate erstellen/bearbeiten</a>
               <a *ngIf="this.dataService.currentUserRole == 'Company'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Unternehmensprofil bearbeiten</a>
               <a *ngIf="this.dataService.currentUserRole == 'HR-Consultant'" (click)="profile()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Personalvermittlerprofil bearbeiten</a>    
-              <a (click)="chat()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Konversationen anzeigen</a>
-             
+              <a (click)="chat()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Konversationen anzeigen</a>    
+              <a (click)="publicConsultants()" class="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Öffentliche Personalberater</a>
             </div>
             <a routerLink="/" class="block w-full cursor-pointer bg-gray-50 px-5 py-3 text-center font-medium text-amber-600 hover:bg-gray-100">Startseite</a>
           </div>
