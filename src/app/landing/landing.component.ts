@@ -17,6 +17,7 @@ export class LandingComponent implements OnInit {
     message: ''
   };
   showErrorMessage: boolean = false;
+  showVideo: boolean = false;
 
   constructor(public dataService: DataService) { 
     this.getLandingPageAdvertisements();
