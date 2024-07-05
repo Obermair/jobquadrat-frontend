@@ -216,7 +216,7 @@ export class DataService {
   }
 
   getAdvertisementsLandingPage() {
-    this.advertisementService.advertisementsGet({_limit: 20}).subscribe(
+    this.advertisementService.advertisementsGet({_limit: 20, _sort: 'created_at:desc'}).subscribe(
       (data: Advertisement[]) => {
         //order data by published_at property
         data = data.sort((a, b) => {
