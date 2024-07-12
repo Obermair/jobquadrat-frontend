@@ -6,8 +6,8 @@
             <p class="mt-1 text-sm font-semibold text-gray-500">Hier können Personalberater ihre Leistungen und Angebote präsentieren. Informieren Sie sich hier welche Personalberater auf unserer Plattform verfügbar sind und treten Sie mit Ihnen in Kontakt.</p>  
             <div class="mt-10 space-y-10">
             <article *ngFor="let consultant of dataService.publicConsultants" class="relative isolate flex flex-col gap-8 lg:flex-row">
-                <div *ngIf="consultant.profile_img != null" class="relative aspect-[16/9] sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
-                  <img [src]="dataService.rootUrl + consultant.profile_img" alt="" class="absolute inset-0 h-full w-full rounded-2xl bg-gray-50 object-cover">
+                <div *ngIf="consultant.profile_img != null" class="relative h-64 lg:w-64 lg:shrink-0">
+                  <img [src]="dataService.rootUrl + consultant.profile_img" alt="" class="inset-0 h-full w-full rounded-2xl bg-white object-contain p-2">
                   <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
                 </div>
                 <div>
