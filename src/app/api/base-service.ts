@@ -15,7 +15,7 @@ export class BaseService {
   ) {
   }
 
-  private _rootUrl: string = 'https://api.jobquadrat.com';
+  private _rootUrl: string = 'http://localhost:1337/api';
 
   /**
    * Returns the root url for all operations in this service. If not set directly in this

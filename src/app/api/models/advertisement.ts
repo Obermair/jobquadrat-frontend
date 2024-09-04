@@ -13,6 +13,8 @@ export interface Advertisement {
   jobTitle?: string;
   location?: string;
   placementBonus?: number;
+  updated_at?: string;
+  created_at?: string;
   published_at?: string;
   requirements?: string;
   salary?: string;

@@ -14,6 +14,7 @@ import { ChatCommunications } from './api/models/chatCommunications';
 import { ChatMessage } from './api/models/chatMessage';
 import { Subject } from 'rxjs';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class DataService {
   public currentAdvertisementLimit: number = 30;
   public userAdvertisementsLoading: boolean = true;
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
-  public rootUrl: string = 'https://api.jobquadrat.com';
+  public rootUrl: string = 'http://localhost:1337/api';
   public currentAdvertisementBonuses: PlacementBonus[] = [];
   public activePlacementBonus: number = 0;
   public formSent: boolean = false;
@@ -102,23 +103,77 @@ export class DataService {
     return initials;
   }
 
-  
-  login(username: string, password: string): void {
-    let loginParams: any = {
-      "body": {
-        "identifier": username,
-        "password": password
+  // Main function to handle transforming the entire response
+  private transformResponse(response: any): any[] {
+    if (!response || !response.data) return []; // Ensure data exists
+    return response.data.map((item: any) => this.transformV4toV3(item)); // Transform each job item
+  }
+
+  // Recursive function to transform Strapi v4 data structure into a v3-like format
+  private transformV4toV3(data: any): any {
+    // Check if the current data has `attributes` structure (Strapi v4 format)
+    if (data && data.attributes) {
+      // Flatten the object by merging `id` and recursively transformed `attributes`
+      const transformedAttributes = this.transformAttributes(data.attributes);
+
+      // Include `id` from the top level of Strapi v4 item
+      return {
+        id: data.id,
+        ...transformedAttributes,
+      };
+    }
+
+    // Return the data as is if it's neither an object with nested fields nor an array
+    return data;
+  }
+
+  // Recursively transform nested attributes, handling nested `data` objects
+  private transformAttributes(attributes: any): any {
+    const transformedObject: any = {};
+
+    for (const key in attributes) {
+      if (attributes.hasOwnProperty(key)) {
+        const value = attributes[key];
+
+        // Handle nested Strapi objects with `data` structure
+        if (value && value.data) {
+          if (Array.isArray(value.data)) {
+            // Transform arrays of nested objects
+            transformedObject[key] = value.data.map((nestedItem: any) => 
+              this.transformV4toV3(nestedItem)
+            );
+          } else {
+            // Transform single nested object
+            transformedObject[key] = this.transformV4toV3(value.data);
+          }
+        } else {
+          // Directly assign other attributes
+          transformedObject[key] = value;
+        }
       }
     }
-    this.userPermissionService.authLocalPost(loginParams).subscribe(
+
+    return transformedObject;
+  }
+  login(username: string, password: string): void {
+    this.http.post('http://localhost:1337/api/auth/local', {
+      identifier: username,
+      password: password,
+    }).subscribe(
       (data: any) => {
+        console.log(data);
         localStorage.setItem('jwt_token', data.jwt);
         localStorage.setItem('jwt_user', data.user.username);
         localStorage.setItem('jwt_user_id', data.user.id);
-        localStorage.setItem('jwt_user_role', data.user.role.name);
+        //localStorage.setItem('jwt_user_role', data.user.role.name);
         localStorage.setItem('jwt_user_description', data.user.description);
         localStorage.setItem('jwt_user_email', data.user.email);
-        this.router.navigate(['/advertisements']);
+        this.http.get<any>('http://localhost:1337/api/users?filters[id][$eq]='+ data.user.id + '&populate=*').subscribe(
+          (result: any) => {
+            localStorage.setItem('jwt_user_role', result[0].role.name);
+            this.router.navigate(['advertisements']);
+          } 
+        ) 
       },
       (err: Error) => {
         this.wrongCredentials = true;
@@ -126,9 +181,10 @@ export class DataService {
     );
   }
 
+  //todo
   register(name: string, email: string, password: string, description: string, role: number){
     let createParams: any = {
-      "body": {
+      "data": {
         "username": name,
         "email": email,
         "password": password,
@@ -163,12 +219,14 @@ export class DataService {
     );
   }
 
+  //todo
   getCurrentUser(){
     this.currentUserId = localStorage.getItem('jwt_user_id') || '';
 
     if(this.currentUserId != ''){
       this.userPermissionService.usersIdGet({id: this.currentUserId}).subscribe(
         (data: any) => {
+          console.log("Halllooooo" + data);
           this.user = data;
           this.currentUser = data.username;
           this.currentUserRole = data.role.name;
@@ -180,6 +238,7 @@ export class DataService {
     }
   }
 
+  //todo
   forgotPassword(email: string){
     let forgotParams: any = {
       "body": {
@@ -197,6 +256,7 @@ export class DataService {
     );
   }
 
+  //todo
   resetPassword(password: string, passwordRepeat: string, code: string){
     let resetParams: any = {
       "body": {
@@ -216,31 +276,35 @@ export class DataService {
   }
 
   getAdvertisementsLandingPage() {
-    this.advertisementService.advertisementsGet({_limit: 20, _sort: 'created_at:desc'}).subscribe(
-      (data: Advertisement[]) => {
-        //order data by published_at property
-        data = data.sort((a, b) => {
-          return <any>new Date(b.published_at!) - <any>new Date(a.published_at!);
-        });
-
-        this.addPlacementBonusToLandingPageList(data);
-        this.landingPageAdvertisements = data;
-      }
-    );
+    //add a except to the advertisement
+    this.http.get<any>('http://localhost:1337/api/jobs?sort=createdAt:desc&pagination[limit]=20').pipe(
+      map(response => this.transformResponse(response))
+    ).subscribe(
+      (result: any) => {
+        this.addPlacementBonusToLandingPageList(result);
+        this.landingPageAdvertisements = result;
+      } 
+    ) 
   }
 
   getAmountOfAdvertisements() {
-    this.advertisementService.advertisementsCountGet().subscribe(
+    this.http.get('http://localhost:1337/api/jobs?pagination[withCount]=true').subscribe(
       (data: any) => {
-        this.totalAdvertisementAmount = data;
+        this.totalAdvertisementAmount = data.meta.totalCount;
       }
     );
   }
 
   getAdvertisements() {
-    this.advertisementService.advertisementsGet({_limit: this.currentLimit}).subscribe(
-      (data: Advertisement[]) => {
+    this.http.get<any>('http://localhost:1337/api/jobs?pagination[limit]=' + this.currentLimit + '&populate=*')
+      .pipe(
+        map(response => this.transformResponse(response))
+      )
+      .subscribe(
+      (result: any) => {
         //order data by published_at property
+        let data: Advertisement[] = this.transformV4toV3(result);
+
         data = data.sort((a, b) => {
           return <any>new Date(b.published_at!) - <any>new Date(a.published_at!);
         });
@@ -252,6 +316,7 @@ export class DataService {
     );
   }
 
+  //todo
   getFilteredAdvertisements(searchInput: string) {
     let filterParams: string = '?_where[_or][0][jobTitle_contains]=' + searchInput + '&_where[_or][1][assignment_contains]=' + searchInput + '&_where[_or][2][benefits_contains]=' + searchInput + '&_where[_or][3][location_contains]=' + searchInput + '&_where[_or][4][requirements_contains]=' + searchInput + '&_where[_or][5][salary_contains]=' + searchInput;
  
@@ -265,8 +330,9 @@ export class DataService {
     );
   }
 
+  //todo
   loadPublicConsultants() {
-    this.http.get<any>('https://api.jobquadrat.com/users?_where[public]=true')
+    this.http.get<any>('http://localhost:1337/api/users?_where[public]=true')
       .subscribe((data: UsersPermissionsUser[]) => {
         this.publicConsultants = data;
         console.log(data);
@@ -274,7 +340,7 @@ export class DataService {
     )
   }
 
- 
+  //todo
   getAdvertisementsByUser() {
     let userParams: string = '?_where[users_permissions_user.id]=' + this.currentUserId;
     userParams += '&_limit=' + this.currentAdvertisementLimit;
@@ -312,13 +378,17 @@ export class DataService {
   }
 
   getActivePlacementBonus(advertisementId: string) {
+  
     return new Promise((resolve, reject) => {
-      this.http.get<any>('https://api.jobquadrat.com/placement-bonuses?_where[advertisement.id]=' + advertisementId)
-        .subscribe((data: PlacementBonus[]) => {
+      this.http.get<any>('http://localhost:1337/api/placement-bonuses?_where[advertisement.id]=' + advertisementId)
+      .pipe(
+        map(response => this.transformResponse(response))
+      ).subscribe((data: PlacementBonus[]) => {   
           //sort data by data.created_at property
           data = data.sort((a, b) => {
             return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
           });
+
           this.currentAdvertisementBonuses = data;
           this.activePlacementBonus = data[0].bonus || 0; 
           resolve(data[0].bonus || 0);
@@ -380,7 +450,7 @@ export class DataService {
 
   //load all chatCommunications where chat sender is current user
   getChatCommunicationsOfConsultant(chatUpdate: boolean) {
-    this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_sender_p1.id]=' + this.currentUserId)
+    this.http.get<any>('http://localhost:1337/api/chat-communications?_where[chat_sender_p1.id]=' + this.currentUserId)
       .subscribe((data: any) => {
         //order data by last_message_timestamp property
         data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
@@ -408,7 +478,7 @@ export class DataService {
   }
 
   getChatCommunicationsOfCompany(chatUpdate: boolean) {
-    this.http.get<any>('https://api.jobquadrat.com/chat-communications?_where[chat_receiver_p2.id]=' + this.currentUserId)
+    this.http.get<any>('http://localhost:1337/api/chat-communications?_where[chat_receiver_p2.id]=' + this.currentUserId)
       .subscribe((data: any) => {
         //order data by last_message_timestamp property
         data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
@@ -473,7 +543,7 @@ export class DataService {
       }
     }
 
-    this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
+    this.http.put<any>('http://localhost:1337/api/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
         if(this.currentUserRole == "HR-Consultant"){
           this.getChatCommunicationsOfConsultant(true);
@@ -500,7 +570,7 @@ export class DataService {
       }
     }
 
-    this.http.put<any>('https://api.jobquadrat.com/chat-communications/' + chatCommunicationId, chatParams)
+    this.http.put<any>('http://localhost:1337/api/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
         //go through all chatCommunications and update the unread messages
         if(this.currentUserRole == "HR-Consultant"){
@@ -529,7 +599,7 @@ export class DataService {
     }
 
     
-    this.http.post<any>('https://api.jobquadrat.com/chat-communications', chatParams)
+    this.http.post<any>('http://localhost:1337/api/chat-communications', chatParams)
       .subscribe(data => {
         this.addNewMessagetoFirechat(data.id, communicationMessage);
         if(files.length > 0){
@@ -585,7 +655,7 @@ export class DataService {
     }
 
     //upload to server and log errror
-    this.http.post<any>('https://api.jobquadrat.com/upload', formData)
+    this.http.post<any>('http://localhost:1337/api/upload', formData)
       .subscribe(data => {
         this.addUploadFileToFirechat(chatId, data);
       }
@@ -595,7 +665,7 @@ export class DataService {
   uploadImage(file: File){
     let formData = new FormData();
     formData.append('files', file);
-    return this.http.post<any>('https://api.jobquadrat.com/upload', formData);
+    return this.http.post<any>('http://localhost:1337/api/upload', formData);
   }
 
   addUploadFileToFirechat(chatId: string, files: any){
@@ -684,7 +754,7 @@ export class DataService {
         "id": advertisementId
       }
     }
-    this.http.post<any>('https://api.jobquadrat.com/placement-bonuses', placementBonusParams)
+    this.http.post<any>('http://localhost:1337/api/placement-bonuses', placementBonusParams)
       .subscribe(data => {
         this.getPlacementBonusesByAdvertisement(advertisementId);
       }
@@ -692,7 +762,7 @@ export class DataService {
   }
 
   getPlacementBonusesByAdvertisement(advertisementId: number) {
-    this.http.get<any>('https://api.jobquadrat.com/placement-bonuses?_where[advertisement.id]=' + advertisementId)
+    this.http.get<any>('http://localhost:1337/api/placement-bonuses?_where[advertisement.id]=' + advertisementId)
       .subscribe((data: PlacementBonus[]) => {
         //sort data by data.created_at property
         data = data.sort((a, b) => {
@@ -785,7 +855,7 @@ export class DataService {
       "html": html
     }
 
-    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+    this.http.post<any>('http://localhost:1337/api/email', emailParams)
       .subscribe(data => { 
       }
     )
@@ -801,7 +871,7 @@ export class DataService {
       "html": html
     }
 
-    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+    this.http.post<any>('http://localhost:1337/api/email', emailParams)
       .subscribe(data => {
       }
     )
@@ -818,7 +888,7 @@ export class DataService {
       "html": html
     }
 
-    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+    this.http.post<any>('http://localhost:1337/api/email', emailParams)
       .subscribe(data => {
         this.formSent = true;
       }
@@ -835,7 +905,7 @@ export class DataService {
       "html": html
     }
 
-    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+    this.http.post<any>('http://localhost:1337/api/email', emailParams)
       .subscribe(data => {
       }
     )
@@ -851,7 +921,7 @@ export class DataService {
       "html": html
     }
 
-    this.http.post<any>('https://api.jobquadrat.com/email', emailParams)
+    this.http.post<any>('http://localhost:1337/api/email', emailParams)
       .subscribe(data => {
       }
     )
