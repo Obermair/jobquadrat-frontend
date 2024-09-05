@@ -60,15 +60,20 @@ export class UpdateProfileComponent implements OnInit {
 
   updateUserData(){
     if(this.dataService.user.username != "" && this.dataService.user.email != ""){
-      const userParams: any = {
-        "id": localStorage.getItem('jwt_user_id') ?? '',
-        "body": this.dataService.user
+      const userParams: any = { 
+          "username": this.dataService.user.username,
+          "description": this.dataService.user.description,
+          "email": this.dataService.user.email,
+          "profile_img": this.dataService.user.profile_img,
+          "profile_img_id": this.dataService.user.profile_img_id,
+          "services": this.dataService.user.services
       };
 
       //todo
-      this.userService.usersIdPut(userParams)
+      this.http.put<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
       .subscribe(
         (updatedUser) => {
+          console.log(updatedUser);
           this.successMessage = "Änderungen erfolgreich angepasst!";
           this.errorMessage = "";
           localStorage.setItem('jwt_user', updatedUser.username); 
@@ -98,13 +103,14 @@ export class UpdateProfileComponent implements OnInit {
   resetPassword(){
     if(this.password == this.passwordRepeat && this.password != ''){
       const userParams: any = {
-        "id": localStorage.getItem('jwt_user_id') ?? '',
-        "body": {
-          "password": this.password
+        data: {
+          password: this.password
         }
       };
+
+      console.log('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
   
-      this.userService.usersIdPut(userParams)
+      this.http.put<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
       .subscribe(
         (updatedUser) => {
           this.successMessage = "Änderungen erfolgreich angepasst!";
@@ -122,11 +128,8 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   deactiveProfile(){
-    const deleteParams: any = {
-      "id": localStorage.getItem('jwt_user_id') ?? '',
-    };
-
-    this.userService.usersIdDelete(deleteParams).subscribe(
+    this.http.delete<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '')
+      .subscribe(
       (updatedUser) => {
         localStorage.clear();
         this.router.navigate(['/login']);
