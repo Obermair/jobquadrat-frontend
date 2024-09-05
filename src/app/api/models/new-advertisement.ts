@@ -8,7 +8,7 @@ export interface NewAdvertisement {
   jobTitle?: string;
   location?: string;
   placementBonus?: number;
-  published_at?: string;
+  publishedAt?: string;
   requirements?: string;
   salary?: string;
   updated_by?: string;

@@ -13,7 +13,7 @@ export interface UsersPermissionsUser {
 'placementBonus'?: number;
 'district'?: string;
 'users_permissions_user'?: string;
-'published_at'?: string;
+'publishedAt'?: string;
 'created_by'?: string;
 'updated_by'?: string;
 }>;

@@ -5,7 +5,7 @@ export interface Advertisement {
 'id': string;
 'name'?: string;
 'advertisements'?: Array<string>;
-'published_at'?: string;
+'publishedAt'?: string;
 'created_by'?: string;
 'updated_by'?: string;
 };
@@ -13,9 +13,9 @@ export interface Advertisement {
   jobTitle?: string;
   location?: string;
   placementBonus?: number;
-  updated_at?: string;
-  created_at?: string;
-  published_at?: string;
+  updatedAt?: string;
+  createdAt?: string;
+  publishedAt?: string;
   requirements?: string;
   salary?: string;
   currentPlacementBonus?: number;

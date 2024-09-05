@@ -105,7 +105,7 @@ export class SaveAdvertisementComponent implements OnInit {
       this.advertisement.requirements = this.requirementsPoints;
       this.advertisement.benefits = this.benefitsPoints;
 
-      this.dataService.postAvertisement(this.advertisement, this.placementBonus);
+      this.dataService.postAdvertisement(this.advertisement, this.placementBonus);
       this.router.navigate(['../'], {relativeTo:this.route});
     } else{
       this.errorMessage = "Bitte füllen Sie alle Felder aus!"

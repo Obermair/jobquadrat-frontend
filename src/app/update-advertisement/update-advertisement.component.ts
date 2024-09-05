@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Advertisement } from '../api/models';
 import { AdvertisementService } from '../api/services';
 import { DataService } from '../data.service';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
  
 @Component({
   selector: 'app-update-advertisement',
@@ -28,10 +30,10 @@ export class UpdateAdvertisementComponent implements OnInit {
   benefitsPoints = "";
 
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute, 
-    public advertisementService: AdvertisementService) {
-      let filterParams: string = '?id=' + this.route.snapshot.params['id'];
-
-      this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+    public advertisementService: AdvertisementService, private http: HttpClient) {
+      this.http.get<any>('http://localhost:1337/api/jobs?filters[id][$eq]='+ this.route.snapshot.params['id'] + '&populate=*').pipe(
+        map(response => this.dataService.transformResponse(response))
+        ).subscribe(
         (data: any) => {
           if(data[0].users_permissions_user.id == this.dataService.currentUserId){
             this.advertisement = data[0];

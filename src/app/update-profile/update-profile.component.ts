@@ -4,6 +4,7 @@ import { DataService } from '../data.service';
 import { UsersPermissionsUserService } from '../api/services';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-update-profile',
@@ -45,8 +46,7 @@ export class UpdateProfileComponent implements OnInit {
         .subscribe();
       }
 
-      this.http.post<any>('https://api.jobquadrat.com/upload', formData)
-        .subscribe(data => {
+      this.http.post<any>('https://api.jobquadrat.com/upload', formData).subscribe(data => {
           this.dataService.user.profile_img_id = data[0].id;
           this.dataService.user.profile_img = data[0].url;
           this.updateUserData();
@@ -64,6 +64,8 @@ export class UpdateProfileComponent implements OnInit {
         "id": localStorage.getItem('jwt_user_id') ?? '',
         "body": this.dataService.user
       };
+
+      //todo
       this.userService.usersIdPut(userParams)
       .subscribe(
         (updatedUser) => {

@@ -104,7 +104,7 @@ export class DataService {
   }
 
   // Main function to handle transforming the entire response
-  private transformResponse(response: any): any[] {
+  public transformResponse(response: any): any[] {
     if (!response || !response.data) return []; // Ensure data exists
     return response.data.map((item: any) => this.transformV4toV3(item)); // Transform each job item
   }
@@ -155,13 +155,13 @@ export class DataService {
 
     return transformedObject;
   }
+
   login(username: string, password: string): void {
     this.http.post('http://localhost:1337/api/auth/local', {
       identifier: username,
       password: password,
     }).subscribe(
       (data: any) => {
-        console.log(data);
         localStorage.setItem('jwt_token', data.jwt);
         localStorage.setItem('jwt_user', data.user.username);
         localStorage.setItem('jwt_user_id', data.user.id);
@@ -184,34 +184,32 @@ export class DataService {
   //todo
   register(name: string, email: string, password: string, description: string, role: number){
     let createParams: any = {
-      "data": {
+      data: {
         "username": name,
         "email": email,
         "password": password,
         "description": description
-      },
+      }
     }
 
     let userParams: any;
     
-    this.userPermissionService.authLocalRegisterPost(createParams).subscribe(
+    this.http.post<any>('http://localhost:1337/api/auth/local/register', createParams)
+      .subscribe(
       (data: any) => {
         userParams = {
-          "id": data.user.id,
-          "body": {
-            "role": {
-              "id": role,
-            }
+          data: {
+            "id": data.user.id,
+            "role": role
           }
         }
-        
-        this.userPermissionService.usersIdPut(userParams).subscribe(
+
+        this.http.put<any>('http://localhost:1337/api/users/' + data.user.id, userParams).subscribe(
           (data: any) => {
             this.registerSuccess = true;
             localStorage.setItem('auth_user', data.email);
           }
         );
-        
       },
       (err: Error) => {
         this.authError = true;
@@ -219,17 +217,15 @@ export class DataService {
     );
   }
 
-  //todo
   getCurrentUser(){
     this.currentUserId = localStorage.getItem('jwt_user_id') || '';
 
     if(this.currentUserId != ''){
-      this.userPermissionService.usersIdGet({id: this.currentUserId}).subscribe(
+      this.http.get<any>('http://localhost:1337/api/users?filters[id][$eq]='+ this.currentUserId + '&populate=*').subscribe(
         (data: any) => {
-          console.log("Halllooooo" + data);
-          this.user = data;
-          this.currentUser = data.username;
-          this.currentUserRole = data.role.name;
+          this.user = data[0];
+          this.currentUser = data[0].username;
+          this.currentUserRole = data[0].role.name;
           if(this.user.profile_img == null){
             this.user.profile_img = "";
           }
@@ -238,15 +234,16 @@ export class DataService {
     }
   }
 
-  //todo
   forgotPassword(email: string){
     let forgotParams: any = {
-      "body": {
+      data: {
         "email": email,
         "url": this.resetPath
       }
     }
-    this.userPermissionService.authForgotPasswordPost(forgotParams).subscribe(
+
+    this.http.post<any>('http://localhost:1337/api/auth/forgot-password', forgotParams)
+      .subscribe(
       (data: any) => {
         this.forgotSent = true;
       },
@@ -259,18 +256,20 @@ export class DataService {
   //todo
   resetPassword(password: string, passwordRepeat: string, code: string){
     let resetParams: any = {
-      "body": {
+      data: {
         "code": code,
         "password": password,
-        "passwordConfirmation": passwordRepeat,
-      } 
-    }
+        "passwordConfirmation": passwordRepeat
+      }
+    } 
+    
 
-    this.userPermissionService.authResetPasswordPost(resetParams).subscribe(
+    this.http.post<any>('http://localhost:1337/api/auth/reset-password', resetParams)
+      .subscribe(
       (data: any) => {
         this.resetSent = true;
       },
-      (err: Error) => {
+        (err: Error) => {
       }
     );
   }
@@ -290,7 +289,7 @@ export class DataService {
   getAmountOfAdvertisements() {
     this.http.get('http://localhost:1337/api/jobs?pagination[withCount]=true').subscribe(
       (data: any) => {
-        this.totalAdvertisementAmount = data.meta.totalCount;
+        this.totalAdvertisementAmount = data.meta.pagination.total;
       }
     );
   }
@@ -301,12 +300,9 @@ export class DataService {
         map(response => this.transformResponse(response))
       )
       .subscribe(
-      (result: any) => {
-        //order data by published_at property
-        let data: Advertisement[] = this.transformV4toV3(result);
-
+      (data: Advertisement[]) => {
         data = data.sort((a, b) => {
-          return <any>new Date(b.published_at!) - <any>new Date(a.published_at!);
+          return <any>new Date(b.publishedAt!) - <any>new Date(a.publishedAt!);
         });
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
@@ -316,11 +312,19 @@ export class DataService {
     );
   }
 
-  //todo
   getFilteredAdvertisements(searchInput: string) {
-    let filterParams: string = '?_where[_or][0][jobTitle_contains]=' + searchInput + '&_where[_or][1][assignment_contains]=' + searchInput + '&_where[_or][2][benefits_contains]=' + searchInput + '&_where[_or][3][location_contains]=' + searchInput + '&_where[_or][4][requirements_contains]=' + searchInput + '&_where[_or][5][salary_contains]=' + searchInput;
- 
-    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+    let filterParams: string = 
+      '?filters[$or][0][jobTitle][$contains]=' + searchInput + 
+      '&filters[$or][1][assignment][$contains]=' + searchInput + 
+      '&filters[$or][2][benefits][$contains]=' + searchInput + 
+      '&filters[$or][3][location][$contains]=' + searchInput + 
+      '&filters[$or][4][requirements][$contains]=' + searchInput + 
+      '&filters[$or][5][salary][$contains]=' + searchInput;
+
+    this.http.get<any>('http://localhost:1337/api/jobs' + filterParams + '&populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe(
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
@@ -330,21 +334,24 @@ export class DataService {
     );
   }
 
-  //todo
   loadPublicConsultants() {
-    this.http.get<any>('http://localhost:1337/api/users?_where[public]=true')
-      .subscribe((data: UsersPermissionsUser[]) => {
+    this.http.get<any>('http://localhost:1337/api/users?filters[public][$eq]=true').subscribe((data: UsersPermissionsUser[]) => {
         this.publicConsultants = data;
-        console.log(data);
       }
     )
   }
 
-  //todo
   getAdvertisementsByUser() {
-    let userParams: string = '?_where[users_permissions_user.id]=' + this.currentUserId;
-    userParams += '&_limit=' + this.currentAdvertisementLimit;
-    this.advertisementService.advertisementsCustomFilterGet(userParams).subscribe(
+      // Initialize the filter parameters using Strapi v4 format
+      let userParams: string = '?filters[users_permissions_user][id][$eq]=' + this.currentUserId;
+
+      // Add the limit parameter
+      userParams += '&pagination[limit]=' + this.currentAdvertisementLimit;
+
+      this.http.get<any>('http://localhost:1337/api/jobs' + userParams + '&populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe(
       (data: any) => {
         this.userAdvertisements = data;
         this.userAdvertisementsLoading = false;
@@ -378,15 +385,14 @@ export class DataService {
   }
 
   getActivePlacementBonus(advertisementId: string) {
-  
     return new Promise((resolve, reject) => {
-      this.http.get<any>('http://localhost:1337/api/placement-bonuses?_where[advertisement.id]=' + advertisementId)
+      this.http.get<any>('http://localhost:1337/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId + '&populate=*')
       .pipe(
-        map(response => this.transformResponse(response))
+      map(response => this.transformResponse(response))
       ).subscribe((data: PlacementBonus[]) => {   
-          //sort data by data.created_at property
+          //sort data by data.createdAt property
           data = data.sort((a, b) => {
-            return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
+            return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
           });
 
           this.currentAdvertisementBonuses = data;
@@ -399,12 +405,16 @@ export class DataService {
 
 
   getFilteredAdvertisementsByDistricts(districts: District[]) {
-    let filterParams: string = '?_where[_or][0][district.id]=' + districts[0].id;
-    for (let i = 1; i < districts.length; i++) {
-      filterParams += '&_where[_or][' + i + '][district.id]=' + districts[i].id;
-    }
+    let filterParams: string = '?filters[$or][0][district][id][$eq]=' + districts[0].id;
 
-    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+    for (let i = 1; i < districts.length; i++) {
+      filterParams += '&filters[$or][' + i + '][district][id][$eq]=' + districts[i].id;
+    }
+    
+    this.http.get<any>('http://localhost:1337/api/jobs' + filterParams + '&populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe(
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
@@ -415,15 +425,27 @@ export class DataService {
   }
 
   getFilteredAdvertisementsByDistrictsAndSearch(districts: District[], searchInput: string) {
-    let filterParams: string = '?_where[_and][0][_or][0][district.id]=' + districts[0].id;
+    // Initialize the filter parameters with the first district ID in Strapi v4 format
+    let filterParams: string = '?filters[$and][0][$or][0][district][id][$eq]=' + districts[0].id;
+
+    // Add additional district filters to the OR condition
     for (let i = 1; i < districts.length; i++) {
-      filterParams += '&_where[_and][0][_or][' + i + '][district.id]=' + districts[i].id;
+      filterParams += '&filters[$and][0][$or][' + i + '][district][id][$eq]=' + districts[i].id;
     }
 
-    filterParams += '&_where[_and][1][_or][0][jobTitle_contains]=' + searchInput + '&_where[_and][1][_or][1][assignment_contains]=' + searchInput + '&_where[_and][1][_or][2][benefits_contains]=' + searchInput + '&_where[_and][1][_or][3][location_contains]=' + searchInput + '&_where[_and][1][_or][4][requirements_contains]=' + searchInput + '&_where[_and][1][_or][5][salary_contains]=' + searchInput;
+    // Add filters for job title, assignment, benefits, location, requirements, and salary based on search input
+    filterParams += 
+      '&filters[$and][1][$or][0][jobTitle][$contains]=' + searchInput + 
+      '&filters[$and][1][$or][1][assignment][$contains]=' + searchInput + 
+      '&filters[$and][1][$or][2][benefits][$contains]=' + searchInput + 
+      '&filters[$and][1][$or][3][location][$contains]=' + searchInput + 
+      '&filters[$and][1][$or][4][requirements][$contains]=' + searchInput + 
+      '&filters[$and][1][$or][5][salary][$contains]=' + searchInput;
 
-
-    this.advertisementService.advertisementsCustomFilterGet(filterParams).subscribe(
+    this.http.get<any>('http://localhost:1337/api/jobs' + filterParams + '&populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe(
       (data: any) => {
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
@@ -434,7 +456,10 @@ export class DataService {
   }
   
   getDistricts() {
-    this.districtService.districtsGet().subscribe(
+    this.http.get<any>('http://localhost:1337/api/districts?populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe(
       (data: any) => {
         this.districts = data;
         //sort discricts by name
@@ -450,8 +475,10 @@ export class DataService {
 
   //load all chatCommunications where chat sender is current user
   getChatCommunicationsOfConsultant(chatUpdate: boolean) {
-    this.http.get<any>('http://localhost:1337/api/chat-communications?_where[chat_sender_p1.id]=' + this.currentUserId)
-      .subscribe((data: any) => {
+    this.http.get<any>('http://localhost:1337/api/chat-communications?filters[chat_sender_p1][id][$eq]=' + this.currentUserId + + '&populate=*')
+      .pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe((data: any) => {
         //order data by last_message_timestamp property
         data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
           return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
@@ -478,8 +505,9 @@ export class DataService {
   }
 
   getChatCommunicationsOfCompany(chatUpdate: boolean) {
-    this.http.get<any>('http://localhost:1337/api/chat-communications?_where[chat_receiver_p2.id]=' + this.currentUserId)
-      .subscribe((data: any) => {
+    this.http.get<any>('http://localhost:1337/api/chat-communications?filters[chat_receiver_p2][id][$eq]=' + this.currentUserId + '&populate=*').pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe((data: any) => {
         //order data by last_message_timestamp property
         data = data.sort((a: ChatCommunications, b: ChatCommunications) => {
           return <any>new Date(b.last_message_timestamp!) - <any>new Date(a.last_message_timestamp!);
@@ -528,45 +556,49 @@ export class DataService {
 
   updateChatCommunicationTimestamp(chatCommunicationId: string) {
     let chatParams: any;
-    if(this.currentUserRole == "HR-Consultant"){
+    if (this.currentUserRole === "HR-Consultant") {
       chatParams = {
-        "id": chatCommunicationId,
-        "last_message_timestamp": new Date(),
-        "unread_message_p2": true
-      }
+        data: {
+          "last_message_timestamp": new Date(),
+          "unread_message_p2": true
+        }
+      };
     }
-    if(this.currentUserRole == "Company"){
+    if (this.currentUserRole === "Company") {
       chatParams = {
-        "id": chatCommunicationId,
-        "last_message_timestamp": new Date(),
-        "unread_message_p1": true
-      }
+        data: {
+          "last_message_timestamp": new Date(),
+          "unread_message_p1": true
+        }
+      };
     }
-
-    this.http.put<any>('http://localhost:1337/api/chat-communications/' + chatCommunicationId, chatParams)
-      .subscribe(data => { 
-        if(this.currentUserRole == "HR-Consultant"){
+  
+    this.http.put<any>('http://localhost:1337/api/chat-communications/' + chatCommunicationId, chatParams).subscribe(data => {
+        if (this.currentUserRole === "HR-Consultant") {
           this.getChatCommunicationsOfConsultant(true);
         }
-        if(this.currentUserRole == "Company"){
+        if (this.currentUserRole === "Company") {
           this.getChatCommunicationsOfCompany(true);
         }
-      }
-    )
+      });
   }
 
   readMessages(chatCommunicationId: string, chatSender: string) {
     let chatParams: any;
     if(chatSender == "p1"){
       chatParams = {
-        "id": chatCommunicationId,
-        "unread_message_p1": false
+        data: {
+          "id": chatCommunicationId,
+          "unread_message_p1": false
+        }
       }
     }
     if(chatSender == "p2"){
       chatParams = {
-        "id": chatCommunicationId,
-        "unread_message_p2": false
+        data: {
+          "id": chatCommunicationId,
+          "unread_message_p2": false
+        }
       }
     }
 
@@ -586,16 +618,14 @@ export class DataService {
 
   addChatCommunication(communicationMessage: string, files: File[]) {
     let chatParams: any = {
-      "advertisement": {
-        "id": this.advertisementProfile.id
-      },
-      "chat_sender_p1": {
-        "id": this.currentUserId
-      }, 
-      "chat_receiver_p2": this.advertisementProfile.users_permissions_user,
-      "last_message_timestamp": new Date(),
-      "unread_message_p1": false,
-      "unread_message_p2": true
+      data: {
+        "advertisement": this.advertisementProfile.id,
+        "chat_sender_p1": this.currentUserId,
+        "chat_receiver_p2": this.advertisementProfile.users_permissions_user,
+        "last_message_timestamp": new Date(),
+        "unread_message_p1": false,
+        "unread_message_p2": true
+      }
     }
 
     
@@ -749,24 +779,24 @@ export class DataService {
 
   addPlacementBonus(bonus: number, advertisementId: number) {
     let placementBonusParams: any = {
-      "bonus": bonus,
-      "advertisement": {
-        "id": advertisementId
+      data: {     
+        "bonus": bonus,
+        "advertisement": advertisementId
       }
-    }
-    this.http.post<any>('http://localhost:1337/api/placement-bonuses', placementBonusParams)
-      .subscribe(data => {
+    };
+
+    this.http.post<any>('http://localhost:1337/api/placement-bonuses', placementBonusParams).subscribe(data => {
         this.getPlacementBonusesByAdvertisement(advertisementId);
-      }
-    )
+      });
   }
 
   getPlacementBonusesByAdvertisement(advertisementId: number) {
-    this.http.get<any>('http://localhost:1337/api/placement-bonuses?_where[advertisement.id]=' + advertisementId)
-      .subscribe((data: PlacementBonus[]) => {
-        //sort data by data.created_at property
+    this.http.get<any>('http://localhost:1337/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId).pipe(
+      map(response => this.transformResponse(response))
+      ).subscribe((data: PlacementBonus[]) => {
+        //sort data by data.createdAt property
         data = data.sort((a, b) => {
-          return <any>new Date(b.created_at!) - <any>new Date(a.created_at!);
+          return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
         });
         this.currentAdvertisementBonuses = data;
         this.activePlacementBonus = data[0].bonus || 0;
@@ -776,9 +806,9 @@ export class DataService {
 
  
 
-  postAvertisement(advertisement: Advertisement, placementBonus: number) {
+  postAdvertisement(advertisement: Advertisement, placementBonus: number) {
     let advertisementParams: any = {
-      "body": {
+      data: {
         "jobTitle": advertisement.jobTitle,
         "workingTime": advertisement.workingTime,
         "assignment": advertisement.assignment,
@@ -786,27 +816,22 @@ export class DataService {
         "location": advertisement.location,
         "requirements": advertisement.requirements,
         "salary": advertisement.salary,
-        "district": {
-          "id": advertisement.district!.id
-        },
-        "users_permissions_user": {
-          "id": this.currentUserId
-        }
+        "district": advertisement.district?.id, // Directly pass the ID
+        "users_permissions_user": this.currentUserId // Directly pass the ID
       }
-    }
+    };
 
-    this.advertisementService.advertisementsPost(advertisementParams).subscribe(
+    this.http.post<any>('http://localhost:1337/api/jobs', advertisementParams).subscribe(
       (data: any) => {
         this.getAdvertisementsByUser();
-        this.addPlacementBonus(placementBonus, data.id);
+        this.addPlacementBonus(placementBonus, data.data.id);
       }
     );
   }
 
   updateAdvertisement(advertisement: Advertisement) {
     let advertisementParams: any = {
-      "id": advertisement.id,
-      "body": {
+      data: {
         "jobTitle": advertisement.jobTitle,
         "workingTime": advertisement.workingTime,
         "assignment": advertisement.assignment,
@@ -814,16 +839,12 @@ export class DataService {
         "location": advertisement.location,
         "requirements": advertisement.requirements,
         "salary": advertisement.salary,
-        "district": {
-          "id": advertisement.district!.id
-        },
-        "users_permissions_user": {
-          "id": this.currentUserId
-        }
+        "district": advertisement.district?.id, // Directly pass the ID
+        "users_permissions_user": this.currentUserId // Directly pass the ID
       }
-    }
+    };
 
-    this.advertisementService.advertisementsIdPut(advertisementParams).subscribe(
+    this.http.put<any>('http://localhost:1337/api/jobs/' + advertisement.id, advertisementParams).subscribe(
       (data: any) => {
         this.getAdvertisementsByUser();
       }
@@ -832,27 +853,29 @@ export class DataService {
 
   deactivateAdvertisement(advertisement: Advertisement) {
     let advertisementParams: any = {
-      "id": advertisement.id,
-      "body": {
-        "published_at": null
+      data: {
+        "publishedAt": null
       }
-    }
+    };
 
-    this.advertisementService.advertisementsIdPut(advertisementParams).subscribe(
-      (data: any) => {
-        this.getAdvertisementsByUser();
-      }
-    );
+    this.http.put<any>('http://localhost:1337/api/jobs/' + advertisement.id, advertisementParams)
+      .subscribe(
+        (data: any) => {
+          this.getAdvertisementsByUser();
+        }
+      );
   }
 
   sendNewMessageMailToCompany(chatCommunication: ChatCommunications){
     let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_sender_p1?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
  
     let emailParams: any = {
-      "to": chatCommunication.chat_receiver_p2?.email,
-      "from": "jobquadrat@gmail.com",
-      "subject": "Neue Nachricht auf Jobquadrat",
-      "html": html
+      data: {
+        "to": chatCommunication.chat_receiver_p2?.email,
+        "from": "jobquadrat@gmail.com",
+        "subject": "Neue Nachricht auf Jobquadrat",
+        "html": html
+      }
     }
 
     this.http.post<any>('http://localhost:1337/api/email', emailParams)
@@ -865,10 +888,12 @@ export class DataService {
     let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_receiver_p2?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
  
     let emailParams: any = {
-      "to": chatCommunication.chat_sender_p1?.email,
-      "from": "jobquadrat@gmail.com",
-      "subject": "Neue Nachricht auf Jobquadrat",
-      "html": html
+      data: {
+        "to": chatCommunication.chat_sender_p1?.email,
+        "from": "jobquadrat@gmail.com",
+        "subject": "Neue Nachricht auf Jobquadrat",
+        "html": html
+      }
     }
 
     this.http.post<any>('http://localhost:1337/api/email', emailParams)
@@ -882,10 +907,12 @@ export class DataService {
     let html = '<img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"><h2>Neue Email von Jobquadrat</h2><p><b>Name:</b> ' + form.firstname + " " + form.lastname + '</p><p><b>Unternehmen:</b> ' + form.company + '</p><p><b>Email:</b> ' + form.email + '</p><p><b>Nachricht:</b> ' + form.message + '</p>';
 
     let emailParams: any = {
-      "to": "jobquadrat@gmail.com",
-      "from": "jobquadrat@gmail.com",
-      "subject": "Neue Email von Jobquadrat",
-      "html": html
+      data: {
+        "to": "jobquadrat@gmail.com",
+        "from": "jobquadrat@gmail.com",
+        "subject": "Neue Email von Jobquadrat",
+        "html": html
+      }
     }
 
     this.http.post<any>('http://localhost:1337/api/email', emailParams)
@@ -899,10 +926,12 @@ export class DataService {
     let html = '<!DOCTYPE html><html><head>  <meta charset="UTF-8">  <title>Neue Vermittlung von einem Personalvermittler gemeldet</title>  <style>    body {      font-family: Arial, sans-serif;      line-height: 1.6;      margin: 0;      padding: 20px;    }    h1 {      color: #333333;      font-size: 24px;      margin-bottom: 20px;    }    p {      color: #333333;      font-size: 16px;      margin-bottom: 10px;    }    table {      border-collapse: collapse;      width: 100%;    }    th, td {      border: 1px solid #dddddd;      padding: 8px;      text-align: left;    }    th {      background-color: #f5f5f5;    }  </style></head><body><img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo">  <h1>Neue Vermittlung gemeldet</h1> <p>Ein Personalvermittler hat eine neue Vermittlung gemeldet:</p>  <table>    <tr>      <th>Personalvermittler</th>      <td>' + placementData.recruiter + '</td>    </tr>    <tr>      <th>E-Mail-Adresse</th>      <td>' + placementData.recruiterMail + '</td>    </tr>    <tr>      <th>Inserat</th>      <td>' + placementData.jobTitle + '</td>    </tr>    <tr>      <th>Vermittlungsprämie</th>      <td>' + placementData.placementBonus + '%</td>    </tr> <tr>      <th>Bruttojahresgehalt</th>      <td>' + placementData.actualSalary + '€</td>    </tr>   <tr>      <th>Unternehmen</th>      <td>' + placementData.companyName + '</td>    </tr>    <tr>      <th>Kontaktperson</th>      <td>' + placementData.contactPerson + '</td>    </tr>  </table>  <p>Bitte überprüfen Sie die Details und nehmen Sie gegebenenfalls weitere Schritte vor.</p></body></html>'
 
     let emailParams: any = {
-      "to": "jobquadrat@gmail.com",
-      "from": "jobquadrat@gmail.com",
-      "subject": "Neue Vermittlung von Jobquadrat",
-      "html": html
+      data: {
+        "to": "jobquadrat@gmail.com",
+        "from": "jobquadrat@gmail.com",
+        "subject": "Neue Vermittlung von Jobquadrat",
+        "html": html
+      }
     }
 
     this.http.post<any>('http://localhost:1337/api/email', emailParams)
@@ -915,10 +944,12 @@ export class DataService {
     let html = '<!DOCTYPE html><html><head>  <meta charset="UTF-8">  <title>Neue Vermittlung von einem Unternehmen gemeldet</title>  <style>    body {      font-family: Arial, sans-serif;      line-height: 1.6;      margin: 0;      padding: 20px;    }    h1 {      color: #333333;      font-size: 24px;      margin-bottom: 20px;    }    p {      color: #333333;      font-size: 16px;      margin-bottom: 10px;    }    table {      border-collapse: collapse;      width: 100%;    }    th, td {      border: 1px solid #dddddd;      padding: 8px;      text-align: left;    }    th {      background-color: #f5f5f5;    }  </style></head><body><img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo">  <h1>Neue Vermittlung gemeldet</h1> <p>Ein Unternehmen hat eine neue Vermittlung gemeldet:</p>  <table>    <tr>      <th>Unternehmen</th>      <td>' + placementData.companyName + '(ID: '+ placementData.companyId + ')' + '</td>    </tr> <tr>      <th>UID</th>      <td>' + placementData.uid + '</td>    </tr> <tr>      <th>Straße</th>      <td>' + placementData.street + '</td>    </tr> <tr>      <th>Hausnummer</th>      <td>' + placementData.houseNr + '</td>    </tr> <tr>      <th>Postleitzahl</th>      <td>' + placementData.postalCode + '</td>    </tr>  <tr>      <th>Stadt</th>      <td>' + placementData.city + '</td>    </tr><tr>      <th>Unternehmenskontakt</th>      <td>' + placementData.contactPerson + '</td>    </tr>     <tr>      <th>Inserat</th>      <td>' + placementData.jobTitle + '</td>    </tr>    <tr>      <th>Vermittlungsprämie</th>      <td>' + placementData.placementBonus + '%</td>    </tr><tr>      <th>Bruttojahresgehalt</th>      <td>' + placementData.actualSalary + '€</td>    </tr>     <tr>      <th>Personalvermittler</th>      <td>' + placementData.recruiter + '</td>    </tr>    <tr>      <th>Kontakt Personalvermittler</th>      <td>' + placementData.recruiterMail + '</td>    </tr>  </table>  <p>Bitte überprüfen Sie die Details und nehmen Sie gegebenenfalls weitere Schritte vor.</p></body></html>'
 
     let emailParams: any = {
-      "to": "jobquadrat@gmail.com",
-      "from": "jobquadrat@gmail.com",
-      "subject": "Neue Vermittlung von Jobquadrat",
-      "html": html
+      data: {
+        "to": "jobquadrat@gmail.com",
+        "from": "jobquadrat@gmail.com",
+        "subject": "Neue Vermittlung von Jobquadrat",
+        "html": html
+      }
     }
 
     this.http.post<any>('http://localhost:1337/api/email', emailParams)
