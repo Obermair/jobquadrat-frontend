@@ -197,13 +197,9 @@ export class DataService {
       .subscribe(
       (data: any) => {
         userParams = {
-          data: {
-            "id": data.user.id,
-            "role": role
-          }
+          "id": data.user.id,
+          "role": role
         }
-
-        console.log(userParams);
 
         this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + data.user.id, userParams).subscribe(
           (data: any) => {
