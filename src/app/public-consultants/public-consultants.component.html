@@ -7,7 +7,7 @@
             <div class="mt-10 space-y-10">
             <article *ngFor="let consultant of dataService.publicConsultants" class="relative isolate flex flex-col gap-8 lg:flex-row">
                 <div *ngIf="consultant.profile_img != null" class="relative h-64 lg:w-64 lg:shrink-0">
-                  <img [src]="dataService.rootUrl + consultant.profile_img" alt="" class="inset-0 h-full w-full rounded-2xl bg-white object-contain p-2">
+                  <img [src]="dataService.serverUrl + consultant.profile_img" alt="" class="inset-0 h-full w-full rounded-2xl bg-white object-contain p-2">
                   <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
                 </div>
                 <div>

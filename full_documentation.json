@@ -23,7 +23,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:1337",
+      "url": "http://v2202211186550206218.quicksrv.de:4300",
       "description": "Development server"
     },
     {

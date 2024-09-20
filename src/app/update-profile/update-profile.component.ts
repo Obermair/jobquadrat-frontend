@@ -17,7 +17,8 @@ export class UpdateProfileComponent implements OnInit {
   successMessage = "";
   showDeactivationAccount = false;
   showResetPasswort = false;
-  password = "";
+  oldPassword = "";
+  newPassword = "";
   passwordRepeat = "";
   errorMessageFileUpload = "";
   currentServicePoint = "";
@@ -42,11 +43,11 @@ export class UpdateProfileComponent implements OnInit {
       if(this.dataService.user.profile_img_id != "" && this.dataService.user.profile_img_id != null){
         let deleteId = this.dataService.user.profile_img_id;
         this.dataService.user.profile_img_id = "";
-        this.http.delete<any>('https://api.jobquadrat.com/upload/files/' + deleteId)
+        this.http.delete<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload/files/' + deleteId)
         .subscribe();
       }
 
-      this.http.post<any>('https://api.jobquadrat.com/upload', formData).subscribe(data => {
+      this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload', formData).subscribe(data => {
           this.dataService.user.profile_img_id = data[0].id;
           this.dataService.user.profile_img = data[0].url;
           this.updateUserData();
@@ -65,15 +66,15 @@ export class UpdateProfileComponent implements OnInit {
           "description": this.dataService.user.description,
           "email": this.dataService.user.email,
           "profile_img": this.dataService.user.profile_img,
-          "profile_img_id": this.dataService.user.profile_img_id,
-          "services": this.dataService.user.services
+          "profile_img_id": this.dataService.user.profile_img_id?.toString(),
+          "services": this.dataService.user.services,
+          "public": this.dataService.user.public
       };
 
       //todo
-      this.http.put<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
+      this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
       .subscribe(
         (updatedUser) => {
-          console.log(updatedUser);
           this.successMessage = "Änderungen erfolgreich angepasst!";
           this.errorMessage = "";
           localStorage.setItem('jwt_user', updatedUser.username); 
@@ -91,7 +92,8 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   toggleDeactiveProfile(){
-    this.password = "";
+    this.oldPassword = "";
+    this.newPassword = "";
     this.passwordRepeat = "";
     this.showDeactivationAccount = !this.showDeactivationAccount;
   }
@@ -101,16 +103,14 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   resetPassword(){
-    if(this.password == this.passwordRepeat && this.password != ''){
-      const userParams: any = {
-        data: {
-          password: this.password
-        }
+    if(this.newPassword == this.passwordRepeat && this.newPassword != ''){
+      const passwordParams: any = {
+          password: this.newPassword,
+          currentPassword: this.oldPassword,
+          passwordConfirmation: this.passwordRepeat
       };
 
-      console.log('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
-  
-      this.http.put<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
+      this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/auth/change-password', passwordParams)
       .subscribe(
         (updatedUser) => {
           this.successMessage = "Änderungen erfolgreich angepasst!";
@@ -119,7 +119,7 @@ export class UpdateProfileComponent implements OnInit {
         },
         (error: any) => {
           // Handle any errors that occurred during the update
-          this.errorMessage = "Änderungen wurden nicht übernommen werden. Versuche es später erneut."
+          this.errorMessage = "Passwort stimmt entweder nicht überein oder ist zu kurz. (mind. 6 Zeichen)"
           this.successMessage = "";
           this.toggleResetPasswort();
         }
@@ -128,7 +128,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   deactiveProfile(){
-    this.http.delete<any>('http://localhost:1337/api/users/' + localStorage.getItem('jwt_user_id') ?? '')
+    this.http.delete<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + localStorage.getItem('jwt_user_id') ?? '')
       .subscribe(
       (updatedUser) => {
         localStorage.clear();
@@ -172,7 +172,7 @@ export class UpdateProfileComponent implements OnInit {
       return URL.createObjectURL(this.uploadImage);
     }
     else{
-      return this.dataService.rootUrl + this.dataService.user.profile_img
+      return this.dataService.serverUrl + this.dataService.user.profile_img
     }
   }
 
