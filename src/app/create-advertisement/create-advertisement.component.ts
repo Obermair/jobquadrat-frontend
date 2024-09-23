@@ -79,7 +79,7 @@ export class CreateAdvertisementComponent implements OnInit {
       this.dataService.deactivateAdvertisement(this.currentUserAd);
       
       //reload advertisements
-      window.location.reload();
+      //window.location.reload();
       
       this.showSuccessPlacement = !this.showSuccessPlacement;
     }

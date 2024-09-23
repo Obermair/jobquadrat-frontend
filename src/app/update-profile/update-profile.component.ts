@@ -99,6 +99,9 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   toggleResetPasswort(){
+    this.oldPassword = "";
+    this.newPassword = "";
+    this.passwordRepeat = "";
     this.showResetPasswort = !this.showResetPasswort;
   }
 
