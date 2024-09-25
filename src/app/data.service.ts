@@ -466,7 +466,7 @@ export class DataService {
 
   //load all chatCommunications where chat sender is current user
   getChatCommunicationsOfConsultant(chatUpdate: boolean) {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications?filters[chat_sender_p1][id][$eq]=' + this.currentUserId + + '&populate=*')
+    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications?filters[chat_sender_p1][id][$eq]=' + this.currentUserId + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe((data: any) => {
@@ -476,7 +476,7 @@ export class DataService {
         });
         this.currentUserConversations = data;
 
-        if(chatUpdate){
+        if(chatUpdate){ 
           this.currentChatCommunicationId = data[0].id;
           this.chatAdvertisement = data[0].advertisement.id || {id: ""};
           if(data[0].advertisement.id != ""){
@@ -592,7 +592,6 @@ export class DataService {
         }
       }
     }
-
     this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
         //go through all chatCommunications and update the unread messages
@@ -619,12 +618,11 @@ export class DataService {
       }
     }
 
-    
     this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications', chatParams)
       .subscribe(data => {
-        this.addNewMessagetoFirechat(data.id, communicationMessage);
+        this.addNewMessagetoFirechat(data.data.id.toString(), communicationMessage);
         if(files.length > 0){
-          this.uploadFiles(data.id, files);
+          this.uploadFiles(data.data.id.toString(), files);
         }
         this.router.navigate(['advertisements/chat']);
       }
@@ -637,6 +635,7 @@ export class DataService {
     let activeUpdateChat = false;
     this.chatMessages = [];
 
+    console.log(chatCommunicationId);
     onValue(chatsRef, (snapshot: any) => {
       //get data from snapshot and push it to chatMessages array and remove all previous messages
       activeUpdateChat = false;
@@ -860,12 +859,9 @@ export class DataService {
     let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_sender_p1?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
  
     let emailParams: any = {
-      data: {
-        "to": chatCommunication.chat_receiver_p2?.email,
-        "from": "jobquadrat@gmail.com",
-        "subject": "Neue Nachricht auf Jobquadrat",
-        "html": html
-      }
+      "to": chatCommunication.chat_receiver_p2?.email,
+      "subject": "Neue Nachricht auf Jobquadrat",
+      "htmlContent": html
     }
 
     this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
@@ -878,12 +874,9 @@ export class DataService {
     let html = '<!DOCTYPE html> <html lang="de"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Neue Nachricht auf Jobquadrat</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; line-height: 1.6; margin: 0; padding: 20px; color: #333333; background-color: #f9f9f9; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); } h1 { font-size: 24px; margin-bottom: 20px; color: #f59e0b; } p { margin-bottom: 10px; } a { color: #f59e0b; text-decoration: none; font-weight: bold; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; } </style> </head> <body> <div class="container"> <img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"> <h1>Du hast eine neue Chatnachricht auf <a href="https://www.jobquadrat.com/">jobquadrat.com</a></h1> <p>Du hast soeben eine neue Nachricht zum Inserat <strong>' + chatCommunication.advertisement?.jobTitle + '</strong> von <strong>' + chatCommunication.chat_receiver_p2?.username + '</strong> bekommen.</p> <p>Gehe jetzt auf <a href="https://www.jobquadrat.com/advertisements/chat">jobquadrat.com</a>, um dir die neue Nachricht anzusehen.</p> </div> </body> </html>'
  
     let emailParams: any = {
-      data: {
-        "to": chatCommunication.chat_sender_p1?.email,
-        "from": "jobquadrat@gmail.com",
-        "subject": "Neue Nachricht auf Jobquadrat",
-        "html": html
-      }
+      "to": chatCommunication.chat_sender_p1?.email,
+      "subject": "Neue Nachricht auf Jobquadrat",
+      "htmlContent": html
     }
 
     this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
@@ -897,12 +890,9 @@ export class DataService {
     let html = '<img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo"><h2>Neue Email von Jobquadrat</h2><p><b>Name:</b> ' + form.firstname + " " + form.lastname + '</p><p><b>Unternehmen:</b> ' + form.company + '</p><p><b>Email:</b> ' + form.email + '</p><p><b>Nachricht:</b> ' + form.message + '</p>';
 
     let emailParams: any = {
-      data: {
-        "to": "jobquadrat@gmail.com",
-        "from": "jobquadrat@gmail.com",
-        "subject": "Neue Email von Jobquadrat",
-        "html": html
-      }
+      "to": "jobquadrat@gmail.com",
+      "subject": "Neue Email von Jobquadrat",
+      "htmlContent": html
     }
 
     this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
@@ -914,14 +904,10 @@ export class DataService {
 
   sendRecruiterSuccessPlacement(placementData: any){
     let html = '<!DOCTYPE html><html><head>  <meta charset="UTF-8">  <title>Neue Vermittlung von einem Personalvermittler gemeldet</title>  <style>    body {      font-family: Arial, sans-serif;      line-height: 1.6;      margin: 0;      padding: 20px;    }    h1 {      color: #333333;      font-size: 24px;      margin-bottom: 20px;    }    p {      color: #333333;      font-size: 16px;      margin-bottom: 10px;    }    table {      border-collapse: collapse;      width: 100%;    }    th, td {      border: 1px solid #dddddd;      padding: 8px;      text-align: left;    }    th {      background-color: #f5f5f5;    }  </style></head><body><img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo">  <h1>Neue Vermittlung gemeldet</h1> <p>Ein Personalvermittler hat eine neue Vermittlung gemeldet:</p>  <table>    <tr>      <th>Personalvermittler</th>      <td>' + placementData.recruiter + '</td>    </tr>    <tr>      <th>E-Mail-Adresse</th>      <td>' + placementData.recruiterMail + '</td>    </tr>    <tr>      <th>Inserat</th>      <td>' + placementData.jobTitle + '</td>    </tr>    <tr>      <th>Vermittlungsprämie</th>      <td>' + placementData.placementBonus + '%</td>    </tr> <tr>      <th>Bruttojahresgehalt</th>      <td>' + placementData.actualSalary + '€</td>    </tr>   <tr>      <th>Unternehmen</th>      <td>' + placementData.companyName + '</td>    </tr>    <tr>      <th>Kontaktperson</th>      <td>' + placementData.contactPerson + '</td>    </tr>  </table>  <p>Bitte überprüfen Sie die Details und nehmen Sie gegebenenfalls weitere Schritte vor.</p></body></html>'
-
     let emailParams: any = {
-      data: {
-        "to": "jobquadrat@gmail.com",
-        "from": "jobquadrat@gmail.com",
-        "subject": "Neue Vermittlung von Jobquadrat",
-        "html": html
-      }
+      "to": "jobquadrat@gmail.com",
+      "subject": "Neue Vermittlung von Jobquadrat",
+      "htmlContent": html
     }
 
     this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
@@ -934,7 +920,7 @@ export class DataService {
     let html = '<!DOCTYPE html><html><head>  <meta charset="UTF-8">  <title>Neue Vermittlung von einem Unternehmen gemeldet</title>  <style>    body {      font-family: Arial, sans-serif;      line-height: 1.6;      margin: 0;      padding: 20px;    }    h1 {      color: #333333;      font-size: 24px;      margin-bottom: 20px;    }    p {      color: #333333;      font-size: 16px;      margin-bottom: 10px;    }    table {      border-collapse: collapse;      width: 100%;    }    th, td {      border: 1px solid #dddddd;      padding: 8px;      text-align: left;    }    th {      background-color: #f5f5f5;    }  </style></head><body><img width="400px" src="https://www.jobquadrat.com/assets/images/logo.png" alt="Jobquadrat Logo">  <h1>Neue Vermittlung gemeldet</h1> <p>Ein Unternehmen hat eine neue Vermittlung gemeldet:</p>  <table>    <tr>      <th>Unternehmen</th>      <td>' + placementData.companyName + '(ID: '+ placementData.companyId + ')' + '</td>    </tr> <tr>      <th>UID</th>      <td>' + placementData.uid + '</td>    </tr> <tr>      <th>Straße</th>      <td>' + placementData.street + '</td>    </tr> <tr>      <th>Hausnummer</th>      <td>' + placementData.houseNr + '</td>    </tr> <tr>      <th>Postleitzahl</th>      <td>' + placementData.postalCode + '</td>    </tr>  <tr>      <th>Stadt</th>      <td>' + placementData.city + '</td>    </tr><tr>      <th>Unternehmenskontakt</th>      <td>' + placementData.contactPerson + '</td>    </tr>     <tr>      <th>Inserat</th>      <td>' + placementData.jobTitle + '</td>    </tr>    <tr>      <th>Vermittlungsprämie</th>      <td>' + placementData.placementBonus + '%</td>    </tr><tr>      <th>Bruttojahresgehalt</th>      <td>' + placementData.actualSalary + '€</td>    </tr>     <tr>      <th>Personalvermittler</th>      <td>' + placementData.recruiter + '</td>    </tr>    <tr>      <th>Kontakt Personalvermittler</th>      <td>' + placementData.recruiterMail + '</td>    </tr>  </table>  <p>Bitte überprüfen Sie die Details und nehmen Sie gegebenenfalls weitere Schritte vor.</p></body></html>'
 
     let emailParams: any = {
-      "to": "davidobermair01@gmail.com",
+      "to": "jobquadrat@gmail.com",
       "subject": "Neue Vermittlung von Jobquadrat",
       "htmlContent": html
     }

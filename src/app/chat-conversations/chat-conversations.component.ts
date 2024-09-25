@@ -16,8 +16,6 @@ export class ChatConversationsComponent implements OnInit {
     if(this.dataService.currentUserRole == 'Company'){
       this.dataService.getChatCommunicationsOfCompany(true);
     }
-
-    
   }
 
   updateCommunicationId(participantId: string){

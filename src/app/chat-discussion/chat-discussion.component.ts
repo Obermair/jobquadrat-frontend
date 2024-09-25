@@ -69,7 +69,7 @@ export class ChatDiscussionComponent implements OnInit {
   }
 
   getFileLink(filePath: string){
-    return this.dataService.rootUrl + filePath;
+    return this.dataService.serverUrl + filePath;
   }
 
   scrollToBottom(): void {
