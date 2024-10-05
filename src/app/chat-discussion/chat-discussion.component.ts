@@ -110,7 +110,7 @@ export class ChatDiscussionComponent implements OnInit {
           this.dataService.advertisementProfile = ad;
         }
       });
-    }, 500);
+    }, 1500);
   }
 
   sendMessage(){

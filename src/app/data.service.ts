@@ -51,8 +51,8 @@ export class DataService {
   public currentAdvertisementLimit: number = 30;
   public userAdvertisementsLoading: boolean = true;
   public resetPath: string = "https://www.jobquadrat.com/reset-password";
-  public serverUrl: string = 'http://v2202211186550206218.quicksrv.de:4300';
-  public rootUrl: string = 'http://v2202211186550206218.quicksrv.de:4300/api';
+  public serverUrl: string = 'https://api.jobquadrat.com';
+  public rootUrl: string = 'https://api.jobquadrat.com/api';
   public currentAdvertisementBonuses: PlacementBonus[] = [];
   public activePlacementBonus: number = 0;
   public formSent: boolean = false;
@@ -158,7 +158,7 @@ export class DataService {
   }
 
   login(username: string, password: string): void {
-    this.http.post('http://v2202211186550206218.quicksrv.de:4300/api/auth/local', {
+    this.http.post('https://api.jobquadrat.com/api/auth/local', {
       identifier: username,
       password: password,
     }).subscribe(
@@ -169,7 +169,7 @@ export class DataService {
         //localStorage.setItem('jwt_user_role', data.user.role.name);
         localStorage.setItem('jwt_user_description', data.user.description);
         localStorage.setItem('jwt_user_email', data.user.email);
-        this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/users?filters[id][$eq]='+ data.user.id + '&populate=*').subscribe(
+        this.http.get<any>('https://api.jobquadrat.com/api/users?filters[id][$eq]='+ data.user.id + '&populate=*').subscribe(
           (result: any) => {
             localStorage.setItem('jwt_user_role', result[0].role.name);
             this.router.navigate(['advertisements']);
@@ -193,7 +193,7 @@ export class DataService {
 
     let userParams: any;
     
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/auth/local/register', createParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/auth/local/register', createParams)
       .subscribe(
       (data: any) => {
         userParams = {
@@ -201,7 +201,7 @@ export class DataService {
           "role": role
         }
 
-        this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + data.user.id, userParams).subscribe(
+        this.http.put<any>('https://api.jobquadrat.com/api/users/' + data.user.id, userParams).subscribe(
           (data: any) => {
             this.registerSuccess = true;
             localStorage.setItem('auth_user', data.email);
@@ -218,7 +218,7 @@ export class DataService {
     this.currentUserId = localStorage.getItem('jwt_user_id') || '';
 
     if(this.currentUserId != ''){
-      this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/users?filters[id][$eq]='+ this.currentUserId + '&populate=*').subscribe(
+      this.http.get<any>('https://api.jobquadrat.com/api/users?filters[id][$eq]='+ this.currentUserId + '&populate=*').subscribe(
         (data: any) => {
           this.user = data[0];
           this.currentUser = data[0].username;
@@ -235,7 +235,7 @@ export class DataService {
     let forgotParams: any = {
         "email": email
     }
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/auth/forgot-password', forgotParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/auth/forgot-password', forgotParams)
       .subscribe(
       (data: any) => {
         this.forgotSent = true;
@@ -255,7 +255,7 @@ export class DataService {
     } 
     
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/auth/reset-password', resetParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/auth/reset-password', resetParams)
       .subscribe(
       (data: any) => {
         this.resetSent = true;
@@ -267,7 +267,7 @@ export class DataService {
 
   getAdvertisementsLandingPage() {
     //add a except to the advertisement
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs?sort=createdAt:desc&pagination[limit]=20').pipe(
+    this.http.get<any>('https://api.jobquadrat.com/api/jobs?sort=createdAt:desc&pagination[limit]=20').pipe(
       map(response => this.transformResponse(response))
     ).subscribe(
       (result: any) => {
@@ -278,7 +278,7 @@ export class DataService {
   }
 
   getAmountOfAdvertisements() {
-    this.http.get('http://v2202211186550206218.quicksrv.de:4300/api/jobs?pagination[withCount]=true').subscribe(
+    this.http.get('https://api.jobquadrat.com/api/jobs?pagination[withCount]=true').subscribe(
       (data: any) => {
         this.totalAdvertisementAmount = data.meta.pagination.total;
       }
@@ -286,14 +286,14 @@ export class DataService {
   }
 
   getAdvertisements() {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs?pagination[limit]=' + this.currentLimit + '&populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/jobs?pagination[limit]=' + this.currentLimit + '&populate=*')
       .pipe(
         map(response => this.transformResponse(response))
       )
       .subscribe(
       (data: Advertisement[]) => {
         data = data.sort((a, b) => {
-          return <any>new Date(b.publishedAt!) - <any>new Date(a.publishedAt!);
+          return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
         });
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
@@ -312,7 +312,7 @@ export class DataService {
       '&filters[$or][4][requirements][$contains]=' + searchInput + 
       '&filters[$or][5][salary][$contains]=' + searchInput;
 
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs' + filterParams + '&populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/jobs' + filterParams + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe(
@@ -326,7 +326,7 @@ export class DataService {
   }
 
   loadPublicConsultants() {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/users?filters[public][$eq]=true').subscribe((data: UsersPermissionsUser[]) => {
+    this.http.get<any>('https://api.jobquadrat.com/api/users?filters[public][$eq]=true').subscribe((data: UsersPermissionsUser[]) => {
         this.publicConsultants = data;
       }
     )
@@ -339,7 +339,7 @@ export class DataService {
       // Add the limit parameter
       userParams += '&pagination[limit]=' + this.currentAdvertisementLimit;
 
-      this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs' + userParams + '&populate=*')
+      this.http.get<any>('https://api.jobquadrat.com/api/jobs' + userParams + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe(
@@ -377,7 +377,7 @@ export class DataService {
 
   getActivePlacementBonus(advertisementId: string) {
     return new Promise((resolve, reject) => {
-      this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId + '&populate=*')
+      this.http.get<any>('https://api.jobquadrat.com/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe((data: PlacementBonus[]) => {   
@@ -386,9 +386,12 @@ export class DataService {
             return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
           });
 
-          this.currentAdvertisementBonuses = data;
-          this.activePlacementBonus = data[0].bonus || 0; 
-          resolve(data[0].bonus || 0);
+          if(data.length > 0){
+            this.currentAdvertisementBonuses = data;
+            this.activePlacementBonus = data[0].bonus || 0; 
+            resolve(data[0].bonus || 0);
+          }
+          
         }
       )
     });
@@ -402,7 +405,7 @@ export class DataService {
       filterParams += '&filters[$or][' + i + '][district][id][$eq]=' + districts[i].id;
     }
     
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs' + filterParams + '&populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/jobs' + filterParams + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe(
@@ -433,7 +436,7 @@ export class DataService {
       '&filters[$and][1][$or][4][requirements][$contains]=' + searchInput + 
       '&filters[$and][1][$or][5][salary][$contains]=' + searchInput;
 
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs' + filterParams + '&populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/jobs' + filterParams + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe(
@@ -447,7 +450,7 @@ export class DataService {
   }
   
   getDistricts() {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/districts?populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/districts?populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe(
@@ -466,7 +469,7 @@ export class DataService {
 
   //load all chatCommunications where chat sender is current user
   getChatCommunicationsOfConsultant(chatUpdate: boolean) {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications?filters[chat_sender_p1][id][$eq]=' + this.currentUserId + '&populate=*')
+    this.http.get<any>('https://api.jobquadrat.com/api/chat-communications?filters[chat_sender_p1][id][$eq]=' + this.currentUserId + '&populate=*')
       .pipe(
       map(response => this.transformResponse(response))
       ).subscribe((data: any) => {
@@ -496,7 +499,7 @@ export class DataService {
   }
 
   getChatCommunicationsOfCompany(chatUpdate: boolean) {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications?filters[chat_receiver_p2][id][$eq]=' + this.currentUserId + '&populate=*').pipe(
+    this.http.get<any>('https://api.jobquadrat.com/api/chat-communications?filters[chat_receiver_p2][id][$eq]=' + this.currentUserId + '&populate=*').pipe(
       map(response => this.transformResponse(response))
       ).subscribe((data: any) => {
         //order data by last_message_timestamp property
@@ -564,7 +567,7 @@ export class DataService {
       };
     }
   
-    this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications/' + chatCommunicationId, chatParams).subscribe(data => {
+    this.http.put<any>('https://api.jobquadrat.com/api/chat-communications/' + chatCommunicationId, chatParams).subscribe(data => {
         if (this.currentUserRole === "HR-Consultant") {
           this.getChatCommunicationsOfConsultant(true);
         }
@@ -592,7 +595,7 @@ export class DataService {
         }
       }
     }
-    this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications/' + chatCommunicationId, chatParams)
+    this.http.put<any>('https://api.jobquadrat.com/api/chat-communications/' + chatCommunicationId, chatParams)
       .subscribe(data => { 
         //go through all chatCommunications and update the unread messages
         if(this.currentUserRole == "HR-Consultant"){
@@ -618,12 +621,13 @@ export class DataService {
       }
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/chat-communications', chatParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/chat-communications', chatParams)
       .subscribe(data => {
         this.addNewMessagetoFirechat(data.data.id.toString(), communicationMessage);
         if(files.length > 0){
           this.uploadFiles(data.data.id.toString(), files);
         }
+
         this.router.navigate(['advertisements/chat']);
       }
     )
@@ -635,7 +639,6 @@ export class DataService {
     let activeUpdateChat = false;
     this.chatMessages = [];
 
-    console.log(chatCommunicationId);
     onValue(chatsRef, (snapshot: any) => {
       //get data from snapshot and push it to chatMessages array and remove all previous messages
       activeUpdateChat = false;
@@ -675,7 +678,7 @@ export class DataService {
     }
 
     //upload to server and log errror
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload', formData)
+    this.http.post<any>('https://api.jobquadrat.com/api/upload', formData)
       .subscribe(data => {
         this.addUploadFileToFirechat(chatId, data);
       }
@@ -685,7 +688,7 @@ export class DataService {
   uploadImage(file: File){
     let formData = new FormData();
     formData.append('files', file);
-    return this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload', formData);
+    return this.http.post<any>('https://api.jobquadrat.com/api/upload', formData);
   }
 
   addUploadFileToFirechat(chatId: string, files: any){
@@ -775,13 +778,13 @@ export class DataService {
       }
     };
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/placement-bonuses', placementBonusParams).subscribe(data => {
+    this.http.post<any>('https://api.jobquadrat.com/api/placement-bonuses', placementBonusParams).subscribe(data => {
         this.getPlacementBonusesByAdvertisement(advertisementId);
       });
   }
 
   getPlacementBonusesByAdvertisement(advertisementId: number) {
-    this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId).pipe(
+    this.http.get<any>('https://api.jobquadrat.com/api/placement-bonuses?filters[advertisement][id][$eq]=' + advertisementId).pipe(
       map(response => this.transformResponse(response))
       ).subscribe((data: PlacementBonus[]) => {
         //sort data by data.createdAt property
@@ -811,7 +814,7 @@ export class DataService {
       }
     };
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs', advertisementParams).subscribe(
+    this.http.post<any>('https://api.jobquadrat.com/api/jobs', advertisementParams).subscribe(
       (data: any) => {
         this.getAdvertisementsByUser();
         this.addPlacementBonus(placementBonus, data.data.id);
@@ -834,7 +837,7 @@ export class DataService {
       }
     };
 
-    this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs/' + advertisement.id, advertisementParams).subscribe(
+    this.http.put<any>('https://api.jobquadrat.com/api/jobs/' + advertisement.id, advertisementParams).subscribe(
       (data: any) => {
         this.getAdvertisementsByUser();
       }
@@ -847,7 +850,7 @@ export class DataService {
         "publishedAt": null
       }
     };
-    this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs/' + advertisement.id, advertisementParams)
+    this.http.put<any>('https://api.jobquadrat.com/api/jobs/' + advertisement.id, advertisementParams)
       .subscribe(
         (data: any) => {
           this.getAdvertisementsByUser();
@@ -864,7 +867,7 @@ export class DataService {
       "htmlContent": html
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/email', emailParams)
       .subscribe(data => { 
       }
     )
@@ -879,7 +882,7 @@ export class DataService {
       "htmlContent": html
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/email', emailParams)
       .subscribe(data => {
       }
     )
@@ -895,7 +898,7 @@ export class DataService {
       "htmlContent": html
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/email', emailParams)
       .subscribe(data => {
         this.formSent = true;
       }
@@ -910,7 +913,7 @@ export class DataService {
       "htmlContent": html
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/email', emailParams)
       .subscribe(data => {
       }
     )
@@ -925,7 +928,7 @@ export class DataService {
       "htmlContent": html
     }
 
-    this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/email', emailParams)
+    this.http.post<any>('https://api.jobquadrat.com/api/email', emailParams)
       .subscribe(data => {
       }
     )

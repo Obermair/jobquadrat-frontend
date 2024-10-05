@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'http://v2202211186550206218.quicksrv.de:4300/api';
+  rootUrl: string = 'https://api.jobquadrat.com/api';
 }
 
 /**

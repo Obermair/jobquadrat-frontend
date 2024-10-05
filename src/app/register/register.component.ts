@@ -39,18 +39,24 @@ export class RegisterComponent implements OnInit {
       }
       else {
         this.inputWrong = false;
-        if(this.password == this.passwordRepeat && this.password != ""){
-          if(this.password.length >= 6){
-            this.dataService.register(this.name, this.email, this.password, this.description, this.role);
-          }
-          else{
+
+        if(this.name.length >= 3){
+          if(this.password == this.passwordRepeat && this.password != ""){
+            if(this.password.length >= 6){
+              this.dataService.register(this.name, this.email, this.password, this.description, this.role);
+            }
+            else{
+              this.inputWrong = true;
+              this.errorMessage = "Das Passwort muss mindestens 6 Zeichen lang sein!";
+            }
+          } else{
             this.inputWrong = true;
-            this.errorMessage = "Das Passwort muss mindestens 6 Zeichen lang sein!";
+            this.errorMessage = "Die Passwörter stimmen nicht überein!";
           }
-        }else{
+        } else {
           this.inputWrong = true;
-          this.errorMessage = "Die Passwörter stimmen nicht überein!";
-        }
+          this.errorMessage = "Der Name muss mindestens 3 Zeichen lang sein!";
+        } 
       }
     }
     

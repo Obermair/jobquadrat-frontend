@@ -36,7 +36,6 @@ export class AdvertisementProfileComponent implements OnInit {
 
   createNewCommunication(){
     this.dataService.addChatCommunication(this.newCommunicationMessage, this.selectedFiles); 
-    this.router.navigate(['advertisements/chat']);
   }
 
   removeFile(file: File) {

@@ -31,7 +31,7 @@ export class UpdateAdvertisementComponent implements OnInit {
 
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute, 
     public advertisementService: AdvertisementService, private http: HttpClient) {
-      this.http.get<any>('http://v2202211186550206218.quicksrv.de:4300/api/jobs?filters[id][$eq]='+ this.route.snapshot.params['id'] + '&populate=*').pipe(
+      this.http.get<any>('https://api.jobquadrat.com/api/jobs?filters[id][$eq]='+ this.route.snapshot.params['id'] + '&populate=*').pipe(
         map(response => this.dataService.transformResponse(response))
         ).subscribe(
         (data: any) => {

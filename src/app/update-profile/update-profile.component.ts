@@ -43,11 +43,11 @@ export class UpdateProfileComponent implements OnInit {
       if(this.dataService.user.profile_img_id != "" && this.dataService.user.profile_img_id != null){
         let deleteId = this.dataService.user.profile_img_id;
         this.dataService.user.profile_img_id = "";
-        this.http.delete<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload/files/' + deleteId)
+        this.http.delete<any>('https://api.jobquadrat.com/api/upload/files/' + deleteId)
         .subscribe();
       }
 
-      this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/upload', formData).subscribe(data => {
+      this.http.post<any>('https://api.jobquadrat.com/api/upload', formData).subscribe(data => {
           this.dataService.user.profile_img_id = data[0].id;
           this.dataService.user.profile_img = data[0].url;
           this.updateUserData();
@@ -72,7 +72,7 @@ export class UpdateProfileComponent implements OnInit {
       };
 
       //todo
-      this.http.put<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
+      this.http.put<any>('https://api.jobquadrat.com/api/users/' + localStorage.getItem('jwt_user_id') ?? '', userParams)
       .subscribe(
         (updatedUser) => {
           this.successMessage = "Änderungen erfolgreich angepasst!";
@@ -113,7 +113,7 @@ export class UpdateProfileComponent implements OnInit {
           passwordConfirmation: this.passwordRepeat
       };
 
-      this.http.post<any>('http://v2202211186550206218.quicksrv.de:4300/api/auth/change-password', passwordParams)
+      this.http.post<any>('https://api.jobquadrat.com/api/auth/change-password', passwordParams)
       .subscribe(
         (updatedUser) => {
           this.successMessage = "Änderungen erfolgreich angepasst!";
@@ -131,7 +131,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   deactiveProfile(){
-    this.http.delete<any>('http://v2202211186550206218.quicksrv.de:4300/api/users/' + localStorage.getItem('jwt_user_id') ?? '')
+    this.http.delete<any>('https://api.jobquadrat.com/api/users/' + localStorage.getItem('jwt_user_id') ?? '')
       .subscribe(
       (updatedUser) => {
         localStorage.clear();

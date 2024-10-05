@@ -23,7 +23,7 @@
   },
   "servers": [
     {
-      "url": "http://v2202211186550206218.quicksrv.de:4300",
+      "url": "https://api.jobquadrat.com",
       "description": "Development server"
     },
     {
