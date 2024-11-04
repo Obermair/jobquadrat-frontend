@@ -807,6 +807,7 @@ export class DataService {
         "assignment": advertisement.assignment,
         "benefits": advertisement.benefits,
         "location": advertisement.location,
+        "jobInfo": advertisement.jobInfo,
         "requirements": advertisement.requirements,
         "salary": advertisement.salary,
         "district": advertisement.district?.id, // Directly pass the ID
@@ -831,6 +832,7 @@ export class DataService {
         "benefits": advertisement.benefits,
         "location": advertisement.location,
         "requirements": advertisement.requirements,
+        "jobInfo": advertisement.jobInfo,
         "salary": advertisement.salary,
         "district": advertisement.district?.id, // Directly pass the ID
         "users_permissions_user": this.currentUserId // Directly pass the ID

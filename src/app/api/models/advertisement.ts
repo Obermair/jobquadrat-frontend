@@ -19,6 +19,7 @@ export interface Advertisement {
   requirements?: string;
   salary?: string;
   currentPlacementBonus?: number;
+  jobInfo?: string;
   users_permissions_user?: {
 'id': string;
 'username': string;

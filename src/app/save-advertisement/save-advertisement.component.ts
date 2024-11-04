@@ -20,6 +20,8 @@ export class SaveAdvertisementComponent implements OnInit {
   requirementsPoints = "";
   currentBenefitPoint = "";
   benefitsPoints = "";
+  currentJobInformationPoints = "";
+  jobInformationPoints = "";
 
   workingTimeOptions = ["Vollzeit", "Teilzeit"];
   errorMessage = "";
@@ -93,17 +95,39 @@ export class SaveAdvertisementComponent implements OnInit {
   removeBenefitPoint(benefitPoint: string){
     this.benefitsPoints = this.benefitsPoints.replace(benefitPoint + "<*>", "");
   }
- 
+
+  addJobInformationPoint(){
+    if(this.currentJobInformationPoints != ""){
+      this.jobInformationPoints += this.currentJobInformationPoints + "<*>";
+      this.currentJobInformationPoints = "";
+    }
+  }
+
+  jobInformationPointList(){
+    if (this.jobInformationPoints != ""){
+      let jobInformationPointsArray = this.jobInformationPoints.split("<*>");
+      jobInformationPointsArray.pop();
+      return jobInformationPointsArray;
+    } else{
+      return [];
+    }
+  }
+
+  removeJobInformationPoint(benefitPoint: string){
+    this.jobInformationPoints = this.jobInformationPoints.replace(benefitPoint + "<*>", "");
+  }
+
   cancel(){
     this.router.navigate(['../'], {relativeTo:this.route});
   }
 
   save(){
-    if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.assignmentPoints != "" && this.requirementsPoints != "" && this.benefitsPoints != "" ){
+    if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.assignmentPoints != "" && this.requirementsPoints != "" && this.benefitsPoints != "" && this.jobInformationPoints != ""){
       this.advertisement.salary = this.advertisement.salary.toString();
       this.advertisement.assignment = this.assignmentPoints;
       this.advertisement.requirements = this.requirementsPoints;
       this.advertisement.benefits = this.benefitsPoints;
+      this.advertisement.jobInfo = this.jobInformationPoints;
 
       this.dataService.postAdvertisement(this.advertisement, this.placementBonus);
       this.router.navigate(['../'], {relativeTo:this.route});

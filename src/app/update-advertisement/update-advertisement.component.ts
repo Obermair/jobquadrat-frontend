@@ -28,6 +28,8 @@ export class UpdateAdvertisementComponent implements OnInit {
   requirementsPoints = "";
   currentBenefitPoint = "";
   benefitsPoints = "";
+  currentJobInformationPoints = "";
+  jobInformationPoints = "";
 
   constructor(public dataService: DataService, private router: Router, private route: ActivatedRoute, 
     public advertisementService: AdvertisementService, private http: HttpClient) {
@@ -40,6 +42,7 @@ export class UpdateAdvertisementComponent implements OnInit {
             this.assignmentPoints = this.advertisement.assignment || "";
             this.requirementsPoints = this.advertisement.requirements || "";
             this.benefitsPoints = this.advertisement.benefits || "";
+            this.jobInformationPoints = this.advertisement.jobInfo || "";
             this.loading = false;
           }
         }
@@ -109,6 +112,26 @@ export class UpdateAdvertisementComponent implements OnInit {
     this.benefitsPoints = this.benefitsPoints.replace(benefitPoint + "<*>", "");
   }
 
+  addJobInformationPoint(){
+    if(this.currentJobInformationPoints != ""){
+      this.jobInformationPoints += this.currentJobInformationPoints + "<*>";
+      this.currentJobInformationPoints = "";
+    }
+  }
+
+  jobInformationPointList(){
+    if (this.jobInformationPoints != ""){
+      let jobInformationPointsArray = this.jobInformationPoints.split("<*>");
+      jobInformationPointsArray.pop();
+      return jobInformationPointsArray;
+    } else{
+      return [];
+    }
+  }
+
+  removeJobInformationPoint(benefitPoint: string){
+    this.jobInformationPoints = this.jobInformationPoints.replace(benefitPoint + "<*>", "");
+  }
 
   ngOnInit(): void {
     this.dataService.getDistricts();
@@ -124,11 +147,12 @@ export class UpdateAdvertisementComponent implements OnInit {
   }
 
   update(){
-    if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.assignmentPoints != "" && this.requirementsPoints != "" && this.benefitsPoints != ""){
+    if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.assignmentPoints != "" && this.requirementsPoints != "" && this.benefitsPoints != ""&& this.jobInformationPoints != ""){
       this.advertisement.salary = this.advertisement.salary.toString();
       this.advertisement.assignment = this.assignmentPoints;
       this.advertisement.requirements = this.requirementsPoints;
       this.advertisement.benefits = this.benefitsPoints;
+      this.advertisement.jobInfo = this.jobInformationPoints;
 
       this.dataService.updateAdvertisement(this.advertisement);
       this.router.navigate(['../../'], {relativeTo:this.route});

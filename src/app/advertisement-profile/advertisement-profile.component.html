@@ -89,6 +89,13 @@
             <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
                 <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.benefits || '')"></span>
           </div>
+
+
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-bold text-gray-600">Jobinformationen</dt>
+            <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
+                <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.jobInfo || '')"></span>
+          </div>
       </dl>
     </div>
 

@@ -133,6 +133,32 @@
                   </button>
                 </div>
               </div>
+
+              <div class="sm:col-span-3">
+                <label for="jobInformation" class="block text-sm font-medium text-gray-700">Zusätzliche Informationen zur Position (z.B. Organisation, Team, etc.)</label>
+                <div class="mt-1 flex">
+                  <textarea [(ngModel)]="currentJobInformationPoints" id="currentJobInformationPoints" name="currentJobInformationPoints" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+                  <button (click)="addJobInformationPoint()" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+                </div>
+              </div>
+    
+              <div class="sm:col-span-3">
+                <button *ngIf="jobInformationPoints == ''" type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                  </svg>
+                  <span class="mt-2 block text-sm font-semibold text-gray-900">Füge eine Jobinformation hinzu</span>
+                </button>
+    
+                <div *ngFor="let jobInformation of jobInformationPointList()" class="relative block mb-1 w-full rounded-lg border-2 border-dashed p-2 border-gray-300 text-left text-sm font-semibold text-gray-900 focus:outline-none">
+                  <p>{{ jobInformation }}</p>
+                  <button (click)="removeJobInformationPoint(jobInformation)" type="button" class="absolute top-0 right-0 mt-2 mr-2">
+                    <svg class="h-6 w-6 text-gray-400 hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
     
     
                 
