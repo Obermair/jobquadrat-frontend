@@ -114,7 +114,11 @@ export class AdvertisementProfileComponent implements OnInit {
   }
 
   toggleCompanyContact(){
+    const mailtoLink = 'mailto:' + this.dataService.advertisementProfile.users_permissions_user?.email;
+    window.location.href = mailtoLink;
+    /* temporary disabled
     this.showCompanyContact = !this.showCompanyContact;
+    */
   }
 
   successPlacement(){
