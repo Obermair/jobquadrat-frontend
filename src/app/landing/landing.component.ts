@@ -7,6 +7,43 @@ import { DataService } from '../data.service';
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit {
+  logos = [
+    {
+      src: '../../assets/images/testimonial1.png',
+    },
+    {
+      src: '../../assets/images/testimonial2.png',
+    },
+    {
+      src: '../../assets/images/testimonial3.png',
+    },
+    {
+      src: '../../assets/images/testimonial4.png',
+    },
+    {
+      src: '../../assets/images/testimonial5.png',
+    },
+    {
+      src: '../../assets/images/testimonial6.png',
+    },
+    {
+      src: '../../assets/images/testimonial7.png',
+    },
+    {
+      src: '../../assets/images/testimonial8.png',
+    },
+    {
+      src: '../../assets/images/testimonial9.png',
+    },
+    {
+      src: '../../assets/images/testimonial10.png',
+    },
+  ];
+
+  displayLogos = [...this.logos, ...this.logos]; // Duplicates the logos for infinite scrolling
+  scrollOffset = 0;
+  scrollSpeed = 0.5; // Adjust this for faster/slower scrolling
+  intervalId!: any;
 
   openMenu: boolean = false;
   form: any = {
@@ -25,6 +62,27 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.intervalId = setInterval(() => {
+      this.scroll();
+    }, 30); // Slide every 3 seconds
+  }
+
+  ngOnDestroy() {
+    // Clear interval when component is destroyed
+    clearInterval(this.intervalId);
+  }
+
+ 
+  scroll() {
+    this.scrollOffset += this.scrollSpeed;
+
+    // Reset scroll when the first set of logos has scrolled out of view
+    const logoWidth = 158 + 16; // Approx. logo width + padding (adjust as needed)
+    const totalWidth = this.logos.length * logoWidth;
+
+    if (this.scrollOffset >= totalWidth) {
+      this.scrollOffset = 0;
+    }
   }
 
   toggleMenu() {
