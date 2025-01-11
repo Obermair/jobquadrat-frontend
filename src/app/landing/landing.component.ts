@@ -38,11 +38,14 @@ export class LandingComponent implements OnInit {
     {
       src: '../../assets/images/testimonial10.png',
     },
+    {
+      src: '../../assets/images/testimonial11.png',
+    },
   ];
 
   displayLogos = [...this.logos, ...this.logos]; // Duplicates the logos for infinite scrolling
   scrollOffset = 0;
-  scrollSpeed = 0.5; // Adjust this for faster/slower scrolling
+  scrollSpeed = 1.8; // Adjust this for faster/slower scrolling
   intervalId!: any;
 
   openMenu: boolean = false;
@@ -77,7 +80,7 @@ export class LandingComponent implements OnInit {
     this.scrollOffset += this.scrollSpeed;
 
     // Reset scroll when the first set of logos has scrolled out of view
-    const logoWidth = 158 + 16; // Approx. logo width + padding (adjust as needed)
+    const logoWidth = 4000 + 16; // Approx. logo width + padding (adjust as needed)
     const totalWidth = this.logos.length * logoWidth;
 
     if (this.scrollOffset >= totalWidth) {
