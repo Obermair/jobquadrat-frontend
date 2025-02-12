@@ -21,7 +21,7 @@ export class AdvertisementTableComponent implements OnInit  {
 
   loadDefaultAdvertisements(){
     if(this.searchInput == "" && this.filterDistricts.length == 0){
-      this.dataService.currentLimit = 50;
+      this.dataService.currentLimit = 200;
       this.dataService.getAdvertisements();
     }
   }
@@ -32,7 +32,7 @@ export class AdvertisementTableComponent implements OnInit  {
   }
 
   loadMoreAdvertisements(){
-    this.dataService.currentLimit += 5;
+    this.dataService.currentLimit += 10;
     this.dataService.getAdvertisements();
   }
   

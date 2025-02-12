@@ -18,7 +18,7 @@ export class AdvertisementViewComponent implements OnInit {
   }
 
   loadDefaults(){
-    this.dataService.currentLimit = 50;
+    this.dataService.currentLimit = 200;
     this.dataService.getAdvertisements();
   }
 

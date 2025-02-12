@@ -27,7 +27,7 @@ export class DataService {
   //Data Elements
   public totalAdvertisementAmount: number = 0;
   public totalAdvertisement: Advertisement[] = [];
-  public currentLimit: number = 50;
+  public currentLimit: number = 200;
   public user: UsersPermissionsUser = {
     id: "",
     description: "",
@@ -295,6 +295,7 @@ export class DataService {
         data = data.sort((a, b) => {
           return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
         });
+        console.log(data.length);
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
         this.addPlacementBonusToList(this.displayedAdvertisements);
