@@ -182,6 +182,16 @@ export class DataService {
     );
   }
 
+  userOpenedDashboard(){  
+    let userParams: any = {
+      "last_dashboard_opened": new Date()
+    }
+    this.http.put<any>('https://api.jobquadrat.com/api/users/' + this.currentUserId, userParams).subscribe(
+      (data: any) => {
+      }
+    );
+  }
+
   //todo
   register(name: string, email: string, password: string, description: string, role: number){
     let createParams: any = {
