@@ -169,6 +169,7 @@ export class DataService {
         //localStorage.setItem('jwt_user_role', data.user.role.name);
         localStorage.setItem('jwt_user_description', data.user.description);
         localStorage.setItem('jwt_user_email', data.user.email);
+        this.updateLastLoginProperty(data.user.id);
         this.http.get<any>('https://api.jobquadrat.com/api/users?filters[id][$eq]='+ data.user.id + '&populate=*').subscribe(
           (result: any) => {
             localStorage.setItem('jwt_user_role', result[0].role.name);
@@ -182,11 +183,12 @@ export class DataService {
     );
   }
 
-  userOpenedDashboard(){  
+  updateLastLoginProperty(userId: string){
     let userParams: any = {
-      "last_dashboard_opened": new Date()
+      "last_login": new Date().toISOString()
     }
-    this.http.put<any>('https://api.jobquadrat.com/api/users/' + this.currentUserId, userParams).subscribe(
+
+    this.http.put<any>('https://api.jobquadrat.com/api/users/' + userId, userParams).subscribe(
       (data: any) => {
       }
     );
@@ -305,7 +307,6 @@ export class DataService {
         data = data.sort((a, b) => {
           return <any>new Date(b.createdAt!) - <any>new Date(a.createdAt!);
         });
-        console.log(data.length);
         this.displayedAdvertisements = data;
         this.advertisementProfile = data[0];
         this.addPlacementBonusToList(this.displayedAdvertisements);

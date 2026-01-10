@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('jwt_token') != null) {
+      this.dataService.updateLastLoginProperty(localStorage.getItem('jwt_user_id') || '');  
       this.router.navigate(['/advertisements']);
     }
     if (localStorage.getItem('auth_user') != null) {
