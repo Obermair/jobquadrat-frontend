@@ -69,29 +69,42 @@
           <dd class="mt-1 text-sm font-medium text-gray-500">{{ dataService.advertisementProfile.location }}</dd>
         </div>
 
+        <!-- Externe Inseratsvorschau -->
+        <div *ngIf="dataService.advertisementProfile.adLink"
+            class="sm:col-span-2 mb-6">
+          <dt class="text-sm font-bold text-gray-600 mb-2">Originalinserat</dt>
+          <dd class="w-full h-[600px] rounded-lg overflow-hidden border border-gray-300 shadow">
+            <iframe
+              [src]="dataService.advertisementProfile.adLink | safeUrl"
+              class="w-full h-full border-0"
+              loading="lazy"
+              referrerpolicy="no-referrer">
+            </iframe>
+          </dd>
+        </div>
 
-        <div class="sm:col-span-2">
+        <div class="sm:col-span-2" *ngIf="!dataService.advertisementProfile.adLink">
           <dt class="text-sm font-bold text-gray-600">Aufgabengebiet</dt>
           <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
             <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.assignment || '')"></span>
            </dd>
         </div>
 
-        <div class="sm:col-span-2">
+        <div class="sm:col-span-2" *ngIf="!dataService.advertisementProfile.adLink">
             <dt class="text-sm font-bold text-gray-600">Anforderungen</dt>
             <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
               <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.requirements || '')"></span>
              </dd>
           </div>
 
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-2" *ngIf="!dataService.advertisementProfile.adLink">
             <dt class="text-sm font-bold text-gray-600">Benefits</dt>
             <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
                 <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.benefits || '')"></span>
           </div>
 
 
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-2" *ngIf="!dataService.advertisementProfile.adLink">
             <dt class="text-sm font-bold text-gray-600">Jobinformationen</dt>
             <dd class="mt-1 ml-5 max-w-prose space-y-5 text-sm font-medium text-gray-500">
                 <span [innerHtml]="showValueinHTMLList(dataService.advertisementProfile.jobInfo || '')"></span>

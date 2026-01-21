@@ -15,6 +15,7 @@
               <input [(ngModel)]="advertisement.jobTitle" type="text" name="jobTitle" id="jobTitle" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
             </div>
           </div>
+          
 
           <div class="sm:col-span-3">
             <label for="workingTime" class="block text-sm font-medium text-gray-700">Arbeitszeit (Vollzeit, Teilzeit)</label>
@@ -48,18 +49,29 @@
             </div>
           </div>
           <div class="sm:col-span-3">
+            <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie (in % des Bruttojahresgehalts - Bei erfolgreicher Vermittlung fallen 10% davon zusätzlich als Servicepauschale für Jobquadrat an.)</label>
+            <div class="mt-1 flex">
+              <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div class="sm:col-span-6">
+            <label for="adLink" class="block text-sm font-medium text-gray-700">Inserat Link <br> (Wenn Sie den Link zu Ihrem Inserat einfügen, müssen die nachstehenden Felder nicht mehr befüllt werden.)</label>
+            <div class="mt-1">
+              <input [(ngModel)]="advertisement.adLink" type="text" name="adLink" id="adLink" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+            </div>
           </div>
 
  
           <div class="sm:col-span-3">
             <label for="assignment" class="block text-sm font-medium text-gray-700">Aufgabenbeschreibung</label>
             <div class="mt-1 flex">
-              <textarea [(ngModel)]="currentAssignmentPoint" id="assignment" name="assignment" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
-              <button (click)="addAssignmentPoint()" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+              <textarea [(ngModel)]="currentAssignmentPoint" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-100 text-gray-400 cursor-not-allowed': isAdLinkFilled}"  id="assignment" name="assignment" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+              <button (click)="addAssignmentPoint()" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-400 text-gray-400 cursor-not-allowed hover:bg-gray-400': isAdLinkFilled}" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
             </div>
           </div>
 
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-3" *ngIf="!isAdLinkFilled">
             <button *ngIf="assignmentPoints == ''" type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -77,15 +89,25 @@
             </div>
           </div>
 
+          <div class="sm:col-span-3" *ngIf="isAdLinkFilled">
+            <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              <span class="mt-2 block text-sm font-semibold text-gray-900">Statt dieser Beschreibung wird später euer tatsächliches Inserat automatisch als Vorschau (iframe) eingebunden.</span>
+            </button>
+          </div>
+
+
           <div class="sm:col-span-3">
             <label for="requirements" class="block text-sm font-medium text-gray-700">Qualifikationen/Erfahrungen</label>
             <div class="mt-1 flex">
-              <textarea [(ngModel)]="currentRequirementPoint" id="requirements" name="requirements" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
-              <button (click)="addRequirementPoint()" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+              <textarea [(ngModel)]="currentRequirementPoint" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-100 text-gray-400 cursor-not-allowed': isAdLinkFilled}"  id="requirements" name="requirements" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+              <button (click)="addRequirementPoint()" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-400 text-gray-400 cursor-not-allowed hover:bg-gray-400': isAdLinkFilled}" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
             </div>
           </div>
 
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-3" *ngIf="!isAdLinkFilled">
             <button *ngIf="requirementsPoints == ''" type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -103,15 +125,24 @@
             </div>
           </div>
 
-          <div class="sm:col-span-3">
-            <label for="benefits" class="block text-sm font-medium text-gray-700">Benefits</label>
-            <div class="mt-1 flex">
-              <textarea [(ngModel)]="currentBenefitPoint" id="benefits" name="benefits" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
-              <button (click)="addBenefitPoint()" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
-            </div>
+          <div class="sm:col-span-3" *ngIf="isAdLinkFilled">
+            <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              <span class="mt-2 block text-sm font-semibold text-gray-900">Statt dieser Beschreibung wird später euer tatsächliches Inserat automatisch als Vorschau (iframe) eingebunden.</span>
+            </button>
           </div>
 
           <div class="sm:col-span-3">
+            <label for="benefits" class="block text-sm font-medium text-gray-700">Benefits</label>
+            <div class="mt-1 flex">
+              <textarea [(ngModel)]="currentBenefitPoint" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-100 text-gray-400 cursor-not-allowed': isAdLinkFilled}" id="benefits" name="benefits" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+              <button (click)="addBenefitPoint()" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-400 text-gray-400 cursor-not-allowed hover:bg-gray-400': isAdLinkFilled}" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3" *ngIf="!isAdLinkFilled">
             <button *ngIf="benefitsPoints == ''" type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -128,16 +159,26 @@
               </button>
             </div>
           </div>
+          
+
+          <div class="sm:col-span-3" *ngIf="isAdLinkFilled">
+            <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              <span class="mt-2 block text-sm font-semibold text-gray-900">Statt dieser Beschreibung wird später euer tatsächliches Inserat automatisch als Vorschau (iframe) eingebunden.</span>
+            </button>
+          </div>
 
           <div class="sm:col-span-3">
             <label for="jobInformation" class="block text-sm font-medium text-gray-700">Zusätzliche Informationen zur Position (z.B. Organisation, Team, Welche Infos sind für den Personalberater wichtig? Was ist dem Arbeitgeber besonders wichtig?, etc.)</label>
             <div class="mt-1 flex">
-              <textarea [(ngModel)]="currentJobInformationPoints" id="currentJobInformationPoints" name="currentJobInformationPoints" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
-              <button (click)="addJobInformationPoint()" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
+              <textarea [(ngModel)]="currentJobInformationPoints" [disabled]="isAdLinkFilled"  [ngClass]="{'bg-gray-100 text-gray-400 cursor-not-allowed': isAdLinkFilled}"   id="currentJobInformationPoints" name="currentJobInformationPoints" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-white-500 focus:ring-white-500"></textarea>
+              <button (click)="addJobInformationPoint()" [disabled]="isAdLinkFilled" [ngClass]="{'bg-gray-400 text-gray-400 cursor-not-allowed hover:bg-gray-400': isAdLinkFilled}" type="submit" class="ml-3 inline-flex h-10 justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">Hinzufügen</button>
             </div>
           </div>
 
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-3" *ngIf="!isAdLinkFilled">
             <button *ngIf="jobInformationPoints == ''" type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -155,12 +196,13 @@
             </div>
           </div>
 
-
-          <div class="sm:col-span-3">
-            <label for="bonus" class="block text-sm font-medium text-gray-700">Vermittlungsprämie (in % des Bruttojahresgehalts - Bei erfolgreicher Vermittlung fallen 10% davon zusätzlich als Servicepauschale für Jobquadrat an.)</label>
-            <div class="mt-1 flex">
-              <input [(ngModel)]="placementBonus" type="number" name="bonus" id="bonus" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-            </div>
+          <div class="sm:col-span-3" *ngIf="isAdLinkFilled">
+            <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  class="mx-auto h-12 w-12 text-gray-400" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              <span class="mt-2 block text-sm font-semibold text-gray-900">Statt dieser Beschreibung wird später euer tatsächliches Inserat automatisch als Vorschau (iframe) eingebunden.</span>
+            </button>
           </div>
  
         </div>

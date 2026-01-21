@@ -145,9 +145,31 @@ export class UpdateAdvertisementComponent implements OnInit {
   cancel(){
     this.router.navigate(['../../'], {relativeTo:this.route});
   }
+  
+  get isAdLinkFilled(): boolean {
+    return this.advertisement?.adLink != null && this.advertisement.adLink.trim() !== '';
+  }
 
   update(){
-    if(this.advertisement.jobTitle != undefined && this.advertisement.workingTime != undefined && this.advertisement.district != undefined && this.advertisement.salary != undefined && this.advertisement.location != undefined && this.assignmentPoints != "" && this.requirementsPoints != "" && this.benefitsPoints != ""&& this.jobInformationPoints != ""){
+    if (this.isAdLinkFilled) {
+      // Nur Jobtitel und Bonus sind Pflicht
+      if(this.advertisement.jobTitle && this.placementBonus >= 0 && this.advertisement.workingTime && this.advertisement.district &&
+      this.advertisement.salary && this.advertisement.location){
+        this.advertisement.salary = this.advertisement.salary.toString();
+        this.dataService.updateAdvertisement(this.advertisement);
+        this.router.navigate(['../../'], {relativeTo:this.route});
+      } else {
+        this.errorMessage = "Bitte Jobtitel und Vermittlungsprämie angeben!";
+      }
+      return;
+    }
+
+    // Normaler Validierungsfall (ohne AdLink)
+    if(this.advertisement.jobTitle && this.advertisement.workingTime && this.advertisement.district &&
+      this.advertisement.salary && this.advertisement.location && this.placementBonus >= 0 &&
+      this.assignmentPoints != "" && this.requirementsPoints != "" &&
+      this.benefitsPoints != "" && this.jobInformationPoints != ""){
+
       this.advertisement.salary = this.advertisement.salary.toString();
       this.advertisement.assignment = this.assignmentPoints;
       this.advertisement.requirements = this.requirementsPoints;
@@ -156,9 +178,8 @@ export class UpdateAdvertisementComponent implements OnInit {
 
       this.dataService.updateAdvertisement(this.advertisement);
       this.router.navigate(['../../'], {relativeTo:this.route});
-    }else{
-      this.errorMessage = "Bitte füllen Sie alle Felder aus!"
+    } else{
+      this.errorMessage = "Bitte füllen Sie alle Felder aus!";
     }
   }
- 
 }

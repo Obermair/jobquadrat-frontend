@@ -37,4 +37,5 @@ export interface Advertisement {
 'description'?: string;
 };
   workingTime?: string;
+  adLink?: string;
 }

@@ -29,9 +29,11 @@ import { ChatComponent } from './chat/chat.component';
 import { ChatConversationsComponent } from './chat-conversations/chat-conversations.component';
 import { ChatDiscussionComponent } from './chat-discussion/chat-discussion.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SafeUrlPipe } from './safe-url.pipe';
  
 @NgModule({
   declarations: [
+    SafeUrlPipe,
     AppComponent,
     LoginComponent,
     LandingComponent,
