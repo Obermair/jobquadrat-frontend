@@ -128,7 +128,7 @@ export class SaveAdvertisementComponent implements OnInit {
   save(){
     if (this.isAdUrlFilled) {
       // Nur Jobtitel und Bonus sind Pflicht
-      if(this.advertisement.jobTitle && this.placementBonus >= 0 && this.advertisement.workingTime && this.advertisement.district &&
+      if(this.advertisement.jobTitle && this.placementBonus && this.placementBonus > 0 && this.advertisement.workingTime && this.advertisement.district &&
       this.advertisement.salary && this.advertisement.location){
         this.advertisement.salary = this.advertisement.salary.toString();
         this.dataService.postAdvertisement(this.advertisement, this.placementBonus);
@@ -141,7 +141,7 @@ export class SaveAdvertisementComponent implements OnInit {
 
     // Normaler Validierungsfall (ohne AdUrl)
     if(this.advertisement.jobTitle && this.advertisement.workingTime && this.advertisement.district &&
-      this.advertisement.salary && this.advertisement.location && this.placementBonus >= 0 &&
+      this.advertisement.salary && this.advertisement.location && this.placementBonus && this.placementBonus >= 0 &&
       this.assignmentPoints != "" && this.requirementsPoints != "" &&
       this.benefitsPoints != "" && this.jobInformationPoints != ""){
 
