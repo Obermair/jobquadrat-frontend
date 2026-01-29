@@ -40,8 +40,8 @@ export class SaveAdvertisementComponent implements OnInit {
     }
   }
 
-  get isAdLinkFilled(): boolean {
-    return this.advertisement?.adLink != null && this.advertisement.adLink.trim() != '';
+  get isAdUrlFilled(): boolean {
+    return this.advertisement?.adUrl != null && this.advertisement.adUrl.trim() != '';
   }
 
   assignmentPointsList(){
@@ -126,7 +126,7 @@ export class SaveAdvertisementComponent implements OnInit {
   }
 
   save(){
-    if (this.isAdLinkFilled) {
+    if (this.isAdUrlFilled) {
       // Nur Jobtitel und Bonus sind Pflicht
       if(this.advertisement.jobTitle && this.placementBonus >= 0 && this.advertisement.workingTime && this.advertisement.district &&
       this.advertisement.salary && this.advertisement.location){
@@ -134,12 +134,12 @@ export class SaveAdvertisementComponent implements OnInit {
         this.dataService.postAdvertisement(this.advertisement, this.placementBonus);
         this.router.navigate(['../'], {relativeTo:this.route});
       } else {
-        this.errorMessage = "Bitte Jobtitel und Vermittlungsprämie angeben!";
+        this.errorMessage = "Bitte Jobtitel, Arbeitszeit, Bezirk, Gehalt, Ort und Bonus ausfüllen!";
       }
       return;
     }
 
-    // Normaler Validierungsfall (ohne AdLink)
+    // Normaler Validierungsfall (ohne AdUrl)
     if(this.advertisement.jobTitle && this.advertisement.workingTime && this.advertisement.district &&
       this.advertisement.salary && this.advertisement.location && this.placementBonus >= 0 &&
       this.assignmentPoints != "" && this.requirementsPoints != "" &&

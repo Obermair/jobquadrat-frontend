@@ -812,6 +812,8 @@ export class DataService {
  
 
   postAdvertisement(advertisement: Advertisement, placementBonus: number) {
+    console.log('Posting advertisement:', advertisement);
+
     let advertisementParams: any = {
       data: {
         "jobTitle": advertisement.jobTitle,
@@ -822,7 +824,7 @@ export class DataService {
         "jobInfo": advertisement.jobInfo,
         "requirements": advertisement.requirements,
         "salary": advertisement.salary,
-        "adLink": advertisement.adLink,
+        "adUrl": advertisement.adUrl,
         "district": advertisement.district?.id, // Directly pass the ID
         "users_permissions_user": this.currentUserId // Directly pass the ID
       }
@@ -847,7 +849,7 @@ export class DataService {
         "requirements": advertisement.requirements,
         "jobInfo": advertisement.jobInfo,
         "salary": advertisement.salary,
-        "adLink": advertisement.adLink,
+        "adUrl": advertisement.adUrl,
         "district": advertisement.district?.id, // Directly pass the ID
         "users_permissions_user": this.currentUserId // Directly pass the ID
       }
